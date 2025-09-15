@@ -1,0 +1,19 @@
+﻿  error.cpp
+  Circle.cpp
+D:\Projects\WickedEngine\WickedEngine\Geometry\Circle.cpp(11,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\Geometry\Circle.cpp(14,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\WickedEngine\WickedEngine\Geometry\Circle.cpp(29,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\WickedEngine\WickedEngine\Geometry\Circle.cpp(33,22): warning C4018: '>=': signed/unsigned mismatch
+  Polygon.cpp
+D:\Projects\WickedEngine\WickedEngine\Geometry\Polygon.cpp(16,11): warning C4267: 'initializing': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\Geometry\Polygon.cpp(16,42): warning C4267: 'initializing': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\Geometry\Polygon.cpp(31,109): warning C4312: 'type cast': conversion from 'const unsigned int' to 'void *' of greater size
+  shader.cpp
+D:\Projects\WickedEngine\WickedEngine\shader.cpp(157,26): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\shader.cpp(163,26): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\shader.cpp(169,28): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\shader.cpp(175,28): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Projects\WickedEngine\WickedEngine\shader.cpp(181,34): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  WickedEngine.vcxproj -> D:\Projects\WickedEngine\x64\Debug\WickedEngine.exe
