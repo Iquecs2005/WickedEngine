@@ -29,11 +29,9 @@
 #include "error.h"
 
 static ShaderPtr shd;
-static PolygonPtr secondPointer;
-static PolygonPtr minutePointer;
-static PolygonPtr hourPointer;
-static PolygonPtr circleBackdrop;
-static PolygonPtr circlePoint;
+
+static CirclePtr circleGeometry;
+static TrianglePtr triangleGeometry;
 
 static void initialize()
 {
@@ -43,13 +41,10 @@ static void initialize()
 	shd->AttachVertexShader("shaders/vertex.glsl");
 	shd->AttachFragmentShader("shaders/fragment.glsl");
 	shd->Link();
-	
-	std::vector<unsigned int> inc = { 1, 2, 0, 0, 2, 3, 0, 4, 1};
-	secondPointer = Triangle::Make();
-	minutePointer = Triangle::Make();
-	hourPointer = Triangle::Make();
-	circleBackdrop = Circle::Make(65);
-	circlePoint = Circle::Make();
+
+	circleGeometry = Circle::Make(65);
+	triangleGeometry = Triangle::Make();
+
 	Error::Check("initialize");
 }
 
@@ -60,23 +55,56 @@ static void error(int code, const char* msg)
 	exit(0);
 }
 
+static glm::mat4 getDistorcionlessMatrix(GLFWwindow* win)
+{
+	int wn_w, wn_h;
+	glfwGetWindowSize(win, &wn_w, &wn_h);
+	const float w = (float)wn_w;
+	const float h = (float)wn_h;
+	const float screenRatio = w / h;
+
+	float xmax = 5;
+	float xmin = -5;
+	float ymax = 5;
+	float ymin = -5;
+
+	float dx = xmax - xmin;
+	float dy = ymax - ymin;
+
+	if (screenRatio > dx / dy)
+	{
+		float xc = (xmin + xmax) / 2;
+		xmin = xc - dx / 2 * screenRatio;
+		xmax = xc + dx / 2 * screenRatio;
+	}
+	else
+	{
+		float yc = (ymin + ymax) / 2;
+		ymin = yc - dy / 2 / screenRatio;
+		ymax = yc + dy / 2 / screenRatio;
+	}
+
+	return glm::ortho(xmin, xmax, ymin, ymax);
+}
+
 static void display(GLFWwindow* win)
 {
+	const glm::mat4 distorcionlessMatrix = getDistorcionlessMatrix(win);
 	glm::mat4 M;
 	glm::vec4 uniformColor;
+
 	//Clears the color and depth buffer with the clear color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shd->UseProgram();
 
-	M = glm::ortho(-5.0,5.0,-5.0,5.0);
-	M = glm::translate(M, { 0, 0, 0 });
+	M = distorcionlessMatrix;
 	M = glm::scale(M, { 3, 3, 1 });
 	shd->SetUniform("M", M);
 	
 	uniformColor = glm::vec4(1,1,1,1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	circleBackdrop->Draw();
+	circleGeometry->Draw();
 
 	auto now = std::chrono::system_clock::now();
 	std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
@@ -93,8 +121,7 @@ static void display(GLFWwindow* win)
 	float minutes = (time_t_now / 60) % 60 + seconds / 60;
 	float hour = local_tm.tm_hour + minutes / 60;
 
-	M = glm::ortho(-5.0,5.0,-5.0,5.0);
-	M = glm::translate(M, { 0, 0, 0 });
+	M = distorcionlessMatrix;
 	M = glm::rotate(M, (float)glm::radians(360 * seconds / 60), glm::vec3(0, 0, -1));
 	M = glm::scale(M, { 0.1, 2.75, 1 });
 	shd->SetUniform("M", M);
@@ -102,10 +129,9 @@ static void display(GLFWwindow* win)
 	uniformColor = glm::vec4(0.9, 0.3, 0.3, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	secondPointer->Draw();
+	triangleGeometry->Draw();
 
-	M = glm::ortho(-5.0, 5.0, -5.0, 5.0);
-	M = glm::translate(M, { 0, 0, 0 });
+	M = distorcionlessMatrix;
 	M = glm::rotate(M, (float)glm::radians(360 * minutes / 60), glm::vec3(0, 0, -1));
 	M = glm::scale(M, { 0.1, 2, 1 });
 	shd->SetUniform("M", M);
@@ -113,25 +139,23 @@ static void display(GLFWwindow* win)
 	uniformColor = glm::vec4(0, 0, 0, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	secondPointer->Draw();
+	triangleGeometry->Draw();
 
-	M = glm::ortho(-5.0, 5.0, -5.0, 5.0);
-	M = glm::translate(M, { 0, 0, 0 });
+	M = distorcionlessMatrix;
 	M = glm::rotate(M, (float)glm::radians(360 * hour / 12), glm::vec3(0, 0, -1));
 	M = glm::scale(M, { 0.1, 1, 1 });
 	shd->SetUniform("M", M);
 
-	hourPointer->Draw();
+	triangleGeometry->Draw();
 
-	M = glm::ortho(-5.0, 5.0, -5.0, 5.0);
-	M = glm::translate(M, { 0, 0, 0 });
+	M = distorcionlessMatrix;
 	M = glm::scale(M, { 0.2, 0.2, 0.2 });
 	shd->SetUniform("M", M);
 
 	uniformColor = glm::vec4(0.5, 0.5, 0.5, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	circlePoint->Draw();
+	circleGeometry->Draw();
 
 	Error::Check("display");
 }
