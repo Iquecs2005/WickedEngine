@@ -130,10 +130,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="error.cpp" />
+    <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="Geometry\Circle.cpp" />
     <ClCompile Include="Geometry\Polygon.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="GameObjects\Components\Transform.cpp" />
+    <ClCompile Include="General\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -145,11 +148,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="error.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="Geometry\Circle.h" />
     <ClInclude Include="Geometry\Polygon.h" />
     <ClInclude Include="Geometry\Shape.h" />
     <ClInclude Include="Geometry\Triangle.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="GameObjects\Components\Transform.h" />
+    <ClInclude Include="General\Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

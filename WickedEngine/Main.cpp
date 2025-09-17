@@ -24,6 +24,8 @@
 #include "Geometry/Polygon.h"
 #include "Geometry/Circle.h"
 #include "Geometry/Triangle.h"
+#include "General/Vector3.h"
+#include "GameObjects/GameObject.h"
 
 #include "shader.h"
 #include "error.h"
@@ -33,9 +35,12 @@ static ShaderPtr shd;
 static CirclePtr circleGeometry;
 static TrianglePtr triangleGeometry;
 
+static GameObject secondsPointer;
+
 static void initialize()
 {
 	glClearColor(0.80f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_CULL_FACE);
 
 	shd = Shader::Make();
 	shd->AttachVertexShader("shaders/vertex.glsl");
@@ -44,6 +49,9 @@ static void initialize()
 
 	circleGeometry = Circle::Make(65);
 	triangleGeometry = Triangle::Make();
+
+	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
+	secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");
 }
@@ -121,15 +129,14 @@ static void display(GLFWwindow* win)
 	float minutes = (time_t_now / 60) % 60 + seconds / 60;
 	float hour = local_tm.tm_hour + minutes / 60;
 
-	M = distorcionlessMatrix;
+	/*M = distorcionlessMatrix;
 	M = glm::rotate(M, (float)glm::radians(360 * seconds / 60), glm::vec3(0, 0, -1));
-	M = glm::scale(M, { 0.1, 2.75, 1 });
-	shd->SetUniform("M", M);
-
+	M = glm::scale(M, { 0.1, 2.75, 1 });*/
+	
+	secondsPointer.transform.rotation = Vector3(0, 0, -6 * seconds);
 	uniformColor = glm::vec4(0.9, 0.3, 0.3, 1);
 	shd->SetUniform("uniformColor", uniformColor);
-
-	triangleGeometry->Draw();
+	secondsPointer.Draw(distorcionlessMatrix, shd);
 
 	M = distorcionlessMatrix;
 	M = glm::rotate(M, (float)glm::radians(360 * minutes / 60), glm::vec3(0, 0, -1));
