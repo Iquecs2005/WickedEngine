@@ -26,6 +26,7 @@
 #include "Geometry/Triangle.h"
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
+#include "GameObjects/Components/MeshRenderer.h"
 
 #include "shader.h"
 #include "error.h"
@@ -51,7 +52,9 @@ static void initialize()
 	triangleGeometry = Triangle::Make();
 
 	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
-	secondsPointer.geometryList.push_front(triangleGeometry);
+	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
+	secondsMesh->mesh = triangleGeometry;
+	//secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");
 }

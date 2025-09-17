@@ -1,7 +1,7 @@
 #include <memory>
 
 class Shape;
-using ShapePtr = std::shared_ptr<Shape>();
+using ShapePtr = std::shared_ptr<Shape>;
 
 #ifndef SHAPE_H
 #define SHAPE_H
