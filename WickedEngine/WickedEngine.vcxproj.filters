@@ -45,6 +45,9 @@
     <ClCompile Include="GameObjects\Components\MeshRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -86,6 +89,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Components\MeshRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

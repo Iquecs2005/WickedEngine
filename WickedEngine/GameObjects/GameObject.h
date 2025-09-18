@@ -1,9 +1,12 @@
+#include <memory>
+
 class GameObject;
+using GameObjectPtr = std::shared_ptr<GameObject>;
 
 #pragma once
 
 #include <list>
-#include <memory>
+#include <string>
 #include <iostream>
 #include "Components/Transform.h"
 #include "../Geometry/Shape.h"
@@ -13,23 +16,14 @@ class GameObject;
 class GameObject
 {
 public:
+	std::string name;
+
 	Transform& transform;
 	std::list<ShapePtr> geometryList;
 
-	GameObject() : ownedTransform(*this), transform(ownedTransform)
-	{
-		transform.position = Vector3();
-	}
-
-	~GameObject()
-	{
-		while (!components.empty())
-		{
-			MonoBehaviour* component = components.front();
-			components.pop_front();
-			delete component;
-		}
-	}
+	GameObject(std::string name = "GameObject");
+	~GameObject();
+	static inline GameObjectPtr Make(std::string name = "GameObject");
 
 	void Update()
 	{
@@ -39,7 +33,7 @@ public:
 		}
 	}
 
-	void Draw(const glm::mat4 baseMatrix, const ShaderPtr& shd)
+	glm::mat4 Draw(const glm::mat4& baseMatrix, const ShaderPtr& shd)
 	{
 		const glm::mat4 M = transform.getTransformMatrix(baseMatrix);
 		shd->SetUniform("M", M);
@@ -48,6 +42,8 @@ public:
 		{
 			component->Update();
 		}
+
+		return M;
 	}
 
 	template <typename ComponentType>
@@ -67,7 +63,18 @@ public:
 		return newComponent;
 	}
 
+	std::list<GameObjectPtr> getChildren();
+	void addChild(GameObjectPtr child);
+	GameObjectPtr createEmptyChild(std::string name = "Child");
+
 private:
 	Transform ownedTransform;
 	std::list<MonoBehaviour*> components;
+	std::list<GameObjectPtr> children;
 };
+
+inline GameObjectPtr GameObject::Make(std::string name)
+{
+	return GameObjectPtr(new GameObject(name));
+}
+

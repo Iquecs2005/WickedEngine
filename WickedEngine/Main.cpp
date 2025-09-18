@@ -27,6 +27,7 @@
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Components/MeshRenderer.h"
+#include "Scene.h"
 
 #include "shader.h"
 #include "error.h"
@@ -36,6 +37,7 @@ static ShaderPtr shd;
 static CirclePtr circleGeometry;
 static TrianglePtr triangleGeometry;
 
+static Scene scene;
 static GameObject secondsPointer;
 
 static void initialize()
@@ -54,6 +56,21 @@ static void initialize()
 	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
 	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
 	secondsMesh->mesh = triangleGeometry;
+	GameObjectPtr sun = scene.CreateNewGameObject("Sun");
+	sun->AttachComponent<MeshRenderer>()->mesh = circleGeometry;
+	GameObjectPtr child1 = sun->createEmptyChild("child1");
+	child1->AttachComponent<MeshRenderer>()->mesh = triangleGeometry;
+	child1->transform.position = Vector3(0, 2, 0);
+	child1->transform.scale = Vector3(2, 2, 2);
+	child1->transform.rotation = Vector3(0, 0, 90);
+	GameObjectPtr child1_1 = child1->createEmptyChild("child1.1");
+	child1_1->AttachComponent<MeshRenderer>()->mesh = triangleGeometry;
+	child1_1->transform.position = Vector3(2, 0, 0);
+	//scene.CreateNewGameObject("child2", root1);
+	//root1->createEmptyChild("child3");
+	//scene.CreateNewGameObject("GameObject2")->createEmptyChild("child1");;
+	//scene.CreateNewGameObject("GameObject3");
+	//scene.printScene();
 	//secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");
@@ -108,64 +125,69 @@ static void display(GLFWwindow* win)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shd->UseProgram();
 
-	M = distorcionlessMatrix;
-	M = glm::scale(M, { 3, 3, 1 });
-	shd->SetUniform("M", M);
-	
-	uniformColor = glm::vec4(1,1,1,1);
+	uniformColor = glm::vec4(1, 1, 1, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	circleGeometry->Draw();
+	scene.DrawScene(distorcionlessMatrix, shd);
 
-	auto now = std::chrono::system_clock::now();
-	std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
+	//M = distorcionlessMatrix;
+	//M = glm::scale(M, { 3, 3, 1 });
+	//shd->SetUniform("M", M);
+	//
+	//uniformColor = glm::vec4(1,1,1,1);
+	//shd->SetUniform("uniformColor", uniformColor);
 
-	std::tm local_tm;
-	#ifdef _WIN32
-		localtime_s(&local_tm, &time_t_now);
-	#else
-		localtime_r(&time_t_now, &local_tm);
-	#endif
+	//circleGeometry->Draw();
 
-	auto miliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-	float seconds = time_t_now % 60 + (float)miliseconds.count() / 1000;
-	float minutes = (time_t_now / 60) % 60 + seconds / 60;
-	float hour = local_tm.tm_hour + minutes / 60;
+	//auto now = std::chrono::system_clock::now();
+	//std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
 
-	/*M = distorcionlessMatrix;
-	M = glm::rotate(M, (float)glm::radians(360 * seconds / 60), glm::vec3(0, 0, -1));
-	M = glm::scale(M, { 0.1, 2.75, 1 });*/
-	
-	secondsPointer.transform.rotation = Vector3(0, 0, -6 * seconds);
-	uniformColor = glm::vec4(0.9, 0.3, 0.3, 1);
-	shd->SetUniform("uniformColor", uniformColor);
-	secondsPointer.Draw(distorcionlessMatrix, shd);
+	//std::tm local_tm;
+	//#ifdef _WIN32
+	//	localtime_s(&local_tm, &time_t_now);
+	//#else
+	//	localtime_r(&time_t_now, &local_tm);
+	//#endif
 
-	M = distorcionlessMatrix;
-	M = glm::rotate(M, (float)glm::radians(360 * minutes / 60), glm::vec3(0, 0, -1));
-	M = glm::scale(M, { 0.1, 2, 1 });
-	shd->SetUniform("M", M);
+	//auto miliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+	//float seconds = time_t_now % 60 + (float)miliseconds.count() / 1000;
+	//float minutes = (time_t_now / 60) % 60 + seconds / 60;
+	//float hour = local_tm.tm_hour + minutes / 60;
 
-	uniformColor = glm::vec4(0, 0, 0, 1);
-	shd->SetUniform("uniformColor", uniformColor);
+	///*M = distorcionlessMatrix;
+	//M = glm::rotate(M, (float)glm::radians(360 * seconds / 60), glm::vec3(0, 0, -1));
+	//M = glm::scale(M, { 0.1, 2.75, 1 });*/
+	//
+	//secondsPointer.transform.rotation = Vector3(0, 0, -6 * seconds);
+	//uniformColor = glm::vec4(0.9, 0.3, 0.3, 1);
+	//shd->SetUniform("uniformColor", uniformColor);
+	//secondsPointer.Draw(distorcionlessMatrix, shd);
 
-	triangleGeometry->Draw();
+	//M = distorcionlessMatrix;
+	//M = glm::rotate(M, (float)glm::radians(360 * minutes / 60), glm::vec3(0, 0, -1));
+	//M = glm::scale(M, { 0.1, 2, 1 });
+	//shd->SetUniform("M", M);
 
-	M = distorcionlessMatrix;
-	M = glm::rotate(M, (float)glm::radians(360 * hour / 12), glm::vec3(0, 0, -1));
-	M = glm::scale(M, { 0.1, 1, 1 });
-	shd->SetUniform("M", M);
+	//uniformColor = glm::vec4(0, 0, 0, 1);
+	//shd->SetUniform("uniformColor", uniformColor);
 
-	triangleGeometry->Draw();
+	//triangleGeometry->Draw();
 
-	M = distorcionlessMatrix;
-	M = glm::scale(M, { 0.2, 0.2, 0.2 });
-	shd->SetUniform("M", M);
+	//M = distorcionlessMatrix;
+	//M = glm::rotate(M, (float)glm::radians(360 * hour / 12), glm::vec3(0, 0, -1));
+	//M = glm::scale(M, { 0.1, 1, 1 });
+	//shd->SetUniform("M", M);
 
-	uniformColor = glm::vec4(0.5, 0.5, 0.5, 1);
-	shd->SetUniform("uniformColor", uniformColor);
+	//triangleGeometry->Draw();
 
-	circleGeometry->Draw();
+	//M = distorcionlessMatrix;
+	//M = glm::scale(M, { 0.2, 0.2, 0.2 });
+	//shd->SetUniform("M", M);
+
+	//uniformColor = glm::vec4(0.5, 0.5, 0.5, 1);
+	//shd->SetUniform("uniformColor", uniformColor);
+
+	//circleGeometry->Draw();
 
 	Error::Check("display");
 }
