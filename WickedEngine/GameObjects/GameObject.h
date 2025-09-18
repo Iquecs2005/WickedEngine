@@ -49,7 +49,7 @@ public:
 	template <typename ComponentType>
 	ComponentType* AttachComponent()
 	{
-		ComponentType* newComponent = new ComponentType();
+		ComponentType* newComponent = new ComponentType(this);
 		MonoBehaviour* monoComponent = dynamic_cast<MonoBehaviour*>(newComponent);
 
 		if (!monoComponent)

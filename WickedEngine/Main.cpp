@@ -70,7 +70,7 @@ static void initialize()
 	//root1->createEmptyChild("child3");
 	//scene.CreateNewGameObject("GameObject2")->createEmptyChild("child1");;
 	//scene.CreateNewGameObject("GameObject3");
-	//scene.printScene();
+	scene.printScene();
 	//secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");
