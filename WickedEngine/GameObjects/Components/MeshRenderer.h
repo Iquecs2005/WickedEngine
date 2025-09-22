@@ -1,21 +1,23 @@
 #pragma once
 
 #include <iostream>
-#include "MonoBehaviour.h"
+#include "Renderer.h"
 #include "../../Geometry/Shape.h"
+#include "../../Rendering/Material.h"
 
-class MeshRenderer : public MonoBehaviour
+class MeshRenderer : public Renderer
 {
 public:
-	MeshRenderer(GameObject* gameObject) : MonoBehaviour(gameObject) {}
-
 	ShapePtr mesh;
+	MaterialPtr material;
 
-	void Update()
-	{
-		mesh->Draw();
-	}
-
+	MeshRenderer(GameObject* gameObject) : Renderer(gameObject) {}
 	~MeshRenderer() {};
+	void Draw(glm::mat4x4 mvp) override;
+	inline void AttachMaterial(MaterialPtr material);
 };
 
+void MeshRenderer::AttachMaterial(MaterialPtr material) 
+{
+	this->material = material;
+}

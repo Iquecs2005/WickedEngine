@@ -5,7 +5,7 @@
 class Scene
 {
 public:
-	void DrawScene(const glm::mat4x4& originalMatrix, const ShaderPtr& shd);
+	void DrawScene(const glm::mat4x4& originalMatrix);
 	GameObjectPtr CreateNewGameObject(std::string gameObjectName = "GameObject", GameObjectPtr parent = nullptr);
 	void printScene();
 private:

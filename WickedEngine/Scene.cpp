@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-void Scene::DrawScene(const glm::mat4x4& originalMatrix, const ShaderPtr& shd)
+void Scene::DrawScene(const glm::mat4x4& originalMatrix)
 {
 	if (root.empty()) return;
 
@@ -22,9 +22,9 @@ void Scene::DrawScene(const glm::mat4x4& originalMatrix, const ShaderPtr& shd)
 		queue.pop_front();
 		transformationMatrix.pop_front();
 
-		currentMatrix = currentObject->Draw(currentMatrix, shd);
+		currentMatrix = currentObject->Draw(currentMatrix);
 
-		std::list<GameObjectPtr> childList = currentObject->getChildren();
+		std::list<GameObjectPtr> childList = currentObject->GetChildren();
 
 		for (auto i = childList.rbegin(); i != childList.rend(); i++)
 		{
@@ -44,7 +44,7 @@ GameObjectPtr Scene::CreateNewGameObject(std::string gameObjectName, GameObjectP
 	}
 	else
 	{
-		parent->addChild(newGameObject);
+		parent->AddChild(newGameObject);
 	}
 
 	return newGameObject;
@@ -78,7 +78,7 @@ void Scene::printScene()
 
 		std::cout << currentObject->name << std::endl;
 
-		std::list<GameObjectPtr> childList = currentObject->getChildren();
+		std::list<GameObjectPtr> childList = currentObject->GetChildren();
 
 		for (auto i = childList.rbegin(); i != childList.rend(); i++)
 		{

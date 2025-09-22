@@ -29,7 +29,7 @@
 #include "GameObjects/Components/MeshRenderer.h"
 #include "Scene.h"
 
-#include "shader.h"
+#include "Rendering/shader.h"
 #include "error.h"
 
 static ShaderPtr shd;
@@ -53,18 +53,27 @@ static void initialize()
 	circleGeometry = Circle::Make(65);
 	triangleGeometry = Triangle::Make();
 
+	MaterialPtr defaultMaterial = Material::Make();
+	defaultMaterial->AttachShader(shd);
+
 	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
 	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
 	secondsMesh->mesh = triangleGeometry;
 	GameObjectPtr sun = scene.CreateNewGameObject("Sun");
-	sun->AttachComponent<MeshRenderer>()->mesh = circleGeometry;
-	GameObjectPtr child1 = sun->createEmptyChild("child1");
-	child1->AttachComponent<MeshRenderer>()->mesh = triangleGeometry;
+	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
+	sunMR->mesh = circleGeometry;
+	sunMR->AttachMaterial(defaultMaterial);
+	GameObjectPtr child1 = sun->CreateEmptyChild("child1");
+	MeshRenderer* child1MR = child1->AttachComponent<MeshRenderer>();
+	child1MR->mesh = triangleGeometry;
+	child1MR->AttachMaterial(defaultMaterial);
 	child1->transform.position = Vector3(0, 2, 0);
 	child1->transform.scale = Vector3(2, 2, 2);
 	child1->transform.rotation = Vector3(0, 0, 90);
-	GameObjectPtr child1_1 = child1->createEmptyChild("child1.1");
-	child1_1->AttachComponent<MeshRenderer>()->mesh = triangleGeometry;
+	GameObjectPtr child1_1 = child1->CreateEmptyChild("child1.1");
+	MeshRenderer* child1_1MR = child1_1->AttachComponent<MeshRenderer>();
+	child1_1MR->mesh = triangleGeometry;
+	child1_1MR->AttachMaterial(defaultMaterial);
 	child1_1->transform.position = Vector3(2, 0, 0);
 	//scene.CreateNewGameObject("child2", root1);
 	//root1->createEmptyChild("child3");
@@ -128,7 +137,7 @@ static void display(GLFWwindow* win)
 	uniformColor = glm::vec4(1, 1, 1, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	scene.DrawScene(distorcionlessMatrix, shd);
+	scene.DrawScene(distorcionlessMatrix);
 
 	//M = distorcionlessMatrix;
 	//M = glm::scale(M, { 3, 3, 1 });
