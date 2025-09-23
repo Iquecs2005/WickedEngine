@@ -6,13 +6,24 @@ class Color
 {
 public:
 	double& r, g, b, a;
+	static const Color white;
 
 	inline Color();
 	Color(const Color& color);
+	inline Color& operator= (const Color& color);
 
-	static const Color white;
 private:
 	Vector4 colorComponents;
 };
 
 Color::Color() : r(colorComponents.x), g(colorComponents.y), b(colorComponents.w), a(colorComponents.w) {}
+
+inline Color& Color::operator= (const Color& color)
+{
+	r = color.r;
+	g = color.g;
+	b = color.b;
+	a = color.a;
+
+	return *this;
+}

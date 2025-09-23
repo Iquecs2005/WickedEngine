@@ -129,9 +129,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="General\Color32.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
+    <ClCompile Include="General\Color.cpp" />
     <ClCompile Include="Geometry\Circle.cpp" />
     <ClCompile Include="Geometry\Polygon.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -154,9 +155,10 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Color.h" />
+    <ClInclude Include="General\Color32.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="General\Color.h" />
     <ClInclude Include="Geometry\Circle.h" />
     <ClInclude Include="Geometry\Polygon.h" />
     <ClInclude Include="Geometry\Shape.h" />
