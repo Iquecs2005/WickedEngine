@@ -11,7 +11,7 @@ public:
 	ShapePtr mesh;
 	MaterialPtr material;
 
-	MeshRenderer(GameObject* gameObject) : Renderer(gameObject) {}
+	MeshRenderer(GameObject* gameObject);
 	~MeshRenderer() {};
 	void Draw(glm::mat4x4 mvp) override;
 	inline void AttachMaterial(MaterialPtr material);

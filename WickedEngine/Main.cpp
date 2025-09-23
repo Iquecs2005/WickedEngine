@@ -53,8 +53,7 @@ static void initialize()
 	circleGeometry = Circle::Make(65);
 	triangleGeometry = Triangle::Make();
 
-	MaterialPtr defaultMaterial = Material::Make();
-	defaultMaterial->AttachShader(shd);
+	MaterialPtr defaultMaterial = Material::Make(shd);
 
 	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
 	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
@@ -65,21 +64,21 @@ static void initialize()
 	sunMR->AttachMaterial(defaultMaterial);
 	GameObjectPtr child1 = sun->CreateEmptyChild("child1");
 	MeshRenderer* child1MR = child1->AttachComponent<MeshRenderer>();
-	child1MR->mesh = triangleGeometry;
+	child1MR->mesh = circleGeometry;
 	child1MR->AttachMaterial(defaultMaterial);
 	child1->transform.position = Vector3(0, 2, 0);
 	child1->transform.scale = Vector3(2, 2, 2);
 	child1->transform.rotation = Vector3(0, 0, 90);
 	GameObjectPtr child1_1 = child1->CreateEmptyChild("child1.1");
 	MeshRenderer* child1_1MR = child1_1->AttachComponent<MeshRenderer>();
-	child1_1MR->mesh = triangleGeometry;
+	child1_1MR->mesh = circleGeometry;
 	child1_1MR->AttachMaterial(defaultMaterial);
 	child1_1->transform.position = Vector3(2, 0, 0);
 	//scene.CreateNewGameObject("child2", root1);
 	//root1->createEmptyChild("child3");
 	//scene.CreateNewGameObject("GameObject2")->createEmptyChild("child1");;
 	//scene.CreateNewGameObject("GameObject3");
-	scene.printScene();
+	//scene.printScene();
 	//secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");

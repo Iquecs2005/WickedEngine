@@ -10,7 +10,7 @@ ShaderPtr Material::GetShader()
 	return currentShader;
 }
 
-Material::Material()
+Material::Material(ShaderPtr shader)
 {
-	
+	AttachShader(shader);
 }

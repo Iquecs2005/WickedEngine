@@ -33,7 +33,7 @@ public:
 		case 2:
 			return z;
 		default:
-			std::cerr << "Vector3 out of bounds acess" << std::endl;
+			std::cerr << "Vector3 out of bounds access" << std::endl;
 			double errorValue = 0;
 			return errorValue;
 		}
