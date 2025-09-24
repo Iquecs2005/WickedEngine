@@ -1,29 +1,96 @@
+#include <memory>
+
+class Color;
+using ColorPtr = std::shared_ptr<Color>;
+
 #pragma once
 
-#include "Vector4.h"
+#include <glm/glm.hpp>
+#include "Color.h"
 
 class Color
 {
 public:
-	double& r, g, b, a;
-	static const Color white;
+	float r, g, b, a;
 
-	inline Color();
-	Color(const Color& color);
-	inline Color& operator= (const Color& color);
+	static const Color white;
+	static const Color black;
+	static const Color red;
+
+	inline static ColorPtr Make();
+	inline static ColorPtr Make(double r, double g, double b, double a = 1);
+	inline static ColorPtr Make(int r, int g, int b, int a = 255);
+
+	inline void SetColor(double r, double g, double b, double a = 1);
+	inline void SetColor(int r, int g, int b, int a = 255);
+
+	Color& operator= (const Color& color);
+	Color operator+ (const Color& color) const;
+	Color operator* (const Color& color) const;
+	Color operator* (double i) const;
+	float& operator[] (int i);
+	explicit operator glm::vec3() const;
+	operator glm::vec4() const;
+	
+	friend std::ostream& operator<<(std::ostream& out, const Color& color);
 
 private:
-	Vector4 colorComponents;
+	inline Color();
+	inline Color(double r, double g, double b, double a = 1);
+	inline Color(int r, int g, int b, int a = 255);
+
+	void ClampValues();
 };
 
-Color::Color() : r(colorComponents.x), g(colorComponents.y), b(colorComponents.w), a(colorComponents.w) {}
-
-inline Color& Color::operator= (const Color& color)
+inline Color::Color() :
+	r(1), g(1), b(1), a(1)
 {
-	r = color.r;
-	g = color.g;
-	b = color.b;
-	a = color.a;
 
-	return *this;
+}
+
+inline Color::Color(double r, double g, double b, double a) :
+	r(r), g(g), b(b), a(a)
+{
+	ClampValues();
+}
+
+inline Color::Color(int r, int g, int b, int a) :
+	r(r / (float)255), g(g / (float)255), b(b / (float)255), a(a / (float)255)
+{
+	ClampValues();
+}
+
+inline ColorPtr Color::Make()
+{
+	return ColorPtr(new Color());
+}
+
+inline ColorPtr Color::Make(double r, double g, double b, double a)
+{
+	return ColorPtr(new Color(r, g, b, a));
+}
+
+inline ColorPtr Color::Make(int r, int g, int b, int a)
+{
+	return ColorPtr(new Color(r, g, b, a));
+}
+
+inline void Color::SetColor(double r, double g, double b, double a)
+{
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
+
+	ClampValues();
+}
+
+inline void Color::SetColor(int r, int g, int b, int a)
+{
+	this->r = r / 255.0f;
+	this->g = g / 255.0f;
+	this->b = b / 255.0f;
+	this->a = a / 255.0f;
+
+	ClampValues();
 }

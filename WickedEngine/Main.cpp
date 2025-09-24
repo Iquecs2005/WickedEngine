@@ -28,6 +28,7 @@
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Components/MeshRenderer.h"
 #include "Scene.h"
+#include "General/Color.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -40,9 +41,12 @@ static TrianglePtr triangleGeometry;
 static Scene scene;
 static GameObject secondsPointer;
 
+GameObjectPtr earthPivot;
+GameObjectPtr moonPivot;
+
 static void initialize()
 {
-	glClearColor(0.80f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glEnable(GL_CULL_FACE);
 
 	shd = Shader::Make();
@@ -58,22 +62,38 @@ static void initialize()
 	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
 	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
 	secondsMesh->mesh = triangleGeometry;
+
 	GameObjectPtr sun = scene.CreateNewGameObject("Sun");
 	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
 	sunMR->mesh = circleGeometry;
 	sunMR->AttachMaterial(defaultMaterial);
-	GameObjectPtr child1 = sun->CreateEmptyChild("child1");
-	MeshRenderer* child1MR = child1->AttachComponent<MeshRenderer>();
-	child1MR->mesh = circleGeometry;
-	child1MR->AttachMaterial(defaultMaterial);
-	child1->transform.position = Vector3(0, 2, 0);
-	child1->transform.scale = Vector3(2, 2, 2);
-	child1->transform.rotation = Vector3(0, 0, 90);
-	GameObjectPtr child1_1 = child1->CreateEmptyChild("child1.1");
+	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
+
+	earthPivot = sun->CreateEmptyChild("EarthPivot");
+	earthPivot->transform.rotation = Vector3(0,0,0);
+	GameObjectPtr earth = earthPivot->CreateEmptyChild("Earth");
+	MeshRenderer* earthMR = earth->AttachComponent<MeshRenderer>();
+	earthMR->mesh = circleGeometry;
+	earthMR->AttachMaterial(defaultMaterial);
+	earthMR->color->SetColor(50, 170, 230);
+	earth->transform.position = Vector3(3.5, 0, 0);
+	earth->transform.scale = Vector3(0.5, 0.5, 0.5);
+
+	moonPivot = earth->CreateEmptyChild("MoonPivot");
+	moonPivot->transform.rotation = Vector3(0, 0, 0);
+	GameObjectPtr moon = moonPivot->CreateEmptyChild("Earth");
+	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
+	moonMR->mesh = circleGeometry;
+	moonMR->AttachMaterial(defaultMaterial);
+	moonMR->color->SetColor(200, 200, 200);
+	moon->transform.position = Vector3(2, 0, 0);
+	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
+
+	/*GameObjectPtr child1_1 = child1->CreateEmptyChild("child1.1");
 	MeshRenderer* child1_1MR = child1_1->AttachComponent<MeshRenderer>();
 	child1_1MR->mesh = circleGeometry;
 	child1_1MR->AttachMaterial(defaultMaterial);
-	child1_1->transform.position = Vector3(2, 0, 0);
+	child1_1->transform.position = Vector3(2, 0, 0);*/
 	//scene.CreateNewGameObject("child2", root1);
 	//root1->createEmptyChild("child3");
 	//scene.CreateNewGameObject("GameObject2")->createEmptyChild("child1");;
@@ -251,7 +271,8 @@ static void mousebutton(GLFWwindow* win, int button, int action, int mods)
 
 static void update(double dt)
 {
-	
+	earthPivot->transform.rotation += Vector3( 0, 0, 8 * dt);
+	moonPivot->transform.rotation += Vector3( 0, 0, 4 * dt);
 }
 
 int main()

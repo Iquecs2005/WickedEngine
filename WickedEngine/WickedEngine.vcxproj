@@ -129,7 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="General\Color32.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="General\Color.cpp" />
@@ -155,7 +154,6 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="General\Color32.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="General\Color.h" />
