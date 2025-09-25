@@ -60,7 +60,10 @@
     <ClCompile Include="General\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="General\Color32.cpp">
+    <ClCompile Include="GameObjects\Components\UserCreated\PlanetRotator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,7 +124,10 @@
     <ClInclude Include="General\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="General\Color32.h">
+    <ClInclude Include="GameObjects\Components\UserCreated\PlanetRotator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

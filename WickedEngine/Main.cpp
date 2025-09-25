@@ -29,6 +29,8 @@
 #include "GameObjects/Components/MeshRenderer.h"
 #include "Scene.h"
 #include "General/Color.h"
+#include "Time.h"
+#include "GameObjects/Components/UserCreated/PlanetRotator.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -71,6 +73,7 @@ static void initialize()
 
 	earthPivot = sun->CreateEmptyChild("EarthPivot");
 	earthPivot->transform.rotation = Vector3(0,0,0);
+	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
 	GameObjectPtr earth = earthPivot->CreateEmptyChild("Earth");
 	MeshRenderer* earthMR = earth->AttachComponent<MeshRenderer>();
 	earthMR->mesh = circleGeometry;
@@ -81,6 +84,7 @@ static void initialize()
 
 	moonPivot = earth->CreateEmptyChild("MoonPivot");
 	moonPivot->transform.rotation = Vector3(0, 0, 0);
+	moonPivot->AttachComponent<PlanetRotator>();
 	GameObjectPtr moon = moonPivot->CreateEmptyChild("Earth");
 	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
 	moonMR->mesh = circleGeometry;
@@ -271,8 +275,7 @@ static void mousebutton(GLFWwindow* win, int button, int action, int mods)
 
 static void update(double dt)
 {
-	earthPivot->transform.rotation += Vector3( 0, 0, 8 * dt);
-	moonPivot->transform.rotation += Vector3( 0, 0, 4 * dt);
+	//scene.UpdateScene();
 }
 
 int main()
@@ -326,6 +329,7 @@ int main()
 	while (!glfwWindowShouldClose(win))
 	{
 		t = glfwGetTime();
+		Time::deltaTime = t - t0;
 		update(t - t0);
 		t0 = t;
 		display(win);

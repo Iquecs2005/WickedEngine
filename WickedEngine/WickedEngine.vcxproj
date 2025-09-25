@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="error.cpp" />
+    <ClCompile Include="GameObjects\Components\UserCreated\PlanetRotator.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="General\Color.cpp" />
     <ClCompile Include="Geometry\Circle.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="GameObjects\Components\Transform.cpp" />
     <ClCompile Include="General\Vector3.cpp" />
     <ClCompile Include="General\Vector4.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -155,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="error.h" />
+    <ClInclude Include="GameObjects\Components\UserCreated\PlanetRotator.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="General\Color.h" />
     <ClInclude Include="Geometry\Circle.h" />
@@ -170,6 +173,7 @@
     <ClInclude Include="GameObjects\Components\Transform.h" />
     <ClInclude Include="General\Vector3.h" />
     <ClInclude Include="General\Vector4.h" />
+    <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,6 +23,7 @@ void Scene::DrawScene(const glm::mat4x4& originalMatrix)
 		transformationMatrix.pop_front();
 
 		currentMatrix = currentObject->Draw(currentMatrix);
+		currentObject->Update();
 
 		std::list<GameObjectPtr> childList = currentObject->GetChildren();
 
