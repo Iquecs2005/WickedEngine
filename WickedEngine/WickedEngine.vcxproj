@@ -129,6 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\Components\Camera2D.cpp" />
+    <ClCompile Include="GameObjects\Components\Camera.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="GameObjects\Components\UserCreated\PlanetRotator.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
@@ -156,6 +158,8 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\Components\Camera2D.h" />
+    <ClInclude Include="GameObjects\Components\Camera.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="GameObjects\Components\UserCreated\PlanetRotator.h" />
     <ClInclude Include="GameObjects\GameObject.h" />

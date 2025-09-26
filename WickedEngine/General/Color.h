@@ -18,16 +18,16 @@ public:
 	static const Color red;
 
 	inline static ColorPtr Make();
-	inline static ColorPtr Make(double r, double g, double b, double a = 1);
+	inline static ColorPtr Make(float r, float g, float b, float a = 1);
 	inline static ColorPtr Make(int r, int g, int b, int a = 255);
 
-	inline void SetColor(double r, double g, double b, double a = 1);
+	inline void SetColor(float r, float g, float b, float a = 1);
 	inline void SetColor(int r, int g, int b, int a = 255);
 
 	Color& operator= (const Color& color);
 	Color operator+ (const Color& color) const;
 	Color operator* (const Color& color) const;
-	Color operator* (double i) const;
+	Color operator* (float i) const;
 	float& operator[] (int i);
 	explicit operator glm::vec3() const;
 	operator glm::vec4() const;
@@ -36,7 +36,8 @@ public:
 
 private:
 	inline Color();
-	inline Color(double r, double g, double b, double a = 1);
+	inline Color(float r, float g, float b, float a = 1);
+	//inline Color(double r, double g, double b, double a = 1);
 	inline Color(int r, int g, int b, int a = 255);
 
 	void ClampValues();
@@ -48,11 +49,17 @@ inline Color::Color() :
 
 }
 
-inline Color::Color(double r, double g, double b, double a) :
+inline Color::Color(float r, float g, float b, float a) :
 	r(r), g(g), b(b), a(a)
 {
 	ClampValues();
 }
+
+//inline Color::Color(double r, double g, double b, double a) :
+//	r((float)r), g((float)g), b((float)b), a((float)a)
+//{
+//	ClampValues();
+//}
 
 inline Color::Color(int r, int g, int b, int a) :
 	r(r / (float)255), g(g / (float)255), b(b / (float)255), a(a / (float)255)
@@ -65,7 +72,7 @@ inline ColorPtr Color::Make()
 	return ColorPtr(new Color());
 }
 
-inline ColorPtr Color::Make(double r, double g, double b, double a)
+inline ColorPtr Color::Make(float r, float g, float b, float a)
 {
 	return ColorPtr(new Color(r, g, b, a));
 }
@@ -75,7 +82,7 @@ inline ColorPtr Color::Make(int r, int g, int b, int a)
 	return ColorPtr(new Color(r, g, b, a));
 }
 
-inline void Color::SetColor(double r, double g, double b, double a)
+inline void Color::SetColor(float r, float g, float b, float a)
 {
 	this->r = r;
 	this->g = g;

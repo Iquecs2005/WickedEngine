@@ -31,6 +31,7 @@
 #include "General/Color.h"
 #include "Time.h"
 #include "GameObjects/Components/UserCreated/PlanetRotator.h"
+#include "GameObjects/Components/Camera2D.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -38,13 +39,10 @@
 static ShaderPtr shd;
 
 static CirclePtr circleGeometry;
-static TrianglePtr triangleGeometry;
 
 static Scene scene;
-static GameObject secondsPointer;
-
-GameObjectPtr earthPivot;
-GameObjectPtr moonPivot;
+static GameObjectPtr earthPivot;
+static GameObjectPtr moonPivot;
 
 static void initialize()
 {
@@ -57,19 +55,17 @@ static void initialize()
 	shd->Link();
 
 	circleGeometry = Circle::Make(65);
-	triangleGeometry = Triangle::Make();
 
 	MaterialPtr defaultMaterial = Material::Make(shd);
-
-	secondsPointer.transform.scale = Vector3(0.1, 2.75, 1);
-	MeshRenderer* secondsMesh = secondsPointer.AttachComponent<MeshRenderer>();
-	secondsMesh->mesh = triangleGeometry;
 
 	GameObjectPtr sun = scene.CreateNewGameObject("Sun");
 	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
 	sunMR->mesh = circleGeometry;
 	sunMR->AttachMaterial(defaultMaterial);
 	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
+
+	GameObjectPtr cameraObject = sun->CreateEmptyChild("Camera");
+	Camera2D* camera2D = cameraObject->AttachComponent<Camera2D>();
 
 	earthPivot = sun->CreateEmptyChild("EarthPivot");
 	earthPivot->transform.rotation = Vector3(0,0,0);
@@ -150,7 +146,6 @@ static glm::mat4 getDistorcionlessMatrix(GLFWwindow* win)
 static void display(GLFWwindow* win)
 {
 	const glm::mat4 distorcionlessMatrix = getDistorcionlessMatrix(win);
-	glm::mat4 M;
 	glm::vec4 uniformColor;
 
 	//Clears the color and depth buffer with the clear color

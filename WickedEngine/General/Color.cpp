@@ -4,7 +4,7 @@
 
 const Color Color::white = Color();
 const Color Color::black = Color(0, 0, 0);
-const Color Color::red = Color(0.8, 0.1, 0.1);
+const Color Color::red = Color(0.8f, 0.1f, 0.1f);
 
 Color& Color::operator= (const Color& color)
 {
@@ -40,14 +40,14 @@ Color Color::operator* (const Color& color) const
 	return newColor;
 }
 
-Color Color::operator* (double i) const
+Color Color::operator* (float i) const
 {
 	Color newColor;
 
-	newColor.r = std::min(r * i, 1.0);
-	newColor.g = std::min(g * i, 1.0);
-	newColor.b = std::min(b * i, 1.0);
-	newColor.a = std::min(a * i, 1.0);
+	newColor.r = std::min(r * i, 1.0f);
+	newColor.g = std::min(g * i, 1.0f);
+	newColor.b = std::min(b * i, 1.0f);
+	newColor.a = std::min(a * i, 1.0f);
 
 	return newColor;
 }
@@ -66,8 +66,7 @@ float& Color::operator[] (int i)
 		return a;
 	default:
 		std::cerr << "Color out of bounds access" << std::endl;
-		float errorValue = -1.0f;
-		return errorValue;
+		return a;
 	}
 }
 
