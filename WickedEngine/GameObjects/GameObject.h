@@ -37,21 +37,13 @@ public:
 	ComponentType* AttachComponent()
 	{
 		ComponentType* newComponent = new ComponentType(this);
-		//MonoBehaviour* monoComponent = dynamic_cast<MonoBehaviour*>(newComponent);
-
-		/*if (!monoComponent)
-		{
-			std::cerr << "Trying to attach a non-Component to a GameObject";
-			delete newComponent;
-			return nullptr;
-		}*/
-
 		components.push_front(newComponent);
 		return newComponent;
 	}
 
 	void AddToRenderQueue(Renderer* newRenderer);
 
+	//TO DO change to unique ptr
 	std::list<GameObject*> GetChildren();
 	void AddChild(GameObject* child);
 	GameObject* CreateEmptyChild(std::string name = "Child");
@@ -60,6 +52,7 @@ public:
 
 private:
 	Transform ownedTransform;
+	//TO DO change to unique ptr
 	std::list<MonoBehaviour*> components;
 	std::list<Renderer*> renderQueue;
 	std::list<GameObject*> children;

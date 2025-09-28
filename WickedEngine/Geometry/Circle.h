@@ -8,11 +8,6 @@ using CirclePtr = std::shared_ptr<Circle>;
 
 #include "Polygon.h"
 
-static std::vector<VertexData> vertexData = { { 1, 0, 200,   0,   0 },
-											 {-1, 0, 200,   0,   0 },
-											 { 0, 1, 200,   0,   0 } };
-static std::vector<unsigned int> inc = { 2, 1, 0 };
-
 class Circle : public Polygon
 {
 protected:

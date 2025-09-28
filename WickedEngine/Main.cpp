@@ -42,8 +42,6 @@ static CirclePtr circleGeometry;
 
 static Scene* sceneptr = new Scene();
 static Scene& scene = *sceneptr;
-static GameObject* earthPivot;
-static GameObject* moonPivot;
 
 static void initialize(GLFWwindow* win)
 {
@@ -69,8 +67,7 @@ static void initialize(GLFWwindow* win)
 	sunMR->AttachMaterial(defaultMaterial);
 	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
 
-
-	earthPivot = sun->CreateEmptyChild("EarthPivot");
+	GameObject* earthPivot = sun->CreateEmptyChild("EarthPivot");
 	earthPivot->transform.rotation = Vector3(0,0,0);
 	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
@@ -81,7 +78,7 @@ static void initialize(GLFWwindow* win)
 	earth->transform.position = Vector3(3.5, 0, 0);
 	earth->transform.scale = Vector3(0.5, 0.5, 0.5);
 
-	moonPivot = earth->CreateEmptyChild("MoonPivot");
+	GameObject* moonPivot = earth->CreateEmptyChild("MoonPivot");
 	moonPivot->transform.rotation = Vector3(0, 0, 0);
 	moonPivot->AttachComponent<PlanetRotator>();
 	GameObject* moon = moonPivot->CreateEmptyChild("Earth");
@@ -91,18 +88,6 @@ static void initialize(GLFWwindow* win)
 	moonMR->color->SetColor(200, 200, 200);
 	moon->transform.position = Vector3(2, 0, 0);
 	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
-
-	/*GameObjectPtr child1_1 = child1->CreateEmptyChild("child1.1");
-	MeshRenderer* child1_1MR = child1_1->AttachComponent<MeshRenderer>();
-	child1_1MR->mesh = circleGeometry;
-	child1_1MR->AttachMaterial(defaultMaterial);
-	child1_1->transform.position = Vector3(2, 0, 0);*/
-	//scene.CreateNewGameObject("child2", root1);
-	//root1->createEmptyChild("child3");
-	//scene.CreateNewGameObject("GameObject2")->createEmptyChild("child1");;
-	//scene.CreateNewGameObject("GameObject3");
-	//scene.printScene();
-	//secondsPointer.geometryList.push_front(triangleGeometry);
 
 	Error::Check("initialize");
 }
@@ -114,110 +99,12 @@ static void error(int code, const char* msg)
 	exit(0);
 }
 
-static glm::mat4 getDistorcionlessMatrix(GLFWwindow* win)
-{
-	int wn_w, wn_h;
-	glfwGetWindowSize(win, &wn_w, &wn_h);
-	const float w = (float)wn_w;
-	const float h = (float)wn_h;
-	const float screenRatio = w / h;
-
-	float xmax = 5;
-	float xmin = -5;
-	float ymax = 5;
-	float ymin = -5;
-
-	float dx = xmax - xmin;
-	float dy = ymax - ymin;
-
-	if (screenRatio > dx / dy)
-	{
-		float xc = (xmin + xmax) / 2;
-		xmin = xc - dx / 2 * screenRatio;
-		xmax = xc + dx / 2 * screenRatio;
-	}
-	else
-	{
-		float yc = (ymin + ymax) / 2;
-		ymin = yc - dy / 2 / screenRatio;
-		ymax = yc + dy / 2 / screenRatio;
-	}
-
-	return glm::ortho(xmin, xmax, ymin, ymax);
-}
-
 static void display(GLFWwindow* win)
 {
-	const glm::mat4 distorcionlessMatrix = getDistorcionlessMatrix(win);
-	glm::vec4 uniformColor;
-
 	//Clears the color and depth buffer with the clear color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shd->UseProgram();
-
-	uniformColor = glm::vec4(1, 1, 1, 1);
-	shd->SetUniform("uniformColor", uniformColor);
 
 	scene.DrawScene();
-
-	//M = distorcionlessMatrix;
-	//M = glm::scale(M, { 3, 3, 1 });
-	//shd->SetUniform("M", M);
-	//
-	//uniformColor = glm::vec4(1,1,1,1);
-	//shd->SetUniform("uniformColor", uniformColor);
-
-	//circleGeometry->Draw();
-
-	//auto now = std::chrono::system_clock::now();
-	//std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
-
-	//std::tm local_tm;
-	//#ifdef _WIN32
-	//	localtime_s(&local_tm, &time_t_now);
-	//#else
-	//	localtime_r(&time_t_now, &local_tm);
-	//#endif
-
-	//auto miliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-	//float seconds = time_t_now % 60 + (float)miliseconds.count() / 1000;
-	//float minutes = (time_t_now / 60) % 60 + seconds / 60;
-	//float hour = local_tm.tm_hour + minutes / 60;
-
-	///*M = distorcionlessMatrix;
-	//M = glm::rotate(M, (float)glm::radians(360 * seconds / 60), glm::vec3(0, 0, -1));
-	//M = glm::scale(M, { 0.1, 2.75, 1 });*/
-	//
-	//secondsPointer.transform.rotation = Vector3(0, 0, -6 * seconds);
-	//uniformColor = glm::vec4(0.9, 0.3, 0.3, 1);
-	//shd->SetUniform("uniformColor", uniformColor);
-	//secondsPointer.Draw(distorcionlessMatrix, shd);
-
-	//M = distorcionlessMatrix;
-	//M = glm::rotate(M, (float)glm::radians(360 * minutes / 60), glm::vec3(0, 0, -1));
-	//M = glm::scale(M, { 0.1, 2, 1 });
-	//shd->SetUniform("M", M);
-
-	//uniformColor = glm::vec4(0, 0, 0, 1);
-	//shd->SetUniform("uniformColor", uniformColor);
-
-	//triangleGeometry->Draw();
-
-	//M = distorcionlessMatrix;
-	//M = glm::rotate(M, (float)glm::radians(360 * hour / 12), glm::vec3(0, 0, -1));
-	//M = glm::scale(M, { 0.1, 1, 1 });
-	//shd->SetUniform("M", M);
-
-	//triangleGeometry->Draw();
-
-	//M = distorcionlessMatrix;
-	//M = glm::scale(M, { 0.2, 0.2, 0.2 });
-	//shd->SetUniform("M", M);
-
-	//uniformColor = glm::vec4(0.5, 0.5, 0.5, 1);
-	//shd->SetUniform("uniformColor", uniformColor);
-
-	//circleGeometry->Draw();
 
 	Error::Check("display");
 }
