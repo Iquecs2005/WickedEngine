@@ -40,11 +40,12 @@ static ShaderPtr shd;
 
 static CirclePtr circleGeometry;
 
-static Scene scene;
-static GameObjectPtr earthPivot;
-static GameObjectPtr moonPivot;
+static Scene* sceneptr = new Scene();
+static Scene& scene = *sceneptr;
+static GameObject* earthPivot;
+static GameObject* moonPivot;
 
-static void initialize()
+static void initialize(GLFWwindow* win)
 {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glEnable(GL_CULL_FACE);
@@ -58,19 +59,21 @@ static void initialize()
 
 	MaterialPtr defaultMaterial = Material::Make(shd);
 
-	GameObjectPtr sun = scene.CreateNewGameObject("Sun");
+	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
+	Camera2D* camera2D = cameraObject->AttachComponent<Camera2D>();
+	camera2D->SetCurrentWindow(win);
+
+	GameObject* sun = scene.CreateNewGameObject("Sun");
 	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
 	sunMR->mesh = circleGeometry;
 	sunMR->AttachMaterial(defaultMaterial);
 	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
 
-	GameObjectPtr cameraObject = sun->CreateEmptyChild("Camera");
-	Camera2D* camera2D = cameraObject->AttachComponent<Camera2D>();
 
 	earthPivot = sun->CreateEmptyChild("EarthPivot");
 	earthPivot->transform.rotation = Vector3(0,0,0);
 	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
-	GameObjectPtr earth = earthPivot->CreateEmptyChild("Earth");
+	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
 	MeshRenderer* earthMR = earth->AttachComponent<MeshRenderer>();
 	earthMR->mesh = circleGeometry;
 	earthMR->AttachMaterial(defaultMaterial);
@@ -81,7 +84,7 @@ static void initialize()
 	moonPivot = earth->CreateEmptyChild("MoonPivot");
 	moonPivot->transform.rotation = Vector3(0, 0, 0);
 	moonPivot->AttachComponent<PlanetRotator>();
-	GameObjectPtr moon = moonPivot->CreateEmptyChild("Earth");
+	GameObject* moon = moonPivot->CreateEmptyChild("Earth");
 	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
 	moonMR->mesh = circleGeometry;
 	moonMR->AttachMaterial(defaultMaterial);
@@ -155,7 +158,7 @@ static void display(GLFWwindow* win)
 	uniformColor = glm::vec4(1, 1, 1, 1);
 	shd->SetUniform("uniformColor", uniformColor);
 
-	scene.DrawScene(distorcionlessMatrix);
+	scene.DrawScene();
 
 	//M = distorcionlessMatrix;
 	//M = glm::scale(M, { 3, 3, 1 });
@@ -315,10 +318,8 @@ int main()
 	glfwSetKeyCallback(win, keyboard);   // keyboard callback
 	glfwSetMouseButtonCallback(win, mousebutton); // mouse button callback
 
-	initialize();
+	initialize(win);
 
-
-	//QuadPtr square = Quad::Make();
 	double t;
 	double t0 = glfwGetTime();
 	while (!glfwWindowShouldClose(win))
@@ -328,14 +329,17 @@ int main()
 		update(t - t0);
 		t0 = t;
 		display(win);
-		//square->Draw();
 		glfwSwapBuffers(win);
 		//Realizes queued events
 		glfwPollEvents();
 	}
 
+	delete sceneptr;
+
 	// Destroys remaining windows and cursors
 	glfwTerminate();
+
+	std::cout << "Program exit" << std::endl;
 
 	return 0;
 }

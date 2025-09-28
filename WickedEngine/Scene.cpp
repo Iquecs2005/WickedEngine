@@ -1,22 +1,37 @@
 #include "Scene.h"
+#include "GameObjects/Components/Camera.h"
 
-void Scene::DrawScene(const glm::mat4x4& originalMatrix)
+Scene::~Scene()
+{
+	std::cout << "Deleting Scene" << std::endl;
+
+	while (!root.empty())
+	{
+		GameObject* component = root.front();
+		root.pop_front();
+		delete component;
+	}
+}
+
+void Scene::DrawScene()
 {
 	if (root.empty()) return;
 
-	std::list<GameObjectPtr> queue;
+	std::list<GameObject*> queue;
 	std::list<glm::mat4x4> transformationMatrix;
 
-	for (GameObjectPtr gameObject : root)
+	glm::mat4x4 cameraMatrix = Camera::getMainCamera()->GetProjectionMatrix();
+
+	for (const auto& gameObject : root)
 	{
 		queue.push_back(gameObject);
 		//TODO change to pointer so the list is smaller
-		transformationMatrix.push_back(originalMatrix);
+		transformationMatrix.push_back(cameraMatrix);
 	}
 
 	while (!queue.empty())
 	{
-		GameObjectPtr currentObject = queue.front();
+		GameObject* currentObject = queue.front();
 		glm::mat4x4 currentMatrix = transformationMatrix.front();
 
 		queue.pop_front();
@@ -25,7 +40,7 @@ void Scene::DrawScene(const glm::mat4x4& originalMatrix)
 		currentMatrix = currentObject->Draw(currentMatrix);
 		currentObject->Update();
 
-		std::list<GameObjectPtr> childList = currentObject->GetChildren();
+		std::list<GameObject*> childList = currentObject->GetChildren();
 
 		for (auto i = childList.rbegin(); i != childList.rend(); i++)
 		{
@@ -35,9 +50,9 @@ void Scene::DrawScene(const glm::mat4x4& originalMatrix)
 	}
 }
 
-GameObjectPtr Scene::CreateNewGameObject(std::string gameObjectName, GameObjectPtr parent)
+GameObject* Scene::CreateNewGameObject(std::string gameObjectName, GameObject* parent)
 {
-	GameObjectPtr newGameObject = GameObject::Make(gameObjectName);
+	GameObject* newGameObject = new GameObject(gameObjectName);
 
 	if (parent == nullptr)
 	{
@@ -55,10 +70,10 @@ void Scene::printScene()
 {
 	if (root.empty()) return;
 
-	std::list<GameObjectPtr> queue;
+	std::list<GameObject*> queue;
 	std::list<unsigned int> level;
 
-	for (GameObjectPtr gameObject : root)
+	for (GameObject* gameObject : root)
 	{
 		queue.push_back(gameObject);
 		level.push_back(0);
@@ -66,7 +81,7 @@ void Scene::printScene()
 
 	while (!queue.empty())
 	{
-		GameObjectPtr currentObject = queue.front();
+		GameObject* currentObject = queue.front();
 		unsigned int currentLevel = level.front();
 
 		queue.pop_front();
@@ -79,7 +94,7 @@ void Scene::printScene()
 
 		std::cout << currentObject->name << std::endl;
 
-		std::list<GameObjectPtr> childList = currentObject->GetChildren();
+		std::list<GameObject*> childList = currentObject->GetChildren();
 
 		for (auto i = childList.rbegin(); i != childList.rend(); i++)
 		{

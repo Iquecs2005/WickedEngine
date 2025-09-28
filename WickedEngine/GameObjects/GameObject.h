@@ -1,7 +1,6 @@
 #include <memory>
 
 class GameObject;
-using GameObjectPtr = std::shared_ptr<GameObject>;
 
 #pragma once
 
@@ -14,6 +13,8 @@ using GameObjectPtr = std::shared_ptr<GameObject>;
 #include "Components/MonoBehaviour.h"
 #include "Components/Renderer.h"
 
+class Scene;
+
 class GameObject
 {
 public:
@@ -21,10 +22,6 @@ public:
 
 	Transform& transform;
 	std::list<ShapePtr> geometryList;
-
-	GameObject(std::string name = "GameObject");
-	~GameObject();
-	static inline GameObjectPtr Make(std::string name = "GameObject");
 
 	void Update()
 	{
@@ -40,7 +37,7 @@ public:
 	ComponentType* AttachComponent()
 	{
 		ComponentType* newComponent = new ComponentType(this);
-		MonoBehaviour* monoComponent = dynamic_cast<MonoBehaviour*>(newComponent);
+		//MonoBehaviour* monoComponent = dynamic_cast<MonoBehaviour*>(newComponent);
 
 		/*if (!monoComponent)
 		{
@@ -49,25 +46,25 @@ public:
 			return nullptr;
 		}*/
 
-		components.push_front(monoComponent);
+		components.push_front(newComponent);
 		return newComponent;
 	}
 
 	void AddToRenderQueue(Renderer* newRenderer);
 
-	std::list<GameObjectPtr> GetChildren();
-	void AddChild(GameObjectPtr child);
-	GameObjectPtr CreateEmptyChild(std::string name = "Child");
+	std::list<GameObject*> GetChildren();
+	void AddChild(GameObject* child);
+	GameObject* CreateEmptyChild(std::string name = "Child");
+
+	friend class Scene;
 
 private:
 	Transform ownedTransform;
 	std::list<MonoBehaviour*> components;
 	std::list<Renderer*> renderQueue;
-	std::list<GameObjectPtr> children;
-};
+	std::list<GameObject*> children;
 
-inline GameObjectPtr GameObject::Make(std::string name)
-{
-	return GameObjectPtr(new GameObject(name));
-}
+	GameObject(std::string name = "GameObject");
+	~GameObject();
+};
 

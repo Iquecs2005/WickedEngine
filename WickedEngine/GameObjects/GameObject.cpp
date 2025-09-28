@@ -10,6 +10,13 @@ GameObject::~GameObject()
 		components.pop_front();
 		delete component;
 	}
+
+	while (!children.empty())
+	{
+		GameObject* child = children.front();
+		children.pop_front();
+		delete child;
+	}
 }
 
 glm::mat4 GameObject::Draw(const glm::mat4& baseMatrix)
@@ -29,19 +36,19 @@ void GameObject::AddToRenderQueue(Renderer* newRenderer)
 	renderQueue.push_back(newRenderer);
 }
 
-std::list<GameObjectPtr> GameObject::GetChildren()
+std::list<GameObject*> GameObject::GetChildren()
 {
 	return children;
 }
 
-void GameObject::AddChild(GameObjectPtr child)
+void GameObject::AddChild(GameObject* child)
 {
 	children.push_back(child);
 }
 
-GameObjectPtr GameObject::CreateEmptyChild(std::string name)
+GameObject* GameObject::CreateEmptyChild(std::string name)
 {
-	GameObjectPtr newChildren = GameObject::Make(name);
+	GameObject* newChildren = new GameObject();
 
 	AddChild(newChildren);
 

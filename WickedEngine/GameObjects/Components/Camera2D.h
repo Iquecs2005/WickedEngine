@@ -9,12 +9,13 @@ public:
 	float cameraWidth;
 	float cameraHeight;
 
-	inline Camera2D(GameObject* gameObject);
 	glm::mat4 GetProjectionMatrix() override;
-	inline void SetCurrentWindow(GLFWwindow* window);
-private:
-	GLFWwindow* currentWin;
+
+	friend class GameObject;
+
+protected:
+	inline Camera2D(GameObject* gameObject);
+	inline ~Camera2D() {};
 };
 
-inline Camera2D::Camera2D(GameObject* gameObject) : Camera(gameObject), cameraWidth(5), cameraHeight(2.8125f), currentWin(nullptr) {}
-inline void Camera2D::SetCurrentWindow(GLFWwindow* window) { currentWin = window; }
+inline Camera2D::Camera2D(GameObject* gameObject) : Camera(gameObject), cameraWidth(5), cameraHeight(5) {}
