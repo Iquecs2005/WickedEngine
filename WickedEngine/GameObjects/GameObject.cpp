@@ -48,7 +48,7 @@ void GameObject::AddChild(GameObject* child)
 
 GameObject* GameObject::CreateEmptyChild(std::string name)
 {
-	GameObject* newChildren = new GameObject();
+	GameObject* newChildren = new GameObject(name);
 
 	AddChild(newChildren);
 

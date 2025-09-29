@@ -40,7 +40,7 @@ static ShaderPtr shd;
 
 static CirclePtr circleGeometry;
 
-static Scene* sceneptr = new Scene();
+static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
 
 static void initialize(GLFWwindow* win)
@@ -81,13 +81,15 @@ static void initialize(GLFWwindow* win)
 	GameObject* moonPivot = earth->CreateEmptyChild("MoonPivot");
 	moonPivot->transform.rotation = Vector3(0, 0, 0);
 	moonPivot->AttachComponent<PlanetRotator>();
-	GameObject* moon = moonPivot->CreateEmptyChild("Earth");
+	GameObject* moon = moonPivot->CreateEmptyChild("Moon");
 	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
 	moonMR->mesh = circleGeometry;
 	moonMR->AttachMaterial(defaultMaterial);
 	moonMR->color->SetColor(200, 200, 200);
 	moon->transform.position = Vector3(2, 0, 0);
 	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
+
+	scene.printScene();
 
 	Error::Check("initialize");
 }

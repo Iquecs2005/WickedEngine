@@ -1,6 +1,11 @@
 #include "Scene.h"
 #include "GameObjects/Components/Camera.h"
 
+Scene::Scene(const std::string& name)
+{
+	this->name = name;
+}
+
 Scene::~Scene()
 {
 	std::cout << "Deleting Scene" << std::endl;
@@ -68,6 +73,8 @@ GameObject* Scene::CreateNewGameObject(std::string gameObjectName, GameObject* p
 
 void Scene::printScene()
 {
+	std::cout << name << ":" << std::endl;
+
 	if (root.empty()) return;
 
 	std::list<GameObject*> queue;
@@ -87,10 +94,13 @@ void Scene::printScene()
 		queue.pop_front();
 		level.pop_front();
 
-		for (int i = 0; i < currentLevel; i++)
+		for (int i = 0; i < (currentLevel + 1) * 2; i++)
 		{
-			std::cout << '\t';
+			std::cout << ' ';
 		}
+
+		if (currentLevel > 0) std::cout << "-";
+		else std::cout << "-";
 
 		std::cout << currentObject->name << std::endl;
 
@@ -102,4 +112,6 @@ void Scene::printScene()
 			level.push_front(currentLevel + 1);
 		}
 	}
+
+	std::cout << std::endl;
 }

@@ -5,6 +5,9 @@
 class Scene
 {
 public:
+	std::string name;
+
+	Scene(const std::string& name = "Scene");
 	~Scene();
 	//void UpdateScene();
 	void DrawScene();
