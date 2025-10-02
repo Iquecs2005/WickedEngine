@@ -137,6 +137,7 @@
     <ClCompile Include="General\Color.cpp" />
     <ClCompile Include="Geometry\Circle.cpp" />
     <ClCompile Include="Geometry\Polygon.cpp" />
+    <ClCompile Include="General\Image.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameObjects\Components\MonoBehaviour.cpp" />
     <ClCompile Include="GameObjects\Components\MeshRenderer.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="GameObjects\Components\Transform.cpp" />
     <ClCompile Include="General\Vector3.cpp" />
     <ClCompile Include="General\Vector4.cpp" />
+    <ClCompile Include="Rendering\Texture.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,12 +173,14 @@
     <ClInclude Include="GameObjects\Components\MonoBehaviour.h" />
     <ClInclude Include="GameObjects\Components\MeshRenderer.h" />
     <ClInclude Include="GameObjects\Components\Renderer.h" />
+    <ClInclude Include="General\Image.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Rendering\shader.h" />
     <ClInclude Include="GameObjects\Components\Transform.h" />
     <ClInclude Include="General\Vector3.h" />
     <ClInclude Include="General\Vector4.h" />
+    <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -62,7 +62,8 @@ static void initialize(GLFWwindow* win)
 	camera2D->SetCurrentWindow(win);
 
 	GameObject* sun = scene.CreateNewGameObject("Sun");
-	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
+	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
+	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	sunMR->mesh = circleGeometry;
 	sunMR->AttachMaterial(defaultMaterial);
 	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
@@ -71,7 +72,8 @@ static void initialize(GLFWwindow* win)
 	earthPivot->transform.rotation = Vector3(0,0,0);
 	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
-	MeshRenderer* earthMR = earth->AttachComponent<MeshRenderer>();
+	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
+	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
 	earthMR->mesh = circleGeometry;
 	earthMR->AttachMaterial(defaultMaterial);
 	earthMR->color->SetColor(50, 170, 230);
