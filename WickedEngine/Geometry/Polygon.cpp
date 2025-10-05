@@ -28,8 +28,8 @@ Polygon::Polygon(const std::vector<VertexData>& vertexData, const std::vector<un
 	glEnableVertexAttribArray(positionAttributeIndex);
 
 	//Color attribute
-	glVertexAttribPointer(colorAttributeIndex, colorDimensions, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(VertexData), (void*)colorOffset);
-	glEnableVertexAttribArray(colorAttributeIndex);
+	glVertexAttribPointer(textureAttributeIndex, textureDimensions, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)textureOffset);
+	glEnableVertexAttribArray(textureAttributeIndex);
 
 	//Incidence Buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shapeBufferIds[incidenceBufferIndex]);

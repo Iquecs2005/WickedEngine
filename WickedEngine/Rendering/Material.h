@@ -6,20 +6,28 @@ using MaterialPtr = std::shared_ptr<Material>;
 #pragma once
 
 #include "shader.h"
+#include "Texture.h"
 
 class Material
 {
 public:
-	static inline MaterialPtr Make(ShaderPtr shader = nullptr);
+	static inline MaterialPtr Make(ShaderPtr shader = nullptr, TexturePtr texture = nullptr);
+
+	void Load();
+	void Unload();
 	void AttachShader(ShaderPtr shader);
+	void AttachTexture(TexturePtr texture);
+
 	ShaderPtr GetShader();
+	TexturePtr GetTexture();
 private:
-	Material(ShaderPtr shader = nullptr);
+	Material(ShaderPtr shader = nullptr, TexturePtr texture = nullptr);
 
 	ShaderPtr currentShader;
+	TexturePtr texture;
 };
 
-MaterialPtr Material::Make(ShaderPtr shader)
+MaterialPtr Material::Make(ShaderPtr shader, TexturePtr texture)
 {
-	return MaterialPtr(new Material(shader));
+	return MaterialPtr(new Material(shader, texture));
 }

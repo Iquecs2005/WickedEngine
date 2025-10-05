@@ -1,11 +1,16 @@
 #version 410
 
-in vec4 color;
+uniform vec4 uniformColor;
+uniform sampler2D decal;
+
+in data 
+{
+	vec2 texcoord;
+} f;
 out vec4 fcolor;
 
-uniform vec4 uniformColor;
 
 void main (void)
 {
-  fcolor = color * uniformColor;
+  fcolor = uniformColor * texture(decal, f.texcoord);
 }

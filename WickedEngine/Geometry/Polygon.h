@@ -13,7 +13,7 @@ using PolygonPtr = std::shared_ptr<Polygon>;
 struct VertexData
 {
 	float x, y;
-	unsigned char r, g, b;
+	float s, t;
 };
 
 class Polygon : public Shape
@@ -29,9 +29,9 @@ class Polygon : public Shape
 	static const unsigned int positionAttributeIndex = 0;
 	static const unsigned int positionDimensions = 2;
 	static const unsigned int positionOffset = 0;
-	static const unsigned int colorAttributeIndex = 1;
-	static const unsigned int colorDimensions = 3;
-	static const unsigned int colorOffset = sizeof(float) * positionDimensions;
+	static const unsigned int textureAttributeIndex = 1;
+	static const unsigned int textureDimensions = 2;
+	static const unsigned int textureOffset = sizeof(float) * positionDimensions;
 	static const unsigned int incidenceBufferIndex = 1;
 
 protected:

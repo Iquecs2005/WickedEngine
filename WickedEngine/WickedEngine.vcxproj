@@ -149,6 +149,7 @@
     <ClCompile Include="General\Vector3.cpp" />
     <ClCompile Include="General\Vector4.cpp" />
     <ClCompile Include="Rendering\Texture.cpp" />
+    <ClCompile Include="Geometry\Square.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="General\Vector3.h" />
     <ClInclude Include="General\Vector4.h" />
     <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Geometry\Square.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

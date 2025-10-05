@@ -10,10 +10,13 @@ std::vector<VertexData> Circle::GenerateVertex(unsigned int nVertices)
 	float currentAngle = 0;
 	float angleStep = 2 * M_PI / (nVertices - 1);
 
-	vertexVector[0] = { 0, 0, 255, 255, 255 };
+	vertexVector[0] = { 0, 0, 0.5, 0.5 };
 	for (int i = 1; i < nVertices; i++)
 	{
-		vertexVector[i] = { cosf(currentAngle), sinf(currentAngle), 255, 255, 255};
+		float cossine = cosf(currentAngle);
+		float sine = sinf(currentAngle);
+
+		vertexVector[i] = { cossine, sine, 0.5f + 0.5f * cossine, 0.5f + 0.5f * sine };
 		currentAngle += angleStep;
 	}
 

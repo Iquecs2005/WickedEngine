@@ -24,6 +24,8 @@
 #include "Geometry/Polygon.h"
 #include "Geometry/Circle.h"
 #include "Geometry/Triangle.h"
+#include "Geometry/Square.h"
+
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Components/MeshRenderer.h"
@@ -39,13 +41,14 @@
 static ShaderPtr shd;
 
 static CirclePtr circleGeometry;
+static SquarePtr squareGeometry;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
 
 static void initialize(GLFWwindow* win)
 {
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0, 0, 0, 0);
 	glEnable(GL_CULL_FACE);
 
 	shd = Shader::Make();
@@ -54,40 +57,68 @@ static void initialize(GLFWwindow* win)
 	shd->Link();
 
 	circleGeometry = Circle::Make(65);
+	squareGeometry = Square::Make();
 
-	MaterialPtr defaultMaterial = Material::Make(shd);
+	MaterialPtr backgroundMaterial = Material::Make(shd);
+	backgroundMaterial->AttachTexture(Texture::Make("decal", "Images/Background.jpg"));
+
+	GameObject* background = scene.CreateNewGameObject("Background");
+	background->transform.scale = { 15, 15, 15 };
+	MeshRenderer* backgroundMR = background->AttachComponent<MeshRenderer>();
+	backgroundMR->mesh = squareGeometry;
+	backgroundMR->AttachMaterial(backgroundMaterial);
 
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
 	Camera2D* camera2D = cameraObject->AttachComponent<Camera2D>();
 	camera2D->SetCurrentWindow(win);
 
+	MaterialPtr sunMaterial = Material::Make(shd);
+	sunMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
+	
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	sunMR->mesh = circleGeometry;
-	sunMR->AttachMaterial(defaultMaterial);
-	sunMR->color->SetColor(1.0f, 0.4f, 0.0f);
+	sunMR->AttachMaterial(sunMaterial);
+
+	GameObject* venusPivot = sun->CreateEmptyChild("MercuryPivot");
+	venusPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 14;
+
+	MaterialPtr venusMaterial = Material::Make(shd);
+	venusMaterial->AttachTexture(Texture::Make("decal", "Images/Venus.jpg"));
+
+	GameObject* venus = venusPivot->CreateEmptyChild("Mercury");
+	venus->transform.position = Vector3(1.75f, 0, 0);
+	venus->transform.scale = Vector3(0.25, 0.25, 0.3);
+	GameObject* venusMesh = venus->CreateEmptyChild("EarthMesh");
+	MeshRenderer* venusMR = venusMesh->AttachComponent<MeshRenderer>();
+	venusMR->mesh = circleGeometry;
+	venusMR->AttachMaterial(venusMaterial);
 
 	GameObject* earthPivot = sun->CreateEmptyChild("EarthPivot");
-	earthPivot->transform.rotation = Vector3(0,0,0);
 	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
+
+	MaterialPtr earthMaterial = Material::Make(shd);
+	earthMaterial->AttachTexture(Texture::Make("decal", "Images/Earth.jpg"));
+
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
 	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
 	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
 	earthMR->mesh = circleGeometry;
-	earthMR->AttachMaterial(defaultMaterial);
-	earthMR->color->SetColor(50, 170, 230);
+	earthMR->AttachMaterial(earthMaterial);
 	earth->transform.position = Vector3(3.5, 0, 0);
 	earth->transform.scale = Vector3(0.5, 0.5, 0.5);
 
 	GameObject* moonPivot = earth->CreateEmptyChild("MoonPivot");
-	moonPivot->transform.rotation = Vector3(0, 0, 0);
 	moonPivot->AttachComponent<PlanetRotator>();
+
+	MaterialPtr moonMaterial = Material::Make(shd);
+	moonMaterial->AttachTexture(Texture::Make("decal", "Images/Moon.jpg"));
+
 	GameObject* moon = moonPivot->CreateEmptyChild("Moon");
 	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
 	moonMR->mesh = circleGeometry;
-	moonMR->AttachMaterial(defaultMaterial);
-	moonMR->color->SetColor(200, 200, 200);
+	moonMR->AttachMaterial(moonMaterial);
 	moon->transform.position = Vector3(2, 0, 0);
 	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
 

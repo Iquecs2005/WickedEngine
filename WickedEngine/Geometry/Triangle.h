@@ -11,9 +11,9 @@ using TrianglePtr = std::shared_ptr<Triangle>;
 class Triangle : public Polygon
 {
 protected:
-	Triangle() : Polygon({ { 1, 0, 255, 255, 255 },
-						   {-1, 0, 255, 255, 255 },
-						   { 0, 1, 255, 255, 255 } }, { 2, 1, 0 }) {};
+	Triangle() : Polygon({ { 1, 0, 1, 0 },
+						   {-1, 0, 0, 0 },
+						   { 0, 1, 0.5f, 1 } }, { 2, 1, 0 }) {};
 public:
 	static inline TrianglePtr Make();
 };

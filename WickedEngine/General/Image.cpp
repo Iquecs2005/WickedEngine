@@ -6,6 +6,7 @@
 
 Image::Image(const std::string& fileName)
 {
+	stbi_set_flip_vertically_on_load(true);
 	imageData = stbi_load(fileName.c_str(), &width, &height, &nChannels, 0);
 	if (!imageData) 
 	{

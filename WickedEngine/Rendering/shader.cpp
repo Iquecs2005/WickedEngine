@@ -12,6 +12,8 @@
 #include <sstream> 
 #include <cstdlib>
 
+#include "../error.h"
+
 // read file content to a string
 static std::string ReadFile (const std::string& filename) 
 {
@@ -63,7 +65,8 @@ ShaderPtr Shader::Make ()
   return ShaderPtr(new Shader());
 }
 
-Shader::Shader ()
+Shader::Shader () 
+: m_texunit(0)
 {
   m_pid = glCreateProgram();
   if (m_pid==0) {
@@ -117,14 +120,14 @@ void Shader::Link ()
 
 void Shader::UseProgram () const
 {
-  glUseProgram(m_pid);
+    glUseProgram(m_pid);
 }
 
 
 void Shader::SetUniform (const std::string& varname, int x) const
 {
-  GLint loc = glGetUniformLocation(m_pid,varname.c_str());
-  glUniform1i(loc,x);
+    GLint loc = glGetUniformLocation(m_pid, varname.c_str());
+    glUniform1i(loc,x);
 }
 
 void Shader::SetUniform (const std::string& varname, float x) const
@@ -179,4 +182,16 @@ void Shader::SetUniform (const std::string& varname, const std::vector<glm::mat4
 {
   GLint loc = glGetUniformLocation(m_pid,varname.c_str());
   glUniformMatrix4fv(loc,mat.size(),GL_FALSE,(float*)mat.data());
+}
+
+void Shader::ActiveTexture(const std::string& varname)
+{
+    SetUniform(varname, m_texunit);
+    glActiveTexture(GL_TEXTURE0 + m_texunit);
+    m_texunit++;
+}
+
+void Shader::DeactiveTexture()
+{
+    m_texunit--;
 }

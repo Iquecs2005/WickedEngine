@@ -11,6 +11,7 @@ using ShaderPtr = std::shared_ptr<Shader>;
 
 class Shader : public std::enable_shared_from_this<Shader> {
   unsigned int m_pid;
+  int m_texunit;
 protected:
   Shader ();
 public:
@@ -32,6 +33,8 @@ public:
   void SetUniform (const std::string& varname, const std::vector<glm::vec3>& vet) const;
   void SetUniform (const std::string& varname, const std::vector<glm::vec4>& vet) const;
   void SetUniform (const std::string& varname, const std::vector<glm::mat4>& mat) const;
+  void ActiveTexture(const std::string& varname);
+  void DeactiveTexture();
 };
 
 #endif
