@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry\3D\Cube.cpp" />
     <ClCompile Include="GameObjects\Components\Camera2D.cpp" />
     <ClCompile Include="GameObjects\Components\Camera.cpp" />
     <ClCompile Include="error.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="GameObjects\Components\MonoBehaviour.cpp" />
     <ClCompile Include="GameObjects\Components\MeshRenderer.cpp" />
     <ClCompile Include="GameObjects\Components\Renderer.cpp" />
+    <ClCompile Include="Geometry\3D\Mesh3D.cpp" />
     <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Rendering\shader.cpp" />
@@ -161,6 +163,7 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry\3D\Cube.h" />
     <ClInclude Include="GameObjects\Components\Camera2D.h" />
     <ClInclude Include="GameObjects\Components\Camera.h" />
     <ClInclude Include="error.h" />
@@ -175,6 +178,7 @@
     <ClInclude Include="GameObjects\Components\MeshRenderer.h" />
     <ClInclude Include="GameObjects\Components\Renderer.h" />
     <ClInclude Include="General\Image.h" />
+    <ClInclude Include="Geometry\3D\Mesh3D.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Rendering\shader.h" />

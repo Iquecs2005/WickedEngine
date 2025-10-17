@@ -81,6 +81,12 @@
     <ClCompile Include="Geometry\Square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\3D\Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\3D\Mesh3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -158,6 +164,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Geometry\Square.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\3D\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\3D\Mesh3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
