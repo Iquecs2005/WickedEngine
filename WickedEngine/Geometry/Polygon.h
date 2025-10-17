@@ -1,4 +1,3 @@
-#include <memory>
 
 class Polygon;
 struct VertexData;
