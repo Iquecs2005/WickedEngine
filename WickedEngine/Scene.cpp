@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "GameObjects/Components/Camera.h"
+#include "Rendering/MVPMatrix.h"
 
 Scene::Scene(const std::string& name)
 {
@@ -22,36 +23,38 @@ void Scene::DrawScene()
 {
 	if (root.empty()) return;
 
-	std::list<GameObject*> queue;
-	std::list<glm::mat4x4> transformationMatrix;
+	std::list<GameObject*> stack;
+	std::list<MVPMatrixPtr> transformationMatrix;
 
-	glm::mat4x4 cameraMatrix = Camera::getMainCamera()->GetProjectionMatrix();
-	cameraMatrix = cameraMatrix * Camera::getMainCamera()->GetViewMatrix();
+	glm::mat4 a = Camera::getMainCamera()->GetViewMatrix();
+	glm::mat4 b = Camera::getMainCamera()->GetViewMatrix();
+	MVPMatrixPtr baseMatrix = MVPMatrix::Make(glm::mat4(1.0f),
+											  Camera::getMainCamera()->GetViewMatrix(),
+											  Camera::getMainCamera()->GetProjectionMatrix());
 
 	for (const auto& gameObject : root)
 	{
-		queue.push_back(gameObject);
-		//TODO change to pointer so the list is smaller
-		transformationMatrix.push_back(cameraMatrix);
+		stack.push_back(gameObject);
+		transformationMatrix.push_back(baseMatrix);
 	}
 
-	while (!queue.empty())
+	while (!stack.empty())
 	{
-		GameObject* currentObject = queue.front();
-		glm::mat4x4 currentMatrix = transformationMatrix.front();
+		GameObject* currentObject = stack.front();
+		MVPMatrixPtr currentMvp = transformationMatrix.front();
 
-		queue.pop_front();
+		stack.pop_front();
 		transformationMatrix.pop_front();
 
-		currentMatrix = currentObject->Draw(currentMatrix);
+		currentMvp = currentObject->Draw(currentMvp);
 		currentObject->Update();
 
 		std::list<GameObject*> childList = currentObject->GetChildren();
 
 		for (auto i = childList.rbegin(); i != childList.rend(); i++)
 		{
-			queue.push_front(*i);
-			transformationMatrix.push_front(currentMatrix);
+			stack.push_front(*i);
+			transformationMatrix.push_front(currentMvp);
 		}
 	}
 }

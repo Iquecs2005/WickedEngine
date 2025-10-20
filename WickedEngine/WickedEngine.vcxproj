@@ -140,11 +140,14 @@
     <ClCompile Include="Geometry\Circle.cpp" />
     <ClCompile Include="Geometry\Polygon.cpp" />
     <ClCompile Include="General\Image.cpp" />
+    <ClCompile Include="GameObjects\Components\Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameObjects\Components\MonoBehaviour.cpp" />
     <ClCompile Include="GameObjects\Components\MeshRenderer.cpp" />
     <ClCompile Include="GameObjects\Components\Renderer.cpp" />
     <ClCompile Include="Geometry\3D\Mesh3D.cpp" />
+    <ClCompile Include="GameObjects\Components\PointLight.cpp" />
+    <ClCompile Include="Rendering\MVPMatrix.cpp" />
     <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Rendering\shader.cpp" />
@@ -181,6 +184,9 @@
     <ClInclude Include="GameObjects\Components\Renderer.h" />
     <ClInclude Include="General\Image.h" />
     <ClInclude Include="Geometry\3D\Mesh3D.h" />
+    <ClInclude Include="GameObjects\Components\Light.h" />
+    <ClInclude Include="GameObjects\Components\PointLight.h" />
+    <ClInclude Include="Rendering\MVPMatrix.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Rendering\shader.h" />

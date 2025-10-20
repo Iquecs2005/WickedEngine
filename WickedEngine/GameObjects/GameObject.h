@@ -12,6 +12,7 @@ class GameObject;
 #include "../Rendering/shader.h"
 #include "Components/MonoBehaviour.h"
 #include "Components/Renderer.h"
+#include "../Rendering/MVPMatrix.h"
 
 class Scene;
 
@@ -31,7 +32,7 @@ public:
 		}
 	}
 
-	glm::mat4 Draw(const glm::mat4& baseMatrix);
+	MVPMatrixPtr Draw(const MVPMatrixPtr baseMatrix);
 
 	template<typename ComponentType>
 	ComponentType* AttachComponent()

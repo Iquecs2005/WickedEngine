@@ -1,16 +1,20 @@
 #include "MeshRenderer.h"
 
+#include "../GameObject.h"
+
 MeshRenderer::MeshRenderer(GameObject* gameObject) : Renderer(gameObject), color(Color::Make())
 {
 
 }
 
-void MeshRenderer::Draw(glm::mat4x4 mvp)
+void MeshRenderer::Draw(const MVPMatrixPtr mvp)
 {
 	material->Load();
 	ShaderPtr currentShader = material->GetShader();
 
-	currentShader->SetUniform("M", mvp);
+	currentShader->SetUniform("mv", mvp->model);
+	currentShader->SetUniform("nm", glm::inverse(glm::transpose(mvp->model)));
+	currentShader->SetUniform("mvp", mvp->mvp);
 	currentShader->SetUniform("uniformColor", (glm::vec4)*color);
 
 	mesh->Draw();

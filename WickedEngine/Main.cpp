@@ -74,14 +74,15 @@ static void initialize(GLFWwindow* win)
 
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
 	cameraObject->transform.position.z = 5;
-	Camera3D* camera3D = cameraObject->AttachComponent<Camera3D>();
-	camera3D->SetCurrentWindow(win);
+	Camera* mainCamera = cameraObject->AttachComponent<Camera3D>();
+	mainCamera->SetCurrentWindow(win);
 
 	MaterialPtr sunMaterial = Material::Make(shd);
 	sunMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
 	
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
+	std::cout << sun->transform.position.x << std::endl;
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	//sunMesh->transform.rotation.x = 45;
 	sunMR->mesh = cube;

@@ -19,9 +19,10 @@ GameObject::~GameObject()
 	}
 }
 
-glm::mat4 GameObject::Draw(const glm::mat4& baseMatrix)
+MVPMatrixPtr GameObject::Draw(const MVPMatrixPtr baseMatrix)
 {
-	const glm::mat4 mvp = transform.getTransformMatrix(baseMatrix);
+	glm::mat4 modelMatrix = transform.getTransformMatrix();
+	MVPMatrixPtr mvp = MVPMatrix::Make(modelMatrix, baseMatrix);
 
 	for (Renderer* renderComponent : renderQueue)
 	{
