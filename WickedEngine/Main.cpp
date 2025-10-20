@@ -25,6 +25,7 @@
 #include "Geometry/Circle.h"
 #include "Geometry/Triangle.h"
 #include "Geometry/Square.h"
+#include "Geometry/3D/Cube.h"
 
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
@@ -34,6 +35,7 @@
 #include "Time.h"
 #include "GameObjects/Components/UserCreated/PlanetRotator.h"
 #include "GameObjects/Components/Camera2D.h"
+#include "GameObjects/Components/Camera3D.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -42,13 +44,14 @@ static ShaderPtr shd;
 
 static CirclePtr circleGeometry;
 static SquarePtr squareGeometry;
+static CubePtr cube;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
 
 static void initialize(GLFWwindow* win)
 {
-	glClearColor(0, 0, 0, 0);
+	glClearColor(0.5, 0.5, 0.5, 0);
 	glEnable(GL_CULL_FACE);
 
 	shd = Shader::Make();
@@ -58,6 +61,7 @@ static void initialize(GLFWwindow* win)
 
 	circleGeometry = Circle::Make(65);
 	squareGeometry = Square::Make();
+	cube = Cube::Make();
 
 	MaterialPtr backgroundMaterial = Material::Make(shd);
 	backgroundMaterial->AttachTexture(Texture::Make("decal", "Images/Background.jpg"));
@@ -69,8 +73,9 @@ static void initialize(GLFWwindow* win)
 	backgroundMR->AttachMaterial(backgroundMaterial);
 
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	Camera2D* camera2D = cameraObject->AttachComponent<Camera2D>();
-	camera2D->SetCurrentWindow(win);
+	cameraObject->transform.position.z = 5;
+	Camera3D* camera3D = cameraObject->AttachComponent<Camera3D>();
+	camera3D->SetCurrentWindow(win);
 
 	MaterialPtr sunMaterial = Material::Make(shd);
 	sunMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
@@ -78,7 +83,8 @@ static void initialize(GLFWwindow* win)
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
-	sunMR->mesh = circleGeometry;
+	//sunMesh->transform.rotation.x = 45;
+	sunMR->mesh = cube;
 	sunMR->AttachMaterial(sunMaterial);
 
 	GameObject* venusPivot = sun->CreateEmptyChild("VenusPivot");

@@ -13,6 +13,10 @@ public:
 	inline void setMainCamera();
 	inline void SetCurrentWindow(GLFWwindow* window);
 	virtual glm::mat4 GetProjectionMatrix() = 0;
+	virtual glm::mat4 GetViewMatrix() 
+	{
+		return glm::mat4(1);
+	};
 
 	friend class GameObject;
 

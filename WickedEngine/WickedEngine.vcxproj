@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\Components\Camera3D.cpp" />
     <ClCompile Include="Geometry\3D\Cube.cpp" />
     <ClCompile Include="GameObjects\Components\Camera2D.cpp" />
     <ClCompile Include="GameObjects\Components\Camera.cpp" />
@@ -163,6 +164,7 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\Components\Camera3D.h" />
     <ClInclude Include="Geometry\3D\Cube.h" />
     <ClInclude Include="GameObjects\Components\Camera2D.h" />
     <ClInclude Include="GameObjects\Components\Camera.h" />

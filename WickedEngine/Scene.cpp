@@ -26,6 +26,7 @@ void Scene::DrawScene()
 	std::list<glm::mat4x4> transformationMatrix;
 
 	glm::mat4x4 cameraMatrix = Camera::getMainCamera()->GetProjectionMatrix();
+	cameraMatrix = cameraMatrix * Camera::getMainCamera()->GetViewMatrix();
 
 	for (const auto& gameObject : root)
 	{

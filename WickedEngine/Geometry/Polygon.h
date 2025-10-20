@@ -1,3 +1,4 @@
+#include <memory>
 
 class Polygon;
 struct VertexData;
@@ -28,7 +29,7 @@ class Polygon : public Shape
 	static const unsigned int positionAttributeIndex = 0;
 	static const unsigned int positionDimensions = 2;
 	static const unsigned int positionOffset = 0;
-	static const unsigned int textureAttributeIndex = 1;
+	static const unsigned int textureAttributeIndex = 3;
 	static const unsigned int textureDimensions = 2;
 	static const unsigned int textureOffset = sizeof(float) * positionDimensions;
 	static const unsigned int incidenceBufferIndex = 1;
