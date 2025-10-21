@@ -73,7 +73,7 @@ static void initialize(GLFWwindow* win)
 	backgroundMR->AttachMaterial(backgroundMaterial);
 
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	cameraObject->transform.position.z = 5;
+	cameraObject->transform.position.z = 4;
 	Camera* mainCamera = cameraObject->AttachComponent<Camera3D>();
 	mainCamera->SetCurrentWindow(win);
 
@@ -82,8 +82,16 @@ static void initialize(GLFWwindow* win)
 	
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
-	std::cout << sun->transform.position.x << std::endl;
+	sun->transform.position.x = 3;
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
+	//sunMesh->transform.rotation.x = 45;
+	sunMR->mesh = cube;
+	sunMR->AttachMaterial(sunMaterial);
+
+	sun = scene.CreateNewGameObject("Sun");
+	sunMesh = sun->CreateEmptyChild("SunMesh");
+	sun->transform.position.x = -2;
+	sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	//sunMesh->transform.rotation.x = 45;
 	sunMR->mesh = cube;
 	sunMR->AttachMaterial(sunMaterial);
@@ -185,9 +193,11 @@ static void mousebutton(GLFWwindow* win, int button, int action, int mods)
 		switch (button)
 		{
 		case GLFW_MOUSE_BUTTON_1:
+			Camera::getMainCamera()->gameObject->transform.position.x += 1;
 			std::cout << "button 1" << std::endl;
 			break;
 		case GLFW_MOUSE_BUTTON_2:
+			Camera::getMainCamera()->gameObject->transform.position.x -= 1;
 			std::cout << "button 2" << std::endl;
 			break;
 		case GLFW_MOUSE_BUTTON_3:
