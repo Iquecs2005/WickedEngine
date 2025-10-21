@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../General/Vector3.h"
 #include <glm/ext/matrix_transform.hpp>
+#include "../../General/Vector3.h"
 
 class GameObject;
 
@@ -14,20 +14,22 @@ public:
 	Vector3 rotation = { 0,0,0 };
 	Vector3 scale = { 1,1,1 };
 
-	Transform(GameObject& gameObject) : gameObject(gameObject) {}
-	
-	glm::mat4 getTransformMatrix()
-	{
-		glm::mat4 transformMatrix(1);
+	Transform(GameObject& gameObject) : gameObject(gameObject), parent(nullptr) {}
+	glm::mat4 getTransformMatrix() const;
+	glm::mat4 GetModelMatrix() const;
+	inline Transform* GetParent() const;
+	inline void SetParent(Transform* transform);
 
-		transformMatrix = glm::translate(transformMatrix, (glm::vec3)position);
-
-		transformMatrix = glm::rotate(transformMatrix, (float)glm::radians(rotation.x), glm::vec3(1, 0, 0));
-		transformMatrix = glm::rotate(transformMatrix, (float)glm::radians(rotation.y), glm::vec3(0, 1, 0));
-		transformMatrix = glm::rotate(transformMatrix, (float)glm::radians(rotation.z), glm::vec3(0, 0, 1));
-
-		transformMatrix = glm::scale(transformMatrix, (glm::vec3)scale);
-
-		return transformMatrix;
-	}
+private:
+	Transform* parent;
 };
+
+Transform* Transform::GetParent() const
+{
+	return parent;
+}
+
+void Transform::SetParent(Transform* transform)
+{
+	parent = transform;
+}

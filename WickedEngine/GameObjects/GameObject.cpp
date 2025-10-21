@@ -45,6 +45,7 @@ std::list<GameObject*> GameObject::GetChildren()
 void GameObject::AddChild(GameObject* child)
 {
 	children.push_back(child);
+	child->transform.SetParent(&transform);
 }
 
 GameObject* GameObject::CreateEmptyChild(std::string name)

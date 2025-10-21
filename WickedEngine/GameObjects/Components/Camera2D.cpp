@@ -5,7 +5,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-glm::mat4 Camera2D::GetProjectionMatrix()
+glm::mat4 Camera2D::GetProjectionMatrix() const
 {
 	int wn_w, wn_h;
 	glfwGetWindowSize(currentWin, &wn_w, &wn_h);

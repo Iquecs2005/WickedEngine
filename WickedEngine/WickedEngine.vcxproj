@@ -129,6 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
+    <ClCompile Include="Rendering\Arcball.cpp" />
     <ClCompile Include="GameObjects\Components\Camera3D.cpp" />
     <ClCompile Include="Geometry\3D\Cube.cpp" />
     <ClCompile Include="GameObjects\Components\Camera2D.cpp" />
@@ -167,6 +169,8 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />
+    <ClInclude Include="Rendering\Arcball.h" />
     <ClInclude Include="GameObjects\Components\Camera3D.h" />
     <ClInclude Include="Geometry\3D\Cube.h" />
     <ClInclude Include="GameObjects\Components\Camera2D.h" />

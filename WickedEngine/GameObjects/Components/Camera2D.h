@@ -9,7 +9,7 @@ public:
 	float cameraWidth;
 	float cameraHeight;
 
-	glm::mat4 GetProjectionMatrix() override;
+	glm::mat4 GetProjectionMatrix() const override;
 
 	friend class GameObject;
 

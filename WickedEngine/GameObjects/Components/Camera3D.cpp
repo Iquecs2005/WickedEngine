@@ -5,12 +5,18 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-glm::mat4 Camera3D::GetViewMatrix()
+glm::mat4 Camera3D::GetViewMatrix() const
 {
-	return glm::lookAt(glm::vec3(eyeVector), glm::vec3(centerPos), glm::vec3(upVector));
+	glm::mat4 view(1.0f);
+
+	view = view * glm::lookAt(glm::vec3(eyeVector), glm::vec3(centerPos), glm::vec3(upVector));
+
+	view = view * glm::inverse(gameObject->transform.GetModelMatrix());
+
+	return view;
 }
 
-glm::mat4 Camera3D::GetProjectionMatrix()
+glm::mat4 Camera3D::GetProjectionMatrix() const
 {
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
