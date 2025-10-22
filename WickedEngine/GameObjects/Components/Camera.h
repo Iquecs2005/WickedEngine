@@ -12,8 +12,8 @@ public:
 	static inline Camera* getMainCamera();
 	inline void setMainCamera();
 	inline void SetCurrentWindow(GLFWwindow* window);
-	virtual glm::mat4 GetProjectionMatrix() = 0;
-	virtual glm::mat4 GetViewMatrix() 
+	virtual glm::mat4 GetProjectionMatrix() const = 0;
+	virtual glm::mat4 GetViewMatrix() const
 	{
 		return glm::mat4(1);
 	};

@@ -36,6 +36,7 @@
 #include "GameObjects/Components/UserCreated/PlanetRotator.h"
 #include "GameObjects/Components/Camera2D.h"
 #include "GameObjects/Components/Camera3D.h"
+#include "GameObjects/Components/ArcballCamera3D.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -49,10 +50,13 @@ static CubePtr cube;
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
 
+static ArcballCamera3D* mainCamera;
+
 static void initialize(GLFWwindow* win)
 {
 	glClearColor(0.5, 0.5, 0.5, 0);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 
 	shd = Shader::Make();
 	shd->AttachVertexShader("shaders/vertex.glsl");
@@ -73,8 +77,8 @@ static void initialize(GLFWwindow* win)
 	backgroundMR->AttachMaterial(backgroundMaterial);
 
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	cameraObject->transform.position.z = 4;
-	Camera* mainCamera = cameraObject->AttachComponent<Camera3D>();
+	//cameraObject->transform.position.z = 4;
+	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
 	mainCamera->SetCurrentWindow(win);
 
 	MaterialPtr sunMaterial = Material::Make(shd);
@@ -90,7 +94,6 @@ static void initialize(GLFWwindow* win)
 
 	sun = scene.CreateNewGameObject("Sun");
 	sunMesh = sun->CreateEmptyChild("SunMesh");
-	sun->transform.position.x = -2;
 	sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	//sunMesh->transform.rotation.x = 45;
 	sunMR->mesh = cube;
@@ -183,7 +186,25 @@ static void cursorpos(GLFWwindow* win, double xpos, double ypos)
 	glfwGetFramebufferSize(win, &fb_w, &fb_h);
 	double x = xpos * fb_w / wn_w;
 	double y = (wn_h - ypos) * fb_h / wn_h;
-	std::cout << "(x,y): " << x << ", " << y << std::endl;
+
+	Error::Check("a");
+	mainCamera->GetArcball()->AccumulateMouseMotion((float)x, (float)y);
+	Error::Check("b");
+}
+
+static void cursorinit(GLFWwindow* win, double xpos, double ypos)
+{
+	// xpos and ypos are the cursor position in pixels, starting from the top left corner 
+	// convert screen pos (upside down) to framebuffer pos (e.g., retina displays)
+
+	int wn_w, wn_h, fb_w, fb_h;
+	glfwGetWindowSize(win, &wn_w, &wn_h);
+	glfwGetFramebufferSize(win, &fb_w, &fb_h);
+	double x = xpos * fb_w / wn_w;
+	double y = (wn_h - ypos) * fb_h / wn_h;
+
+	mainCamera->GetArcball()->InitMouseMotion((float)x, (float)y);
+	glfwSetCursorPosCallback(win, cursorpos);
 }
 
 static void mousebutton(GLFWwindow* win, int button, int action, int mods)
@@ -193,19 +214,18 @@ static void mousebutton(GLFWwindow* win, int button, int action, int mods)
 		switch (button)
 		{
 		case GLFW_MOUSE_BUTTON_1:
-			Camera::getMainCamera()->gameObject->transform.position.x += 1;
-			std::cout << "button 1" << std::endl;
+			//Camera::getMainCamera()->gameObject->transform.position.x -= 1;
+
 			break;
 		case GLFW_MOUSE_BUTTON_2:
-			Camera::getMainCamera()->gameObject->transform.position.x -= 1;
-			std::cout << "button 2" << std::endl;
+			//Camera::getMainCamera()->gameObject->transform.position.x += 1;
 			break;
 		case GLFW_MOUSE_BUTTON_3:
 			std::cout << "button 3" << std::endl;
 			break;
 		}
 
-		glfwSetCursorPosCallback(win, cursorpos);  // cursor position callback
+		glfwSetCursorPosCallback(win, cursorinit);  // cursor position callback
 	}
 	else // GLFW_RELEASE 
 		glfwSetCursorPosCallback(win, nullptr);   // callback disabled
