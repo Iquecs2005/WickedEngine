@@ -120,6 +120,7 @@ static void initialize(GLFWwindow* win)
 	earthMaterial->AttachTexture(Texture::Make("decal", "Images/Earth.jpg"));
 
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
+
 	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
 	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
 	earthMesh->AttachComponent<PlanetRotator>()->rotatingSpeed = 32;
