@@ -26,5 +26,5 @@ protected:
 };
 
 inline Camera3D::Camera3D(GameObject* gameObject) : Camera(gameObject), fOV(90.0f), zNear(0.1f), zFar(1000.0f),
-													centerPos(0,0,0), eyeVector(0,0,1),
+													centerPos(0,0,0), eyeVector(0,0,5),
 													upVector(0,1,0) {}

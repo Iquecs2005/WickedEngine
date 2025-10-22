@@ -6,7 +6,7 @@ glm::mat4 ArcballCamera3D::GetViewMatrix() const
 {
 	glm::mat4 view(1.0f);
 
-	view = view * glm::make_mat4(arcball.GetMatrix());
+	view = view * arcball->GetMatrix();
 	view = view * Camera3D::GetViewMatrix();
 
 	return view;

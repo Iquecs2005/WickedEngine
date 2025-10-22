@@ -1,16 +1,17 @@
 #include "Arcball.h"
 
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp> 
 
-const double PI = 3.14159265359;
+#include <iostream>
 
-Arcball::Arcball(float distance) : distance(distance), x0(0), y0(0)
+const float PI = 3.14159265359;
+
+Arcball::Arcball(float distance) : distance(distance), x0(0), y0(0), matrix(1)
 {
-	for (int i = 0; i < 16; i++)
-	{
-		matrix[i] = i % 5 == 0 ? 1.0f : 0.0f;
-	}
+	
 }
 
 void Arcball::InitMouseMotion(float x0, float y0)
@@ -31,20 +32,20 @@ void Arcball::AccumulateMouseMotion(float x, float y)
 	Map(vp[2], vp[3], x0, y0, ux, uy, uz);
 	Map(vp[2], vp[3], x, y, vx, vy, vz);
 
+	x0 = x;
+	y0 = y;
+
 	float ax = uy * vz - uz * vy;
 	float ay = uz * vx - ux * vz;
 	float az = ux * vy - uy * vx;
 
 	float theta = 2 * (float)asin(sqrt(ax * ax + ay * ay + az * az));
 
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -distance);
-	glRotatef(theta * 180.0f / PI, ax, ay, az);
-	glTranslatef(0.0f, 0.0f, distance);
-	glMultMatrixf(matrix);
-	glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
-	glPopMatrix();
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -distance));
+	model = glm::rotate(model, theta, glm::vec3(ax, ay, az));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, distance));
+	matrix = model * matrix;
 }
 
 void Arcball::Map(int width, int height, float x, float y, float& px, float& py, float& pz)
@@ -72,7 +73,7 @@ void Arcball::Map(int width, int height, float x, float y, float& px, float& py,
 	pz = Z;
 }
 
-const float* Arcball::GetMatrix() const
+const glm::mat4& Arcball::GetMatrix() const
 {
 	return matrix;
 }
