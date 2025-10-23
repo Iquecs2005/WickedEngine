@@ -8,7 +8,7 @@ uniform mat4 mv;
 uniform mat4 nm;
 uniform mat4 mvp;
 
-const vec4 lpos = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+const vec4 lpos = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 out data
 {

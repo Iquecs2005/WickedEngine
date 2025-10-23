@@ -26,6 +26,7 @@
 #include "Geometry/Triangle.h"
 #include "Geometry/Square.h"
 #include "Geometry/3D/Cube.h"
+#include "Geometry/3D/GridGeometry.h"
 
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
@@ -46,6 +47,7 @@ static ShaderPtr shd;
 static CirclePtr circleGeometry;
 static SquarePtr squareGeometry;
 static CubePtr cube;
+static GridGeometryPtr grid;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
@@ -66,6 +68,7 @@ static void initialize(GLFWwindow* win)
 	circleGeometry = Circle::Make(65);
 	squareGeometry = Square::Make();
 	cube = Cube::Make();
+	grid = GridGeometry::Make(16, 16);
 
 	MaterialPtr backgroundMaterial = Material::Make(shd);
 	backgroundMaterial->AttachTexture(Texture::Make("decal", "Images/Background.jpg"));
@@ -86,10 +89,10 @@ static void initialize(GLFWwindow* win)
 	
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
-	sun->transform.position.x = 3;
+	sun->transform.position.z = 1;
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
 	//sunMesh->transform.rotation.x = 45;
-	sunMR->mesh = cube;
+	sunMR->mesh = grid;
 	sunMR->AttachMaterial(sunMaterial);
 
 	sun = scene.CreateNewGameObject("Sun");
@@ -120,6 +123,7 @@ static void initialize(GLFWwindow* win)
 	earthMaterial->AttachTexture(Texture::Make("decal", "Images/Earth.jpg"));
 
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
+
 	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
 	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
 	earthMesh->AttachComponent<PlanetRotator>()->rotatingSpeed = 32;

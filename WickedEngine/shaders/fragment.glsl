@@ -19,7 +19,7 @@ const vec4 materialSpecularColor = vec4( 1.0f, 1.0f, 1.0f, 1.0f );
 const float spotCoeficient = 1.0f; 
 const float lightAttConstantCoefficient = 1;
 const float lightAttLinearCoefficient = 0.25f;
-const float lightAttQuadraticCoefficient = 0.1f;
+const float lightAttQuadraticCoefficient = 0.01f;
 
 void main (void)
 {
