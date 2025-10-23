@@ -10,6 +10,8 @@ using ArcballPtr = std::shared_ptr<Arcball>;
 class Arcball
 {
 public:
+	float distance;
+
 	static inline ArcballPtr Make(float distance);
 	void InitMouseMotion(float x, float y);
 	void AccumulateMouseMotion(float x, float y);
@@ -17,7 +19,6 @@ public:
 protected:
 	Arcball(float distance);
 private:
-	float distance;
 	float x0, y0;
 	glm::mat4 matrix;
 

@@ -24,3 +24,12 @@ glm::mat4 Camera3D::GetProjectionMatrix() const
 
 	return glm::perspective(glm::radians(fOV), ratio, zNear, zFar);
 }
+
+glm::vec4 Camera3D::GetCameraPos() const
+{
+	glm::mat4 transformMatrix = glm::translate(gameObject->transform.GetModelMatrix(), (glm::vec3)eyeVector);
+
+	glm::vec4 globalPos = transformMatrix * glm::vec4(0,0,0,1);
+
+	return globalPos;
+}

@@ -13,9 +13,11 @@ class Color
 public:
 	float r, g, b, a;
 
-	static const Color white;
-	static const Color black;
-	static const Color red;
+	static const ColorPtr white;
+	static const ColorPtr black;
+	static const ColorPtr red;
+	static const ColorPtr green;
+	static const ColorPtr yellow;
 
 	inline static ColorPtr Make();
 	inline static ColorPtr Make(float r, float g, float b, float a = 1);

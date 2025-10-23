@@ -27,6 +27,7 @@
 #include "Geometry/Square.h"
 #include "Geometry/3D/Cube.h"
 #include "Geometry/3D/GridGeometry.h"
+#include "Geometry/3D/Sphere.h"
 
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
@@ -38,6 +39,7 @@
 #include "GameObjects/Components/Camera2D.h"
 #include "GameObjects/Components/Camera3D.h"
 #include "GameObjects/Components/ArcballCamera3D.h"
+#include "GameObjects/Components/PointLight.h"
 
 #include "Rendering/shader.h"
 #include "error.h"
@@ -48,58 +50,37 @@ static CirclePtr circleGeometry;
 static SquarePtr squareGeometry;
 static CubePtr cube;
 static GridGeometryPtr grid;
+static SpherePtr sphere;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
 
 static ArcballCamera3D* mainCamera;
 
-static void initialize(GLFWwindow* win)
+static void SolarSystem(GLFWwindow* win)
 {
-	glClearColor(0.5, 0.5, 0.5, 0);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
-	shd = Shader::Make();
-	shd->AttachVertexShader("shaders/vertex.glsl");
-	shd->AttachFragmentShader("shaders/fragment.glsl");
-	shd->Link();
-
-	circleGeometry = Circle::Make(65);
-	squareGeometry = Square::Make();
-	cube = Cube::Make();
-	grid = GridGeometry::Make(16, 16);
+	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
+	cameraObject->transform.position.z = 0;
+	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
+	mainCamera->SetCurrentWindow(win);
 
 	MaterialPtr backgroundMaterial = Material::Make(shd);
 	backgroundMaterial->AttachTexture(Texture::Make("decal", "Images/Background.jpg"));
 
-	GameObject* background = scene.CreateNewGameObject("Background");
+	GameObject* background = cameraObject->CreateEmptyChild("Background");
+	background->transform.position.z = -1.5f;
 	background->transform.scale = { 15, 15, 15 };
 	MeshRenderer* backgroundMR = background->AttachComponent<MeshRenderer>();
 	backgroundMR->mesh = squareGeometry;
 	backgroundMR->AttachMaterial(backgroundMaterial);
-
-	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	//cameraObject->transform.position.z = 4;
-	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
-	mainCamera->SetCurrentWindow(win);
-
+	
 	MaterialPtr sunMaterial = Material::Make(shd);
 	sunMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
-	
+
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
-	sun->transform.position.z = 1;
 	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
-	//sunMesh->transform.rotation.x = 45;
-	sunMR->mesh = grid;
-	sunMR->AttachMaterial(sunMaterial);
-
-	sun = scene.CreateNewGameObject("Sun");
-	sunMesh = sun->CreateEmptyChild("SunMesh");
-	sunMR = sunMesh->AttachComponent<MeshRenderer>();
-	//sunMesh->transform.rotation.x = 45;
-	sunMR->mesh = cube;
+	sunMR->mesh = sphere;
 	sunMR->AttachMaterial(sunMaterial);
 
 	GameObject* venusPivot = sun->CreateEmptyChild("VenusPivot");
@@ -144,6 +125,83 @@ static void initialize(GLFWwindow* win)
 	moonMR->AttachMaterial(moonMaterial);
 	moon->transform.position = Vector3(2, 0, 0);
 	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
+}
+
+static void T1(GLFWwindow* win)
+{
+	GameObject* a = scene.CreateNewGameObject("a");
+
+	GameObject* cameraObject = a->CreateEmptyChild("Camera");
+	cameraObject->transform.position.z = 4;
+	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
+	mainCamera->SetCurrentWindow(win);
+
+	GameObject* lightObject = scene.CreateNewGameObject("Light");
+	lightObject->transform.position = { 5, 5, 0 };
+	lightObject->AttachComponent<PointLight>();
+
+	MaterialPtr Material = Material::Make(shd);
+
+	GameObject* greenBall1 = lightObject->CreateEmptyChild("GreenBall");
+	greenBall1->transform.scale = { 0.5, 0.5, 0.5 };
+	greenBall1->transform.rotation = { 90, 0, 0 };
+	MeshRenderer* greenBallMR1 = greenBall1->AttachComponent<MeshRenderer>();
+	greenBallMR1->mesh = sphere;
+	greenBallMR1->color = Color::green;
+	greenBallMR1->AttachMaterial(Material);
+
+	GameObject* table = scene.CreateNewGameObject("Table");
+	table->transform.position.y = -1.5;
+	table->transform.scale = { 8, 1, 8 };
+	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
+	tableMR->mesh = cube;
+	tableMR->color = Color::red;
+	tableMR->AttachMaterial(Material);
+
+	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
+	rectangle->transform.position.y = -0.5;
+	rectangle->transform.scale = { 3, 1, 3 };
+	MeshRenderer* rectangleMR = rectangle->AttachComponent<MeshRenderer>();
+	rectangleMR->mesh = cube;
+	rectangleMR->color = Color::yellow;
+	rectangleMR->AttachMaterial(Material);
+
+	GameObject* greenBall = scene.CreateNewGameObject("GreenBall");
+	greenBall->transform.position.y = 0.75;
+	greenBall->transform.scale = {0.8, 0.8, 0.8};
+	greenBall->transform.rotation = { 90, 0, 0 };
+	MeshRenderer* greenBallMR = greenBall->AttachComponent<MeshRenderer>();
+	greenBallMR->mesh = sphere;
+	greenBallMR->color = Color::green;
+	greenBallMR->AttachMaterial(Material);
+
+	GameObject* redBall = scene.CreateNewGameObject("RedBall");
+	redBall->transform.position = {3, -0.15, -3};
+	MeshRenderer* redBallMR = redBall->AttachComponent<MeshRenderer>();
+	redBallMR->mesh = sphere;
+	redBallMR->color = Color::red;
+	redBallMR->AttachMaterial(Material);
+}
+
+static void initialize(GLFWwindow* win)
+{
+	glClearColor(0.5, 0.5, 0.5, 0);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+
+	shd = Shader::Make();
+	shd->AttachVertexShader("shaders/vertex.glsl");
+	shd->AttachFragmentShader("shaders/fragment.glsl");
+	shd->Link();
+	shd->UseProgram();
+
+	circleGeometry = Circle::Make(65);
+	squareGeometry = Square::Make();
+	cube = Cube::Make();
+	grid = GridGeometry::Make(2, 2);
+	sphere = Sphere::Make();
+
+	T1(win);
 
 	scene.printScene();
 
@@ -162,9 +220,11 @@ static void display(GLFWwindow* win)
 	//Clears the color and depth buffer with the clear color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	shd->SetUniform("cameraPos", Camera3D::getMainCamera()->GetCameraPos());
+	Light::LoadLights(shd);
 	scene.DrawScene();
 
-	Error::Check("display");
+	Error::Check("display"); 
 }
 
 static void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods)

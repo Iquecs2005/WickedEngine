@@ -13,10 +13,8 @@ public:
 	inline void setMainCamera();
 	inline void SetCurrentWindow(GLFWwindow* window);
 	virtual glm::mat4 GetProjectionMatrix() const = 0;
-	virtual glm::mat4 GetViewMatrix() const
-	{
-		return glm::mat4(1);
-	};
+	virtual glm::mat4 GetViewMatrix() const;
+	virtual glm::vec4 GetCameraPos() const;
 
 	friend class GameObject;
 
@@ -49,4 +47,3 @@ inline void Camera::SetCurrentWindow(GLFWwindow* window)
 
 inline Camera* Camera::getMainCamera() { return mainCamera; }
 inline void Camera::setMainCamera() { mainCamera = this; }
-

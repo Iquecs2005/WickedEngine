@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "GameObjects/Components/Camera.h"
 #include "Rendering/MVPMatrix.h"
+#include "GameObjects/Components/Light.h"
 
 Scene::Scene(const std::string& name)
 {

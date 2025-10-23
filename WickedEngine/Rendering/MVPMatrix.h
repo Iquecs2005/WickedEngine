@@ -17,7 +17,7 @@ protected:
 	{
 	}
 	MVPMatrix(const glm::mat4& model, const MVPMatrixPtr& baseMvp)
-		: model(baseMvp->model * model), view(baseMvp->view), projection(baseMvp->projection), mvp(projection * view * baseMvp->model * model)
+		: model(baseMvp->model * model), view(baseMvp->view), projection(baseMvp->projection), mvp(projection * view * this->model)
 	{
 	}
 public:

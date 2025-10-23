@@ -2,9 +2,11 @@
 
 #include <iostream>
 
-const Color Color::white = Color();
-const Color Color::black = Color(0, 0, 0);
-const Color Color::red = Color(0.8f, 0.1f, 0.1f);
+const ColorPtr Color::white = Color::Make();
+const ColorPtr Color::black = Color::Make(0, 0, 0);
+const ColorPtr Color::red = Color::Make(0.8f, 0.1f, 0.1f);
+const ColorPtr Color::green = Color::Make(0.2f, 0.8f, 0.2f);
+const ColorPtr Color::yellow = Color::Make(0.8f, 0.8f, 0.2f);
 
 Color& Color::operator= (const Color& color)
 {

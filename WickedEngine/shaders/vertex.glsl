@@ -8,7 +8,7 @@ uniform mat4 mv;
 uniform mat4 nm;
 uniform mat4 mvp;
 
-const vec4 lpos = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+uniform vec4 lightPos;
 
 out data
 {
@@ -24,15 +24,15 @@ void main (void)
 	v.vWorld = vec3(mv * pos);
 	v.nWorld = normalize(vec3(nm * vec4(normal, 0.0f)));
 
-	if (lpos.w == 0)
+	if (lightPos.w == 0)
 	{
-		v.lightVector = normalize(vec3(lpos));
+		v.lightVector = normalize(vec3(lightPos));
 		v.lightDistance = 0;
 	}
 	else
 	{
-		v.lightVector = normalize(vec3(lpos) - v.vWorld);
-		v.lightDistance = distance(vec3(lpos), v.vWorld);
+		v.lightVector = normalize(vec3(lightPos) - v.vWorld);
+		v.lightDistance = distance(vec3(lightPos), v.vWorld);
 	}
 
 	v.texcoord = texcoord;

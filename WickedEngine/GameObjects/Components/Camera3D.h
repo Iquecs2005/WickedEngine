@@ -17,6 +17,7 @@ public:
 
 	glm::mat4 GetViewMatrix() const override;
 	glm::mat4 GetProjectionMatrix() const override;
+	glm::vec4 GetCameraPos() const override;
 
 	friend class GameObject;
 

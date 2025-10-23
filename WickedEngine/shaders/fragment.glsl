@@ -3,6 +3,8 @@
 uniform vec4 uniformColor;
 uniform sampler2D decal;
 
+uniform vec4 cameraPos;
+
 in data 
 {
 	vec3 vWorld;
@@ -16,7 +18,7 @@ out vec4 fcolor;
 
 const float globalAttenuation = 0.75f;
 const vec4 materialSpecularColor = vec4( 1.0f, 1.0f, 1.0f, 1.0f );
-const float spotCoeficient = 1.0f; 
+const float spotCoeficient = 4.0f; 
 const float lightAttConstantCoefficient = 1;
 const float lightAttLinearCoefficient = 0.25f;
 const float lightAttQuadraticCoefficient = 0.01f;
@@ -38,13 +40,13 @@ void main (void)
 	lightDivisor += lightAttLinearCoefficient * f.lightDistance;
 	lightDivisor += lightAttQuadraticCoefficient * pow(f.lightDistance, 2);
 
-	float lightAttenuation = 1 / lightDivisor;
+	float lightAttenuation = 1;
 	fcolor += materialDiffuseColor * max(0, nDotL) * lightAttenuation;
 
 	if (nDotL > 0)
 	{
 		vec3 refL = normalize(reflect(-lightNorm, nNorm));
-		fcolor += materialSpecularColor * pow(max(0, dot(refL, normalize(-vNorm))), spotCoeficient) * lightAttenuation;
+		fcolor += materialSpecularColor * pow(max(0, dot(refL, normalize(vec3(cameraPos) - f.vWorld))), spotCoeficient) * lightAttenuation;
 	}
 
 	//fcolor = uniformColor * texture(decal, f.texcoord);

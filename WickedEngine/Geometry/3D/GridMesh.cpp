@@ -4,8 +4,8 @@ GridMesh::GridMesh(unsigned int nX, unsigned int nY)
 	: nVerticesX(nX), nVerticesY(nY), nVertices(nX * nY), 
 	nTriangles(2 * (nX - 1) * (nX - 1)), verticeList(nVertices), incidenceList(nTriangles * 3)
 {
-	float deltaX = 1.0f / nVerticesX;
-	float deltaY = 1.0f / nVerticesX;
+	float deltaX = 1.0f / (nVerticesX - 1);
+	float deltaY = 1.0f / (nVerticesY - 1); 
 
 	unsigned int nv = 0;
 	for (int i = 0; i < nVerticesX; i++)
