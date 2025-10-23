@@ -129,9 +129,7 @@ static void SolarSystem(GLFWwindow* win)
 
 static void T1(GLFWwindow* win)
 {
-	GameObject* a = scene.CreateNewGameObject("a");
-
-	GameObject* cameraObject = a->CreateEmptyChild("Camera");
+	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
 	cameraObject->transform.position.z = 4;
 	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
 	mainCamera->SetCurrentWindow(win);
@@ -155,7 +153,6 @@ static void T1(GLFWwindow* win)
 	table->transform.scale = { 8, 1, 8 };
 	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
 	tableMR->mesh = cube;
-	tableMR->color = Color::red;
 	tableMR->AttachMaterial(Material);
 
 	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
