@@ -7,10 +7,17 @@ using MaterialPtr = std::shared_ptr<Material>;
 
 #include "shader.h"
 #include "Texture.h"
+#include "../General/Color.h"
 
 class Material
 {
 public:
+	ColorPtr ambientColor;
+	ColorPtr diffuseColor;
+	ColorPtr specularColor;
+
+	float spotCoeficient;
+
 	static inline MaterialPtr Make(ShaderPtr shader = nullptr, TexturePtr texture = nullptr);
 
 	void Load();

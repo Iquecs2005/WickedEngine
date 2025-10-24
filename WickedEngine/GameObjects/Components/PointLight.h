@@ -6,7 +6,11 @@
 class PointLight : public Light
 {
 public:
-	using Light::lightIntensity;
+	float lightAttConstantCoefficient;
+	float lightAttLinearCoefficient;
+	float lightAttQuadraticCoefficient;
+
+	void LoadLight(ShaderPtr currentShader) override;
 
 	friend class GameObject;
 protected:

@@ -5,6 +5,16 @@ uniform sampler2D decal;
 
 uniform vec4 cameraPos;
 
+uniform vec4 materialAmbientColor;
+uniform vec4 materialDiffuseColor;
+uniform vec4 materialSpecularColor;
+
+uniform float lightAttConstantCoefficient;
+uniform float lightAttLinearCoefficient;
+uniform float lightAttQuadraticCoefficient;
+
+uniform float spotCoeficient; 
+
 in data 
 {
 	vec3 vWorld;
@@ -17,11 +27,6 @@ in data
 out vec4 fcolor;
 
 const float globalAttenuation = 0.75f;
-const vec4 materialSpecularColor = vec4( 1.0f, 1.0f, 1.0f, 1.0f );
-const float spotCoeficient = 4.0f; 
-const float lightAttConstantCoefficient = 1;
-const float lightAttLinearCoefficient = 0.25f;
-const float lightAttQuadraticCoefficient = 0.01f;
 
 void main (void)
 {
@@ -29,25 +34,25 @@ void main (void)
 	vec3 nNorm = normalize(f.nWorld);
 	vec3 lightNorm = normalize(f.lightVector);
 
-	vec4 materialAmbientColor = uniformColor * texture(decal, f.texcoord);
-	vec4 materialDiffuseColor = materialAmbientColor;
+	vec4 ambientColor = materialAmbientColor * uniformColor * texture(decal, f.texcoord);
+	vec4 diffuseColor = materialDiffuseColor * uniformColor * texture(decal, f.texcoord);
+	vec4 specularColor = materialSpecularColor;
 
 	float nDotL = dot(nNorm, lightNorm);
 
-	fcolor = materialAmbientColor * globalAttenuation;
+	fcolor = ambientColor * globalAttenuation;
 
 	float lightDivisor = lightAttConstantCoefficient;
 	lightDivisor += lightAttLinearCoefficient * f.lightDistance;
 	lightDivisor += lightAttQuadraticCoefficient * pow(f.lightDistance, 2);
 
 	float lightAttenuation = 1;
-	fcolor += materialDiffuseColor * max(0, nDotL) * lightAttenuation;
+	fcolor += diffuseColor * max(0, nDotL) * lightAttenuation;
 
 	if (nDotL > 0)
 	{
 		vec3 refL = normalize(reflect(-lightNorm, nNorm));
-		fcolor += materialSpecularColor * pow(max(0, dot(refL, normalize(vec3(cameraPos) - f.vWorld))), spotCoeficient) * lightAttenuation;
+		vec3 eyeVector = normalize(vec3(cameraPos) - f.vWorld);
+		fcolor += specularColor * pow(max(0, dot(refL, eyeVector)), spotCoeficient) * lightAttenuation;
 	}
-
-	//fcolor = uniformColor * texture(decal, f.texcoord);
 }

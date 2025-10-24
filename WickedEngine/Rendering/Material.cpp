@@ -6,6 +6,13 @@
 void Material::Load()
 {
 	currentShader->UseProgram();
+
+	currentShader->SetUniform("materialAmbientColor", (glm::vec4)*ambientColor);
+	currentShader->SetUniform("materialDiffuseColor", (glm::vec4)*diffuseColor);
+	currentShader->SetUniform("materialSpecularColor", (glm::vec4)*specularColor);
+
+	currentShader->SetUniform("spotCoeficient", spotCoeficient);
+
 	currentShader->ActiveTexture(texture->GetTextureName().c_str());
 	glBindTexture(GL_TEXTURE_2D, texture->GetTextureId());
 }
@@ -35,8 +42,15 @@ TexturePtr Material::GetTexture()
 	return texture;
 }
 
-Material::Material(ShaderPtr shader, TexturePtr texture)
+Material::Material(ShaderPtr shader, TexturePtr texture) 
+	: ambientColor(Color::Make()), diffuseColor(Color::Make()), specularColor(Color::Make())
 {
+	ambientColor = Color::white;
+	diffuseColor = Color::white;
+	specularColor = Color::white;
+
+	spotCoeficient = 16;
+
 	AttachShader(shader);
 	if (texture == nullptr)
 	{

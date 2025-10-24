@@ -132,6 +132,7 @@
     <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
     <ClCompile Include="Geometry\3D\GridMesh.cpp" />
     <ClCompile Include="Geometry\3D\GridGeometry.cpp" />
+    <ClCompile Include="GameObjects\Components\GlobalLight.cpp" />
     <ClCompile Include="Rendering\Arcball.cpp" />
     <ClCompile Include="GameObjects\Components\Camera3D.cpp" />
     <ClCompile Include="Geometry\3D\Cube.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />
     <ClInclude Include="Geometry\3D\GridMesh.h" />
     <ClInclude Include="Geometry\3D\GridGeometry.h" />
+    <ClInclude Include="GameObjects\Components\GlobalLight.h" />
     <ClInclude Include="Rendering\Arcball.h" />
     <ClInclude Include="GameObjects\Components\Camera3D.h" />
     <ClInclude Include="Geometry\3D\Cube.h" />

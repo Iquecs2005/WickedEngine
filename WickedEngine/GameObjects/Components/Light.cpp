@@ -9,3 +9,13 @@ void Light::LoadLights(ShaderPtr currentShader)
 		currentShader->SetUniform("lightPos", (glm::vec4)currentLight->gameObject->transform.position);
 	}
 }
+
+void Light::LoadLight(ShaderPtr currentShader)
+{
+	currentShader->SetUniform("lightPos", (glm::vec4)currentLight->gameObject->transform.position);
+}
+
+Light::Light(GameObject* gameObject) : MonoBehaviour(gameObject)
+{
+	currentLight = this;
+}

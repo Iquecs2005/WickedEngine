@@ -12,13 +12,9 @@ public:
 
 	static void LoadLights(ShaderPtr currentShader);
 protected:
-	float lightIntensity;
-
-	Light(GameObject* gameObject) : MonoBehaviour(gameObject), lightIntensity(10)
-	{
-		currentLight = this;
-	}
+	Light(GameObject* gameObject);
 	inline ~Light() {};
+	virtual void LoadLight(ShaderPtr currentShader);
 private:
 	static Light* currentLight;
 };

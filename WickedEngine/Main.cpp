@@ -127,7 +127,7 @@ static void SolarSystem(GLFWwindow* win)
 	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
 }
 
-static void T1(GLFWwindow* win)
+static void T2(GLFWwindow* win)
 {
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
 	cameraObject->transform.position.z = 4;
@@ -148,36 +148,54 @@ static void T1(GLFWwindow* win)
 	greenBallMR1->color = Color::green;
 	greenBallMR1->AttachMaterial(Material);
 
+	MaterialPtr whiteMaterial = Material::Make(shd);
+	whiteMaterial->ambientColor = Color::Make(0.50f, 0.50f, 0.50f);
+	whiteMaterial->diffuseColor = Color::Make(0.70f, 0.70f, 0.70f);
+	whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+
 	GameObject* table = scene.CreateNewGameObject("Table");
 	table->transform.position.y = -1.5;
 	table->transform.scale = { 8, 1, 8 };
 	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
 	tableMR->mesh = cube;
-	tableMR->AttachMaterial(Material);
+	tableMR->AttachMaterial(whiteMaterial);
+
+	MaterialPtr yellowBall = Material::Make(shd);
+	yellowBall->ambientColor = Color::Make(0.60f, 0.60f, 0.15f);
+	yellowBall->diffuseColor = Color::Make(1.00f, 1.00f, 0.30f);
+	yellowBall->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
 
 	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
 	rectangle->transform.position.y = -0.5;
 	rectangle->transform.scale = { 3, 1, 3 };
 	MeshRenderer* rectangleMR = rectangle->AttachComponent<MeshRenderer>();
 	rectangleMR->mesh = cube;
-	rectangleMR->color = Color::yellow;
-	rectangleMR->AttachMaterial(Material);
+	rectangleMR->AttachMaterial(yellowBall);
 
+	MaterialPtr greenBallMaterial = Material::Make(shd);
+	greenBallMaterial->ambientColor = Color::Make(0.15f, 0.45f, 0.10f);
+	greenBallMaterial->diffuseColor = Color::Make(0.20f, 0.80f, 0.15f);
+	greenBallMaterial->specularColor = Color::Make(0.80f, 0.80f, 0.80f);
+	
 	GameObject* greenBall = scene.CreateNewGameObject("GreenBall");
 	greenBall->transform.position.y = 0.75;
 	greenBall->transform.scale = {0.8, 0.8, 0.8};
 	greenBall->transform.rotation = { 90, 0, 0 };
 	MeshRenderer* greenBallMR = greenBall->AttachComponent<MeshRenderer>();
 	greenBallMR->mesh = sphere;
-	greenBallMR->color = Color::green;
-	greenBallMR->AttachMaterial(Material);
+	greenBallMR->AttachMaterial(greenBallMaterial);
+
+	MaterialPtr redBallMaterial = Material::Make(shd);
+	redBallMaterial->ambientColor = Color::Make(0.45f, 0.15f, 0.10f);
+	redBallMaterial->diffuseColor = Color::Make(0.85f, 0.20f, 0.15f);
+	redBallMaterial->specularColor = Color::Make(1.00f, 0.30f, 0.20f);
+	redBallMaterial->spotCoeficient = 16;
 
 	GameObject* redBall = scene.CreateNewGameObject("RedBall");
 	redBall->transform.position = {3, -0.15, -3};
 	MeshRenderer* redBallMR = redBall->AttachComponent<MeshRenderer>();
 	redBallMR->mesh = sphere;
-	redBallMR->color = Color::red;
-	redBallMR->AttachMaterial(Material);
+	redBallMR->AttachMaterial(redBallMaterial);
 }
 
 static void initialize(GLFWwindow* win)
@@ -198,7 +216,7 @@ static void initialize(GLFWwindow* win)
 	grid = GridGeometry::Make(2, 2);
 	sphere = Sphere::Make();
 
-	T1(win);
+	T2(win);
 
 	scene.printScene();
 
