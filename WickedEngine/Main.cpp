@@ -28,6 +28,7 @@
 #include "Geometry/3D/Cube.h"
 #include "Geometry/3D/GridGeometry.h"
 #include "Geometry/3D/Sphere.h"
+#include "Geometry/3D/Cylinder.h"
 
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
@@ -51,6 +52,7 @@ static SquarePtr squareGeometry;
 static CubePtr cube;
 static GridGeometryPtr grid;
 static SpherePtr sphere;
+static CylinderPtr cylinder;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
@@ -172,22 +174,17 @@ static void T2(GLFWwindow* win)
 	rectangleMR->mesh = cube;
 	rectangleMR->AttachMaterial(yellowBall);
 
-	MaterialPtr greenBallMaterial = Material::Make(shd);
-	greenBallMaterial->ambientColor = Color::Make(0.15f, 0.45f, 0.10f);
-	greenBallMaterial->diffuseColor = Color::Make(0.20f, 0.80f, 0.15f);
-	greenBallMaterial->specularColor = Color::Make(0.80f, 0.80f, 0.80f);
+	MaterialPtr greenCylinderMaterial = Material::Make(shd);
+	greenCylinderMaterial->AttachTexture(Texture::Make("decal", "Images/Moon.jpg"));
 	
-	GameObject* greenBall = scene.CreateNewGameObject("GreenBall");
-	greenBall->transform.position.y = 0.75;
-	greenBall->transform.scale = {0.8, 0.8, 0.8};
-	greenBall->transform.rotation = { 90, 0, 0 };
-	MeshRenderer* greenBallMR = greenBall->AttachComponent<MeshRenderer>();
-	greenBallMR->mesh = sphere;
-	greenBallMR->AttachMaterial(greenBallMaterial);
+	GameObject* greenCylinder = scene.CreateNewGameObject("GreenBall");
+	greenCylinder->transform.position.y = 1;
+	MeshRenderer* greenCylinderMR = greenCylinder->AttachComponent<MeshRenderer>();
+	greenCylinderMR->mesh = cylinder;
+	greenCylinderMR->AttachMaterial(greenCylinderMaterial);
 
 	MaterialPtr redBallMaterial = Material::Make(shd);
-	redBallMaterial->ambientColor = Color::Make(0.45f, 0.15f, 0.10f);
-	redBallMaterial->diffuseColor = Color::Make(0.85f, 0.20f, 0.15f);
+	redBallMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
 	redBallMaterial->specularColor = Color::Make(1.00f, 0.30f, 0.20f);
 	redBallMaterial->spotCoeficient = 16;
 
@@ -215,6 +212,7 @@ static void initialize(GLFWwindow* win)
 	cube = Cube::Make();
 	grid = GridGeometry::Make(2, 2);
 	sphere = Sphere::Make();
+	cylinder = Cylinder::Make();
 
 	T2(win);
 

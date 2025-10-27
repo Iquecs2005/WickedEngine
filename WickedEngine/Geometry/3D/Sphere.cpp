@@ -29,3 +29,7 @@ GridMeshPtr Sphere::CreateGrid(unsigned int nstack, unsigned int nslice)
 
 	return grid;
 }
+
+
+
+
