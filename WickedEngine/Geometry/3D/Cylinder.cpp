@@ -1,15 +1,15 @@
 #define _USE_MATH_DEFINES
-#include "Cilinder.h"
+#include "Cylinder.h"
 #include <cmath>
 #include <iostream>
 
-Cilinder::Cilinder(unsigned int nstack)
+Cylinder::Cylinder(unsigned int nstack)
 	: Mesh3D(GetVerticeList(nstack), GetIncidenceList(nstack))
 {
 
 }
 
-GridMeshPtr Cilinder::CreateGrid(unsigned int nstack)
+GridMeshPtr Cylinder::CreateGrid(unsigned int nstack)
 {
 	grid = GridMesh::Make(nstack, 2);
 
@@ -27,8 +27,8 @@ GridMeshPtr Cilinder::CreateGrid(unsigned int nstack)
 
 		vertexData1.x = x;
 		vertexData2.x = x;
-		vertexData1.y = -0.5f;
-		vertexData2.y = 0.5f;
+		vertexData1.y = -1;
+		vertexData2.y = 1;
 		vertexData1.z = z;
 		vertexData2.z = z;
 
@@ -45,7 +45,7 @@ GridMeshPtr Cilinder::CreateGrid(unsigned int nstack)
 	return grid;
 }
 
-std::vector<VertexData3D> Cilinder::GenerateLidVertices(unsigned int nVertices, float yValue)
+std::vector<VertexData3D> Cylinder::GenerateLidVertices(unsigned int nVertices, float yValue)
 {
 	std::vector<VertexData3D> vertexVector(nVertices);
 
@@ -75,16 +75,16 @@ std::vector<VertexData3D> Cilinder::GenerateLidVertices(unsigned int nVertices, 
 		float cossine = cosf(currentAngle);
 		float sine = sinf(currentAngle);
 		
-		centerVector.x = sine;
-		centerVector.y = yValue;
-		centerVector.z = cossine;
+		currentVertice.x = sine;
+		currentVertice.y = yValue;
+		currentVertice.z = cossine;
 
-		centerVector.nx = sine;
-		centerVector.ny = 0;
-		centerVector.nz = cossine;
+		currentVertice.nx = sine;
+		currentVertice.ny = 0;
+		currentVertice.nz = cossine;
 
-		centerVector.s = 0.5f + 0.5f * cossine;
-		centerVector.t = 0.5f + 0.5f * sine;
+		currentVertice.s = 0.5f + 0.5f * cossine;
+		currentVertice.t = 0.5f + 0.5f * sine;
 
 		currentAngle += angleStep;
 	}
@@ -92,7 +92,7 @@ std::vector<VertexData3D> Cilinder::GenerateLidVertices(unsigned int nVertices, 
 	return vertexVector;
 }
 
-std::vector<unsigned int> Cilinder::GenerateLidIncidence(unsigned int nVertices, unsigned int offset)
+std::vector<unsigned int> Cylinder::GenerateLidIncidence(unsigned int nVertices, unsigned int offset, bool bottomLid)
 {
 	const unsigned int nTriangles = nVertices - 1;
 	std::vector<unsigned int> incidenceVector(nTriangles * 3);
@@ -100,82 +100,65 @@ std::vector<unsigned int> Cilinder::GenerateLidIncidence(unsigned int nVertices,
 
 	for (unsigned int i = 0; i < nTriangles; i++)
 	{
-		incidenceVector[i * 3] = offset;
-		incidenceVector[i * 3 + 1] = offset + currentVertice++;
-		if (currentVertice >= nVertices) currentVertice = 1;
-		incidenceVector[i * 3 + 2] = offset + currentVertice;
+		if (!bottomLid)
+		{
+			incidenceVector[i * 3] = offset;
+			incidenceVector[i * 3 + 1] = offset + currentVertice++;
+			if (currentVertice >= nVertices) currentVertice = 1;
+			incidenceVector[i * 3 + 2] = offset + currentVertice;
+		}
+		else
+		{
+			incidenceVector[i * 3 + 2] = offset;
+			incidenceVector[i * 3 + 1] = offset + currentVertice++;
+			if (currentVertice >= nVertices) currentVertice = 1;
+			incidenceVector[i * 3] = offset + currentVertice;
+		}
 	}
 
 	return incidenceVector;
 }
 
-std::vector<VertexData3D> Cilinder::GetVerticeList(unsigned int nstack)
+std::vector<VertexData3D> Cylinder::GetVerticeList(unsigned int nstack)
 {
 	if (grid == nullptr)
 		grid = CreateGrid(nstack);
 
 	std::vector<VertexData3D> completeVertexData;
-	completeVertexData.reserve(grid->nVertices + (nstack + 1) * 2);
+	completeVertexData.reserve(grid->nVertices + nstack * 2);
 	
 	std::vector<VertexData3D> tempList;
-	std::cout << "Total vertices: " << grid->nVertices + 5 * 2 << std::endl;
 	
 	tempList = grid->GetVerticeList();
 	completeVertexData.insert(completeVertexData.end(), tempList.begin(), tempList.end());
-	std::cout << "Total vertices: " << completeVertexData.size() << std::endl;
 	
-	tempList = GenerateLidVertices(5, 0.5);
+	tempList = GenerateLidVertices(nstack, 1);
 	completeVertexData.insert(completeVertexData.end(), tempList.begin(), tempList.end());
-	std::cout << "Total vertices: " << completeVertexData.size() << std::endl;
 	
-	tempList = GenerateLidVertices(5, -0.5);
+	tempList = GenerateLidVertices(nstack, -1);
 	completeVertexData.insert(completeVertexData.end(), tempList.begin(), tempList.end());
-	std::cout << "Total vertices: " << completeVertexData.size() << std::endl;
-
-	std::cout << "Vertices:" << std::endl;
-	for (auto a : completeVertexData)
-	{
-		std::cout << a.x << " " << a.y << " " << a.z << std::endl;
-	}
 
 	return completeVertexData;
 }
 
-std::vector<unsigned int> Cilinder::GetIncidenceList(unsigned int nstack)
+std::vector<unsigned int> Cylinder::GetIncidenceList(unsigned int nstack)
 {
 	if (grid == nullptr)
 		grid = CreateGrid(nstack);
 
 	std::vector<unsigned int> completeIncidenceList;
-	completeIncidenceList.reserve(grid->nTriangles * 3 + 6 * nstack);
+	completeIncidenceList.reserve(grid->nTriangles * 3 + 6 * (nstack - 1));
 
 	std::vector<unsigned int> tempList;
-	std::cout << "Total Incidence: " << grid->nTriangles * 3 + 6 * nstack << std::endl;
 	
 	tempList = grid->GetIncidenceList();
 	completeIncidenceList.insert(completeIncidenceList.end(), tempList.begin(), tempList.end());
-	std::cout << "Total Incidence: " << completeIncidenceList.size() << std::endl;
 	
-	tempList = GenerateLidIncidence(nstack + 1, grid->nVertices);
+	tempList = GenerateLidIncidence(nstack, grid->nVertices, false);
 	completeIncidenceList.insert(completeIncidenceList.end(), tempList.begin(), tempList.end());
-	std::cout << "Total Incidence: " << completeIncidenceList.size() << std::endl;
 	
-	tempList = GenerateLidIncidence(nstack + 1, grid->nVertices + nstack + 1);
+	tempList = GenerateLidIncidence(nstack, grid->nVertices + nstack, true);
 	completeIncidenceList.insert(completeIncidenceList.end(), tempList.begin(), tempList.end());
-	std::cout << "Total Incidence: " << completeIncidenceList.size() << std::endl;
-
-	std::cout << "Incidence:" << std::endl;
-	int i = 0;
-	for (auto a : completeIncidenceList)
-	{
-		std::cout << a << " ";
-		i++;
-		if (i == 3)
-		{
-			std::cout << std::endl;
-			i = 0;
-		}
-	}
 
 	return completeIncidenceList;
 }

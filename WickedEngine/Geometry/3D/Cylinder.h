@@ -1,30 +1,30 @@
 #include <memory>
 
-class Cilinder;
-using CilinderPtr = std::shared_ptr<Cilinder>;
+class Cylinder;
+using CylinderPtr = std::shared_ptr<Cylinder>;
 
 #pragma once
 
 #include "GridMesh.h"
 #include "Mesh3D.h"
 
-class Cilinder : public Mesh3D
+class Cylinder : public Mesh3D
 {
 public:
-	static inline CilinderPtr Make(unsigned int nstack = 4);
+	static inline CylinderPtr Make(unsigned int nstack = 64);
 protected:
-	Cilinder(unsigned int nstack);
+	Cylinder(unsigned int nstack);
 private:
 	GridMeshPtr grid;
 
 	GridMeshPtr CreateGrid(unsigned int nstack);
 	std::vector<VertexData3D> GenerateLidVertices(unsigned int nVertices, float yValue);
-	std::vector<unsigned int> GenerateLidIncidence(unsigned int nVertices, unsigned int offset);
+	std::vector<unsigned int> GenerateLidIncidence(unsigned int nVertices, unsigned int offset, bool bottomLid);
 	std::vector<VertexData3D> GetVerticeList(unsigned int nstack);
 	std::vector<unsigned int> GetIncidenceList(unsigned int nstack);
 };
 
-inline CilinderPtr Cilinder::Make(unsigned int nstack)
+inline CylinderPtr Cylinder::Make(unsigned int nstack)
 {
-	return CilinderPtr(new Cilinder(nstack));
+	return CylinderPtr(new Cylinder(nstack));
 }
