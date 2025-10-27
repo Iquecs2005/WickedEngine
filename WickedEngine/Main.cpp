@@ -28,6 +28,7 @@
 #include "Geometry/3D/Cube.h"
 #include "Geometry/3D/GridGeometry.h"
 #include "Geometry/3D/Sphere.h"
+#include "Geometry/3D/Cilinder.h"
 
 #include "General/Vector3.h"
 #include "GameObjects/GameObject.h"
@@ -51,6 +52,7 @@ static SquarePtr squareGeometry;
 static CubePtr cube;
 static GridGeometryPtr grid;
 static SpherePtr sphere;
+static CilinderPtr cilinder;
 
 static Scene* sceneptr = new Scene("Sistema Solar");
 static Scene& scene = *sceneptr;
@@ -179,10 +181,8 @@ static void T2(GLFWwindow* win)
 	
 	GameObject* greenBall = scene.CreateNewGameObject("GreenBall");
 	greenBall->transform.position.y = 0.75;
-	greenBall->transform.scale = {0.8, 0.8, 0.8};
-	greenBall->transform.rotation = { 90, 0, 0 };
 	MeshRenderer* greenBallMR = greenBall->AttachComponent<MeshRenderer>();
-	greenBallMR->mesh = sphere;
+	greenBallMR->mesh = cilinder;
 	greenBallMR->AttachMaterial(greenBallMaterial);
 
 	MaterialPtr redBallMaterial = Material::Make(shd);
@@ -201,7 +201,7 @@ static void T2(GLFWwindow* win)
 static void initialize(GLFWwindow* win)
 {
 	glClearColor(0.5, 0.5, 0.5, 0);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
 	shd = Shader::Make();
@@ -215,6 +215,7 @@ static void initialize(GLFWwindow* win)
 	cube = Cube::Make();
 	grid = GridGeometry::Make(2, 2);
 	sphere = Sphere::Make();
+	cilinder = Cilinder::Make();
 
 	T2(win);
 
