@@ -1,7 +1,9 @@
 #version 410
 
 uniform vec4 uniformColor;
+
 uniform sampler2D decal;
+uniform sampler2D gloss;
 
 uniform vec4 cameraPos;
 
@@ -36,7 +38,7 @@ void main (void)
 
 	vec4 ambientColor = materialAmbientColor * uniformColor * texture(decal, f.texcoord);
 	vec4 diffuseColor = materialDiffuseColor * uniformColor * texture(decal, f.texcoord);
-	vec4 specularColor = materialSpecularColor;
+	vec4 specularColor = materialSpecularColor * texture(gloss, f.texcoord);
 
 	float nDotL = dot(nNorm, lightNorm);
 
@@ -46,13 +48,13 @@ void main (void)
 	lightDivisor += lightAttLinearCoefficient * f.lightDistance;
 	lightDivisor += lightAttQuadraticCoefficient * pow(f.lightDistance, 2);
 
-	float lightAttenuation = 1;
+	float lightAttenuation = 1 / lightDivisor;
 	fcolor += diffuseColor * max(0, nDotL) * lightAttenuation;
 
 	if (nDotL > 0)
 	{
 		vec3 refL = normalize(reflect(-lightNorm, nNorm));
 		vec3 eyeVector = normalize(vec3(cameraPos) - f.vWorld);
-		fcolor += specularColor * pow(max(0, dot(refL, eyeVector)), spotCoeficient) * lightAttenuation;
+		fcolor += pow(max(0, dot(refL, eyeVector)), spotCoeficient) * specularColor * lightAttenuation;
 	}
 }

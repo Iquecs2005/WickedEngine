@@ -2,9 +2,9 @@
 
 PointLight::PointLight(GameObject* gameObject) : Light(gameObject)
 {
-	lightAttConstantCoefficient = 0.90;
-	lightAttLinearCoefficient = 0.10f;
-	lightAttQuadraticCoefficient = 0.01f;
+	lightAttConstantCoefficient = 1;
+	lightAttLinearCoefficient = 0.005f;
+	lightAttQuadraticCoefficient = 0.0001f;
 }
 
 void PointLight::LoadLight(ShaderPtr currentShader)

@@ -13,12 +13,15 @@ void Material::Load()
 
 	currentShader->SetUniform("spotCoeficient", spotCoeficient);
 
-	currentShader->ActiveTexture(texture->GetTextureName().c_str());
-	glBindTexture(GL_TEXTURE_2D, texture->GetTextureId());
+	currentShader->ActiveTexture("gloss");
+	glBindTexture(GL_TEXTURE_2D, glossTexture->GetTextureId());
+	currentShader->ActiveTexture("decal");
+	glBindTexture(GL_TEXTURE_2D, decalTexture->GetTextureId());
 }
 
 void Material::Unload()
 {
+	currentShader->DeactiveTexture();
 	currentShader->DeactiveTexture();
 }
 
@@ -27,9 +30,24 @@ void Material::AttachShader(ShaderPtr shader)
 	currentShader = shader;
 }
 
-void Material::AttachTexture(TexturePtr texture)
+void Material::AttachDecalTexture(TexturePtr texture)
 {
-	this->texture = texture;
+	if (texture == nullptr)
+	{
+		texture = Texture::GetDefaultTexture();
+	}
+
+	decalTexture = texture;
+}
+
+void Material::AttachGlossTexture(TexturePtr texture)
+{
+	if (texture == nullptr)
+	{
+		texture = Texture::GetDefaultTexture();
+	}
+
+	glossTexture = texture;
 }
 
 ShaderPtr Material::GetShader()
@@ -37,12 +55,17 @@ ShaderPtr Material::GetShader()
 	return currentShader;
 }
 
-TexturePtr Material::GetTexture()
+TexturePtr Material::GetDecalTexture()
 {
-	return texture;
+	return decalTexture;
 }
 
-Material::Material(ShaderPtr shader, TexturePtr texture) 
+TexturePtr Material::GetGlossTexture()
+{
+	return glossTexture;
+}
+
+Material::Material(ShaderPtr shader, TexturePtr decalTexture, TexturePtr glossTexture)
 	: ambientColor(Color::Make()), diffuseColor(Color::Make()), specularColor(Color::Make())
 {
 	ambientColor = Color::white;
@@ -52,9 +75,6 @@ Material::Material(ShaderPtr shader, TexturePtr texture)
 	spotCoeficient = 16;
 
 	AttachShader(shader);
-	if (texture == nullptr)
-	{
-		texture = Texture::GetDefaultTexture();
-	}
-	AttachTexture(texture);
+	AttachDecalTexture(decalTexture);
+	AttachGlossTexture(glossTexture);
 }

@@ -67,7 +67,7 @@ static void SolarSystem(GLFWwindow* win)
 	mainCamera->SetCurrentWindow(win);
 
 	MaterialPtr backgroundMaterial = Material::Make(shd);
-	backgroundMaterial->AttachTexture(Texture::Make("decal", "Images/Background.jpg"));
+	backgroundMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Background.jpg"));
 
 	GameObject* background = cameraObject->CreateEmptyChild("Background");
 	background->transform.position.z = -1.5f;
@@ -77,7 +77,7 @@ static void SolarSystem(GLFWwindow* win)
 	backgroundMR->AttachMaterial(backgroundMaterial);
 	
 	MaterialPtr sunMaterial = Material::Make(shd);
-	sunMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
+	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
 
 	GameObject* sun = scene.CreateNewGameObject("Sun");
 	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
@@ -89,7 +89,7 @@ static void SolarSystem(GLFWwindow* win)
 	venusPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 14;
 
 	MaterialPtr venusMaterial = Material::Make(shd);
-	venusMaterial->AttachTexture(Texture::Make("decal", "Images/Venus.jpg"));
+	venusMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Venus.jpg"));
 
 	GameObject* venus = venusPivot->CreateEmptyChild("Venus");
 	venus->transform.position = Vector3(1.75f, 0, 0);
@@ -103,7 +103,7 @@ static void SolarSystem(GLFWwindow* win)
 	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
 
 	MaterialPtr earthMaterial = Material::Make(shd);
-	earthMaterial->AttachTexture(Texture::Make("decal", "Images/Earth.jpg"));
+	earthMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Earth.jpg"));
 
 	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
 
@@ -119,7 +119,7 @@ static void SolarSystem(GLFWwindow* win)
 	moonPivot->AttachComponent<PlanetRotator>();
 
 	MaterialPtr moonMaterial = Material::Make(shd);
-	moonMaterial->AttachTexture(Texture::Make("decal", "Images/Moon.jpg"));
+	moonMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
 
 	GameObject* moon = moonPivot->CreateEmptyChild("Moon");
 	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
@@ -140,20 +140,19 @@ static void T2(GLFWwindow* win)
 	lightObject->transform.position = { 5, 5, 0 };
 	lightObject->AttachComponent<PointLight>();
 
-	MaterialPtr Material = Material::Make(shd);
+	MaterialPtr sunMaterial = Material::Make(shd);
+	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
 
-	GameObject* greenBall1 = lightObject->CreateEmptyChild("GreenBall");
-	greenBall1->transform.scale = { 0.5, 0.5, 0.5 };
-	greenBall1->transform.rotation = { 90, 0, 0 };
-	MeshRenderer* greenBallMR1 = greenBall1->AttachComponent<MeshRenderer>();
-	greenBallMR1->mesh = sphere;
-	greenBallMR1->color = Color::green;
-	greenBallMR1->AttachMaterial(Material);
+	GameObject* sun = lightObject->CreateEmptyChild("Sun");
+	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
+	sunMR->mesh = sphere;
+	sunMR->AttachMaterial(sunMaterial);
 
 	MaterialPtr whiteMaterial = Material::Make(shd);
 	whiteMaterial->ambientColor = Color::Make(0.50f, 0.50f, 0.50f);
 	whiteMaterial->diffuseColor = Color::Make(0.70f, 0.70f, 0.70f);
-	whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+	//whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+	whiteMaterial->AttachGlossTexture(Texture::Make("gloss", Color::green));
 
 	GameObject* table = scene.CreateNewGameObject("Table");
 	table->transform.position.y = -1.5;
@@ -161,6 +160,20 @@ static void T2(GLFWwindow* win)
 	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
 	tableMR->mesh = cube;
 	tableMR->AttachMaterial(whiteMaterial);
+
+	MaterialPtr tableFeetMaterial = Material::Make(shd);
+	tableFeetMaterial->ambientColor = Color::Make(0.80f, 0.0f, 0.3f);
+
+	std::vector<Vector3> tableLegPos = { {0.43f, -2, 0.43f}, {-0.43f, -2, 0.43f}, {0.43f, -2, -0.43f}, {-0.43f, -2, -0.43f} };
+	for (const Vector3& pos : tableLegPos)
+	{
+		GameObject* tableLeg = table->CreateEmptyChild("Table feet");
+		tableLeg->transform.position = pos;
+		tableLeg->transform.scale = { 1.0f / 16, 2, 1.0f / 16 };
+		MeshRenderer* tableLegMR = tableLeg->AttachComponent<MeshRenderer>();
+		tableLegMR->mesh = cylinder;
+		tableLegMR->AttachMaterial(tableFeetMaterial);
+	}
 
 	MaterialPtr yellowBall = Material::Make(shd);
 	yellowBall->ambientColor = Color::Make(0.60f, 0.60f, 0.15f);
@@ -174,30 +187,20 @@ static void T2(GLFWwindow* win)
 	rectangleMR->mesh = cube;
 	rectangleMR->AttachMaterial(yellowBall);
 
-	MaterialPtr greenCylinderMaterial = Material::Make(shd);
-	greenCylinderMaterial->AttachTexture(Texture::Make("decal", "Images/Moon.jpg"));
+	MaterialPtr moonCylinderMaterial = Material::Make(shd);
+	moonCylinderMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
+	moonCylinderMaterial->AttachGlossTexture(Texture::Make("MoonGloss", "Images/Sun.jpg"));
 	
-	GameObject* greenCylinder = scene.CreateNewGameObject("GreenBall");
-	greenCylinder->transform.position.y = 1;
-	MeshRenderer* greenCylinderMR = greenCylinder->AttachComponent<MeshRenderer>();
-	greenCylinderMR->mesh = cylinder;
-	greenCylinderMR->AttachMaterial(greenCylinderMaterial);
-
-	MaterialPtr redBallMaterial = Material::Make(shd);
-	redBallMaterial->AttachTexture(Texture::Make("decal", "Images/Sun.jpg"));
-	redBallMaterial->specularColor = Color::Make(1.00f, 0.30f, 0.20f);
-	redBallMaterial->spotCoeficient = 16;
-
-	GameObject* redBall = scene.CreateNewGameObject("RedBall");
-	redBall->transform.position = {3, -0.15, -3};
-	MeshRenderer* redBallMR = redBall->AttachComponent<MeshRenderer>();
-	redBallMR->mesh = sphere;
-	redBallMR->AttachMaterial(redBallMaterial);
+	GameObject* moonCylinder = scene.CreateNewGameObject("MoonCylinder");
+	moonCylinder->transform.position.y = 1;
+	MeshRenderer* moonCylinderMR = moonCylinder->AttachComponent<MeshRenderer>();
+	moonCylinderMR->mesh = cylinder;
+	moonCylinderMR->AttachMaterial(moonCylinderMaterial);
 }
 
 static void initialize(GLFWwindow* win)
 {
-	glClearColor(0.5, 0.5, 0.5, 0);
+	glClearColor(0, 0, 0, 0);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 

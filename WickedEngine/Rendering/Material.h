@@ -18,23 +18,26 @@ public:
 
 	float spotCoeficient;
 
-	static inline MaterialPtr Make(ShaderPtr shader = nullptr, TexturePtr texture = nullptr);
+	static inline MaterialPtr Make(ShaderPtr shader = nullptr, TexturePtr decalTexture = nullptr, TexturePtr glossTexture = nullptr);
 
 	void Load();
 	void Unload();
 	void AttachShader(ShaderPtr shader);
-	void AttachTexture(TexturePtr texture);
+	void AttachDecalTexture(TexturePtr texture);
+	void AttachGlossTexture(TexturePtr texture);
 
 	ShaderPtr GetShader();
-	TexturePtr GetTexture();
+	TexturePtr GetDecalTexture();
+	TexturePtr GetGlossTexture();
 private:
-	Material(ShaderPtr shader = nullptr, TexturePtr texture = nullptr);
+	Material(ShaderPtr shader = nullptr, TexturePtr decalTexture = nullptr, TexturePtr glossTexture = nullptr);
 
 	ShaderPtr currentShader;
-	TexturePtr texture;
+	TexturePtr decalTexture;
+	TexturePtr glossTexture;
 };
 
-MaterialPtr Material::Make(ShaderPtr shader, TexturePtr texture)
+MaterialPtr Material::Make(ShaderPtr shader, TexturePtr decalTexture, TexturePtr glossTexture)
 {
-	return MaterialPtr(new Material(shader, texture));
+	return MaterialPtr(new Material(shader, decalTexture, glossTexture));
 }
