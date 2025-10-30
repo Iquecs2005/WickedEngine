@@ -10,38 +10,38 @@ using CubePtr = std::shared_ptr<Cube>;
 class Cube : public Mesh3D
 {
 protected:
-	Cube() : Mesh3D(
-		{	
+	Cube() : Mesh3D( 
+		{
 			//Far face
-			{ -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1, 0 },
-			{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1, 1 },
-			{ 0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f, 0, 0 },
-			{ 0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f, 0, 1 },
+			Vertex3D(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, -1.0f), Vector3(-1, 0, 0), Vector2(1, 0)),
+			Vertex3D(Vector3(-0.5f, 0.5f, -0.5f), Vector3(0.0f, 0.0f, -1.0f), Vector3(-1, 0, 0), Vector2(1, 1)),
+			Vertex3D(Vector3(0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, -1.0f), Vector3(-1, 0, 0), Vector2(0, 0)),
+			Vertex3D(Vector3(0.5f,  0.5f, -0.5f), Vector3(0.0f, 0.0f, -1.0f), Vector3(-1, 0, 0), Vector2(0, 1)),
 			//Left face
-			{ -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0, 0 },
-			{ -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0, 1 },
-			{ -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 1, 0 },
-			{ -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 1, 1 },
+			Vertex3D(Vector3(-0.5f, -0.5f, -0.5f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0, 0, 1), Vector2(0, 0)),
+			Vertex3D(Vector3(-0.5f,  0.5f, -0.5f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0, 0, 1), Vector2(0, 1)),
+			Vertex3D(Vector3(-0.5f, -0.5f,  0.5f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0, 0, 1), Vector2(1, 0)),
+			Vertex3D(Vector3(-0.5f,  0.5f,  0.5f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0, 0, 1), Vector2(1, 1)),
 			//Right face
-			{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1, 0 },
-			{  0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1, 1 },
-			{  0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0, 0 },
-			{  0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0, 1 },
+			Vertex3D(Vector3(0.5f, -0.5f, -0.5f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0, 0, -1), Vector2(1, 0)),
+			Vertex3D(Vector3(0.5f,  0.5f, -0.5f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0, 0, -1), Vector2(1, 1)),
+			Vertex3D(Vector3(0.5f, -0.5f,  0.5f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0, 0, -1), Vector2(0, 0)),
+			Vertex3D(Vector3(0.5f,  0.5f,  0.5f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0, 0, -1), Vector2(0, 1)),
 			//Front face
-			{ -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0, 0 },
-			{ -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0, 1 },
-			{  0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1, 0 },
-			{  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1, 1 },
+			Vertex3D(Vector3(-0.5f, -0.5f,  0.5f), Vector3(0.0f,  0.0f,  1.0f), Vector3(1, 0, 0), Vector2(0, 0)),
+			Vertex3D(Vector3(-0.5f,  0.5f,  0.5f), Vector3(0.0f,  0.0f,  1.0f), Vector3(1, 0, 0), Vector2(0, 1)),
+			Vertex3D(Vector3(0.5f, -0.5f,  0.5f), Vector3(0.0f,  0.0f,  1.0f), Vector3(1, 0, 0), Vector2(1, 0)),
+			Vertex3D(Vector3(0.5f,  0.5f,  0.5f), Vector3(0.0f,  0.0f,  1.0f), Vector3(1, 0, 0), Vector2(1, 1)),
 			//Up face
-			{ -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0, 0 },
-			{ -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0, 1 },
-			{  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1, 0 },
-			{  0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 1, 1 },
+			Vertex3D(Vector3(-0.5f,  0.5f,  0.5f), Vector3(0.0f,  1.0f,  0.0f), Vector3(1, 0, 0), Vector2(0, 0)),
+			Vertex3D(Vector3(-0.5f,  0.5f, -0.5f), Vector3(0.0f,  1.0f,  0.0f), Vector3(1, 0, 0), Vector2(0, 1)),
+			Vertex3D(Vector3(0.5f,  0.5f,  0.5f), Vector3(0.0f,  1.0f,  0.0f), Vector3(1, 0, 0), Vector2(1, 0)),
+			Vertex3D(Vector3(0.5f,  0.5f, -0.5f), Vector3(0.0f,  1.0f,  0.0f), Vector3(1, 0, 0), Vector2(1, 1)),
 			//Down face
-			{ -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0, 0 },
-			{ -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0, 1 },
-			{  0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 1, 0 },
-			{  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1, 1 },
+			Vertex3D(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.0f, -1.0f,  0.0f), Vector3(1, 0, 0), Vector2(0, 0)),
+			Vertex3D(Vector3(-0.5f, -0.5f,  0.5f), Vector3(0.0f, -1.0f,  0.0f), Vector3(1, 0, 0), Vector2(0, 1)),
+			Vertex3D(Vector3(0.5f, -0.5f, -0.5f), Vector3(0.0f, -1.0f,  0.0f), Vector3(1, 0, 0), Vector2(1, 0)),
+			Vertex3D(Vector3(0.5f, -0.5f,  0.5f), Vector3(0.0f, -1.0f,  0.0f), Vector3(1, 0, 0), Vector2(1, 1)),
 		}
 		,
 		{

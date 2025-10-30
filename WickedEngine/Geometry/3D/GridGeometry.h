@@ -17,7 +17,7 @@ protected:
 private:
 	GridMeshPtr grid = nullptr;
 
-	inline const std::vector<VertexData3D>& GetVerticeList(unsigned int nx, unsigned int ny);
+	inline const std::vector<Vertex3D>& GetVerticeList(unsigned int nx, unsigned int ny);
 	inline const std::vector<unsigned int>& GetIncidenceList(unsigned int nx, unsigned int ny);
 };
 
@@ -26,7 +26,7 @@ inline GridGeometryPtr GridGeometry::Make(unsigned int nX, unsigned int nY)
 	return GridGeometryPtr(new GridGeometry(nX, nY));
 }
 
-inline const std::vector<VertexData3D>& GridGeometry::GetVerticeList(unsigned int nx, unsigned int ny)
+inline const std::vector<Vertex3D>& GridGeometry::GetVerticeList(unsigned int nx, unsigned int ny)
 {
 	if (grid == nullptr)
 		grid = GridMesh::Make(nx, ny);

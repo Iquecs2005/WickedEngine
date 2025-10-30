@@ -16,6 +16,7 @@ public:
 	static inline TexturePtr Make(const std::string& name, const Color& color);
 
 	static inline TexturePtr GetDefaultTexture();
+	static inline TexturePtr GetDefaultNormalMap();
 	inline unsigned int GetTextureId();
 	inline std::string GetTextureName();
 
@@ -50,6 +51,12 @@ inline TexturePtr Texture::GetDefaultTexture()
 {
 	static const TexturePtr defaultTexture = Texture::Make(std::string("DefaultTexture"), Color::white);
 	return defaultTexture;
+}
+
+inline TexturePtr Texture::GetDefaultNormalMap()
+{
+	static const TexturePtr defaultNormalMap = Texture::Make(std::string("DefaultNormalMap"), Color::Make(0.5f, 0.5f, 1.0f));
+	return defaultNormalMap;
 }
 
 inline unsigned int Texture::GetTextureId()

@@ -13,6 +13,8 @@ void Material::Load()
 
 	currentShader->SetUniform("spotCoeficient", spotCoeficient);
 
+	currentShader->ActiveTexture("normalMap");
+	glBindTexture(GL_TEXTURE_2D, normalMap->GetTextureId());
 	currentShader->ActiveTexture("gloss");
 	glBindTexture(GL_TEXTURE_2D, glossTexture->GetTextureId());
 	currentShader->ActiveTexture("decal");
@@ -21,6 +23,7 @@ void Material::Load()
 
 void Material::Unload()
 {
+	currentShader->DeactiveTexture();
 	currentShader->DeactiveTexture();
 	currentShader->DeactiveTexture();
 }
@@ -50,6 +53,16 @@ void Material::AttachGlossTexture(TexturePtr texture)
 	glossTexture = texture;
 }
 
+void Material::AttachNormalMap(TexturePtr texture)
+{
+	if (texture == nullptr)
+	{
+		texture = Texture::GetDefaultNormalMap();
+	}
+
+	normalMap = texture;
+}
+
 ShaderPtr Material::GetShader()
 {
 	return currentShader;
@@ -65,7 +78,7 @@ TexturePtr Material::GetGlossTexture()
 	return glossTexture;
 }
 
-Material::Material(ShaderPtr shader, TexturePtr decalTexture, TexturePtr glossTexture)
+Material::Material(ShaderPtr shader, TexturePtr decalTexture, TexturePtr glossTexture, TexturePtr normalMap)
 	: ambientColor(Color::Make()), diffuseColor(Color::Make()), specularColor(Color::Make())
 {
 	ambientColor = Color::white;
@@ -77,4 +90,5 @@ Material::Material(ShaderPtr shader, TexturePtr decalTexture, TexturePtr glossTe
 	AttachShader(shader);
 	AttachDecalTexture(decalTexture);
 	AttachGlossTexture(glossTexture);
+	AttachNormalMap(normalMap);
 }

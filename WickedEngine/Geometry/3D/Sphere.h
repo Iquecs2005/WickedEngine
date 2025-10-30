@@ -18,7 +18,7 @@ private:
 	GridMeshPtr grid;
 
 	inline GridMeshPtr CreateGrid(unsigned int nstack, unsigned int nslice);
-	inline std::vector<VertexData3D>& GetVerticeList(unsigned int nstack, unsigned int nslice);
+	inline std::vector<Vertex3D>& GetVerticeList(unsigned int nstack, unsigned int nslice);
 	inline std::vector<unsigned int>& GetIncidenceList(unsigned int nstack, unsigned int nslice);
 };
 
@@ -27,7 +27,7 @@ inline SpherePtr Sphere::Make(unsigned int nstack, unsigned int nslice)
 	return SpherePtr(new Sphere(nstack, nslice));
 }
 
-inline std::vector<VertexData3D>& Sphere::GetVerticeList(unsigned int nstack, unsigned int nslice)
+inline std::vector<Vertex3D>& Sphere::GetVerticeList(unsigned int nstack, unsigned int nslice)
 {
 	if (grid == nullptr)
 		grid = CreateGrid(nstack, nslice);

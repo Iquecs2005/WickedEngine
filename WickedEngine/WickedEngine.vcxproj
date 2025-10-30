@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Rendering\FogModifier.cpp" />
     <ClCompile Include="Geometry\3D\Cylinder.cpp" />
     <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
     <ClCompile Include="Geometry\3D\GridMesh.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="GameObjects\Components\PointLight.cpp" />
     <ClCompile Include="Rendering\MVPMatrix.cpp" />
     <ClCompile Include="Rendering\Material.cpp" />
+    <ClCompile Include="Rendering\RenderModifier.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Rendering\shader.cpp" />
     <ClCompile Include="GameObjects\Components\Transform.cpp" />
@@ -164,6 +166,8 @@
     <ClCompile Include="Geometry\Square.cpp" />
     <ClCompile Include="Geometry\3D\Sphere.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="General\Vector2.cpp" />
+    <ClCompile Include="Geometry\3D\Vertex3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -174,6 +178,7 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Rendering\FogModifier.h" />
     <ClInclude Include="Geometry\3D\Cylinder.h" />
     <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />
     <ClInclude Include="Geometry\3D\GridMesh.h" />
@@ -201,6 +206,7 @@
     <ClInclude Include="GameObjects\Components\PointLight.h" />
     <ClInclude Include="Rendering\MVPMatrix.h" />
     <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\RenderModifier.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Rendering\shader.h" />
     <ClInclude Include="GameObjects\Components\Transform.h" />
@@ -210,6 +216,8 @@
     <ClInclude Include="Geometry\Square.h" />
     <ClInclude Include="Geometry\3D\Sphere.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="General\Vector2.h" />
+    <ClInclude Include="Geometry\3D\Vertex3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

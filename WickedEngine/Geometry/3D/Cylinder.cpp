@@ -16,28 +16,38 @@ GridMeshPtr Cylinder::CreateGrid(unsigned int nstack)
 	float currentAngle = 0;
 	float angleStep = (float)(2 * M_PI / (nstack - 1));
 
-	std::vector<VertexData3D>& vertexDataList = grid->GetVerticeList();
+	std::vector<Vertex3D>& vertexDataList = grid->GetVerticeList();
 	for (unsigned int i = 0; i < nstack * 2; i += 2)
 	{
-		VertexData3D& vertexData1 = vertexDataList[i];
-		VertexData3D& vertexData2 = vertexDataList[i+1];
+		Vertex3D& vertexData1 = vertexDataList[i];
+		Vertex3D& vertexData2 = vertexDataList[i+1];
 
 		float x = sin(currentAngle);
 		float z = cos(currentAngle);
 
 		vertexData1.x = x;
-		vertexData2.x = x;
 		vertexData1.y = -1;
-		vertexData2.y = 1;
 		vertexData1.z = z;
+
+		vertexData2.x = x;
+		vertexData2.y = 1;
 		vertexData2.z = z;
 
 		vertexData1.nx = vertexData1.x;
-		vertexData2.nx = vertexData2.x;
 		vertexData1.ny = 0;
-		vertexData2.ny = 0;
 		vertexData1.nz = vertexData1.z;
+
+		vertexData2.nx = vertexData2.x;
+		vertexData2.ny = 0;
 		vertexData2.nz = vertexData2.z;
+
+		vertexData1.tx = -vertexData1.nz;
+		vertexData1.ty = 0;
+		vertexData1.tz = vertexData1.nx;
+
+		vertexData2.tx = -vertexData2.nz;
+		vertexData2.ty = 0;
+		vertexData2.tz = vertexData2.nx;
 
 		currentAngle += angleStep;
 	}
@@ -45,14 +55,14 @@ GridMeshPtr Cylinder::CreateGrid(unsigned int nstack)
 	return grid;
 }
 
-std::vector<VertexData3D> Cylinder::GenerateLidVertices(unsigned int nVertices, float yValue)
+std::vector<Vertex3D> Cylinder::GenerateLidVertices(unsigned int nVertices, float yValue)
 {
-	std::vector<VertexData3D> vertexVector(nVertices);
+	std::vector<Vertex3D> vertexVector(nVertices);
 
 	float currentAngle = 0;
 	float angleStep = (float)(2 * M_PI / (nVertices - 1));
 
-	VertexData3D& centerVector = vertexVector[0];
+	Vertex3D& centerVector = vertexVector[0];
 
 	centerVector.x = 0;
 	centerVector.y = yValue;
@@ -65,12 +75,16 @@ std::vector<VertexData3D> Cylinder::GenerateLidVertices(unsigned int nVertices, 
 		centerVector.ny = -1;
 	centerVector.nz = 0;
 
+	centerVector.tx = 1;
+	centerVector.ty = 0;
+	centerVector.tz = 0;
+
 	centerVector.s = 0.5f;
 	centerVector.t = 0.5f;
 
 	for (unsigned int i = 1; i < nVertices; i++)
 	{
-		VertexData3D& currentVertice = vertexVector[i];
+		Vertex3D& currentVertice = vertexVector[i];
 
 		float cossine = cosf(currentAngle);
 		float sine = sinf(currentAngle);
@@ -79,9 +93,13 @@ std::vector<VertexData3D> Cylinder::GenerateLidVertices(unsigned int nVertices, 
 		currentVertice.y = yValue;
 		currentVertice.z = cossine;
 
-		currentVertice.nx = sine;
-		currentVertice.ny = 0;
-		currentVertice.nz = cossine;
+		currentVertice.nx = 0;
+		currentVertice.ny = yValue * 2;
+		currentVertice.nz = 0;
+
+		currentVertice.tx = 1;
+		currentVertice.ty = 0;
+		currentVertice.tz = 0;
 
 		currentVertice.s = 0.5f + 0.5f * cossine;
 		currentVertice.t = 0.5f + 0.5f * sine;
@@ -119,15 +137,15 @@ std::vector<unsigned int> Cylinder::GenerateLidIncidence(unsigned int nVertices,
 	return incidenceVector;
 }
 
-std::vector<VertexData3D> Cylinder::GetVerticeList(unsigned int nstack)
+std::vector<Vertex3D> Cylinder::GetVerticeList(unsigned int nstack)
 {
 	if (grid == nullptr)
 		grid = CreateGrid(nstack);
 
-	std::vector<VertexData3D> completeVertexData;
+	std::vector<Vertex3D> completeVertexData;
 	completeVertexData.reserve(grid->nVertices + nstack * 2);
 	
-	std::vector<VertexData3D> tempList;
+	std::vector<Vertex3D> tempList;
 	
 	tempList = grid->GetVerticeList();
 	completeVertexData.insert(completeVertexData.end(), tempList.begin(), tempList.end());

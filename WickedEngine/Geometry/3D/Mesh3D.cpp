@@ -12,7 +12,7 @@
 
 #endif
 
-Mesh3D::Mesh3D(const std::vector<VertexData3D>& vertexData, const std::vector<unsigned int>& inc) :
+Mesh3D::Mesh3D(const std::vector<Vertex3D>& vertexData, const std::vector<unsigned int>& inc) :
 	nVertices(vertexData.size()), nTriangles(inc.size() / 3), shapeBufferIds(nBuffers)
 {
 	glGenVertexArrays(nVaos, &m_vao);
@@ -21,18 +21,22 @@ Mesh3D::Mesh3D(const std::vector<VertexData3D>& vertexData, const std::vector<un
 
 	//Vertex Data buffer
 	glBindBuffer(GL_ARRAY_BUFFER, shapeBufferIds[vertexDataBufferIndex]);
-	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(VertexData3D), vertexData.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(Vertex3D), vertexData.data(), GL_STATIC_DRAW);
 
 	//Position attribute
-	glVertexAttribPointer(positionAttributeIndex, positionDimensions, GL_FLOAT, GL_FALSE, sizeof(VertexData3D), (void*)positionOffset);
+	glVertexAttribPointer(positionAttributeIndex, positionDimensions, GL_FLOAT, GL_FALSE, sizeof(Vertex3D), (void*)positionOffset);
 	glEnableVertexAttribArray(positionAttributeIndex);
 
 	//Normal attribute
-	glVertexAttribPointer(normalAttributeIndex, normalDimensions, GL_FLOAT, GL_FALSE, sizeof(VertexData3D), (void*)normalOffset);
+	glVertexAttribPointer(normalAttributeIndex, normalDimensions, GL_FLOAT, GL_FALSE, sizeof(Vertex3D), (void*)normalOffset);
 	glEnableVertexAttribArray(normalAttributeIndex);
 
+	//Tangent attribute
+	glVertexAttribPointer(tangentAttributeIndex, tangentDimensions, GL_FLOAT, GL_FALSE, sizeof(Vertex3D), (void*)tangentOffset);
+	glEnableVertexAttribArray(tangentAttributeIndex);
+
 	//Texture attribute
-	glVertexAttribPointer(textureAttributeIndex, textureDimensions, GL_FLOAT, GL_FALSE, sizeof(VertexData3D), (void*)textureOffset);
+	glVertexAttribPointer(textureAttributeIndex, textureDimensions, GL_FLOAT, GL_FALSE, sizeof(Vertex3D), (void*)textureOffset);
 	glEnableVertexAttribArray(textureAttributeIndex);
 
 	//Incidence Buffer

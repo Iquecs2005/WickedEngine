@@ -8,18 +8,21 @@ GridMesh::GridMesh(unsigned int nX, unsigned int nY)
 	float deltaY = 1.0f / (nVerticesY - 1); 
 
 	unsigned int nv = 0;
-	for (int i = 0; i < nVerticesX; i++)
+	for (unsigned int i = 0; i < nVerticesX; i++)
 	{
-		for (int j = 0; j < nVerticesY; j++)
+		for (unsigned int j = 0; j < nVerticesY; j++)
 		{
-			verticeList[nv++] = { deltaX * i, deltaY * j, 0, 0, 0, 1, deltaX * i, deltaY * j };
+			verticeList[nv++] = Vertex3D( Vector3(deltaX * i, deltaY * j, 0),
+										  Vector3(0, 0, 1),
+										  Vector3(1, 0, 0),
+										  Vector2(deltaX * i, deltaY * j));
 		}
 	}
 
 	unsigned int ni = 0;
-	for (int i = 0; i < nVerticesX - 1; i++)
+	for (unsigned int i = 0; i < nVerticesX - 1; i++)
 	{
-		for (int j = 0; j < nVerticesY - 1; j++)
+		for (unsigned int j = 0; j < nVerticesY - 1; j++)
 		{
 			incidenceList[ni++] = calculateIndex(i, j, nY);
 			incidenceList[ni++] = calculateIndex(i+1, j, nY);

@@ -11,7 +11,7 @@ class GridMesh
 {
 public:
 	static inline GridMeshPtr Make(unsigned int nX, unsigned int nY);
-	inline std::vector<VertexData3D>& GetVerticeList();
+	inline std::vector<Vertex3D>& GetVerticeList();
 	inline std::vector<unsigned int>& GetIncidenceList();
 
 	const unsigned int nVertices;
@@ -22,10 +22,10 @@ public:
 protected:
 	GridMesh(unsigned int nX, unsigned int nY);
 private:
-	std::vector<VertexData3D> verticeList;
+	std::vector<Vertex3D> verticeList;
 	std::vector<unsigned int> incidenceList;
 
-	inline unsigned int calculateIndex(unsigned int i, unsigned int j, float ny) const;
+	inline unsigned int calculateIndex(unsigned int i, unsigned int j, unsigned int ny) const;
 };
 
 inline GridMeshPtr GridMesh::Make(unsigned int nX, unsigned int nY)
@@ -33,7 +33,7 @@ inline GridMeshPtr GridMesh::Make(unsigned int nX, unsigned int nY)
 	return GridMeshPtr(new GridMesh(nX, nY));
 }
 
-inline std::vector<VertexData3D>& GridMesh::GetVerticeList()
+inline std::vector<Vertex3D>& GridMesh::GetVerticeList()
 {
 	return verticeList;
 }
@@ -43,7 +43,7 @@ inline std::vector<unsigned int>& GridMesh::GetIncidenceList()
 	return incidenceList;
 }
 
-inline unsigned int GridMesh::calculateIndex(unsigned int i, unsigned int j, float ny) const
+inline unsigned int GridMesh::calculateIndex(unsigned int i, unsigned int j, unsigned int ny) const
 {
 	return (unsigned int)(i * ny + j);
 }

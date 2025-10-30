@@ -5,15 +5,10 @@ using Mesh3Dptr = std::shared_ptr<Mesh3D>;
 
 #pragma once
 
-#include "../Shape.h"
 #include <vector>
 
-struct VertexData3D
-{
-	float x, y, z;
-	float nx, ny, nz;
-	float s, t;
-};
+#include "../Shape.h"
+#include "Vertex3D.h"
 
 class Mesh3D : public Shape
 {
@@ -31,21 +26,24 @@ class Mesh3D : public Shape
 	static const unsigned int normalAttributeIndex = 1;
 	static const unsigned int normalDimensions = 3;
 	static const unsigned int normalOffset = sizeof(float) * positionDimensions;
+	static const unsigned int tangentAttributeIndex = 2;
+	static const unsigned int tangentDimensions = 3;
+	static const unsigned int tangentOffset = sizeof(float) * normalDimensions + normalOffset;
 	static const unsigned int textureAttributeIndex = 3;
 	static const unsigned int textureDimensions = 2;
-	static const unsigned int textureOffset = sizeof(float) * normalDimensions + normalOffset;
+	static const unsigned int textureOffset = sizeof(float) * tangentDimensions + tangentOffset;
 	static const unsigned int incidenceBufferIndex = 1;
 
 protected:
-	Mesh3D(const std::vector<VertexData3D>& vertexData, const std::vector<unsigned int>& inc);
+	Mesh3D(const std::vector<Vertex3D>& vertexData, const std::vector<unsigned int>& inc);
 public:
-	static inline Mesh3Dptr Make(const std::vector<VertexData3D>& vertexData, const std::vector<unsigned int>& inc);
+	static inline Mesh3Dptr Make(const std::vector<Vertex3D>& vertexData, const std::vector<unsigned int>& inc);
 
 	virtual ~Mesh3D();
 	virtual void Draw();
 };
 
-inline Mesh3Dptr Mesh3D::Make(const std::vector<VertexData3D>& vertexData, const std::vector<unsigned int>& inc)
+inline Mesh3Dptr Mesh3D::Make(const std::vector<Vertex3D>& vertexData, const std::vector<unsigned int>& inc)
 {
 	return Mesh3Dptr(new Mesh3D(vertexData, inc));
 }

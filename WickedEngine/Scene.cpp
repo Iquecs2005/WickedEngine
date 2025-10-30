@@ -27,6 +27,7 @@ void Scene::DrawScene()
 	std::list<GameObject*> stack;
 	std::list<MVPMatrixPtr> transformationMatrix;
 
+	Camera::getMainCamera()->LoadCamera();
 	glm::mat4 a = Camera::getMainCamera()->GetViewMatrix();
 	glm::mat4 b = Camera::getMainCamera()->GetViewMatrix();
 	MVPMatrixPtr baseMatrix = MVPMatrix::Make(glm::mat4(1.0f),
@@ -58,6 +59,8 @@ void Scene::DrawScene()
 			transformationMatrix.push_front(currentMvp);
 		}
 	}
+
+	Camera::getMainCamera()->UnloadCamera();
 }
 
 GameObject* Scene::CreateNewGameObject(std::string gameObjectName, GameObject* parent)

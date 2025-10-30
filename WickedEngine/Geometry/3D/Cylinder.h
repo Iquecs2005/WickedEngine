@@ -18,9 +18,9 @@ private:
 	GridMeshPtr grid;
 
 	GridMeshPtr CreateGrid(unsigned int nstack);
-	std::vector<VertexData3D> GenerateLidVertices(unsigned int nVertices, float yValue);
+	std::vector<Vertex3D> GenerateLidVertices(unsigned int nVertices, float yValue);
 	std::vector<unsigned int> GenerateLidIncidence(unsigned int nVertices, unsigned int offset, bool bottomLid);
-	std::vector<VertexData3D> GetVerticeList(unsigned int nstack);
+	std::vector<Vertex3D> GetVerticeList(unsigned int nstack);
 	std::vector<unsigned int> GetIncidenceList(unsigned int nstack);
 };
 

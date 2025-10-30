@@ -21,6 +21,9 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Scene.h"
+#include "Time.h"
+
 #include "Geometry/Polygon.h"
 #include "Geometry/Circle.h"
 #include "Geometry/Triangle.h"
@@ -31,11 +34,10 @@
 #include "Geometry/3D/Cylinder.h"
 
 #include "General/Vector3.h"
+#include "General/Color.h"
+
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Components/MeshRenderer.h"
-#include "Scene.h"
-#include "General/Color.h"
-#include "Time.h"
 #include "GameObjects/Components/UserCreated/PlanetRotator.h"
 #include "GameObjects/Components/Camera2D.h"
 #include "GameObjects/Components/Camera3D.h"
@@ -43,6 +45,8 @@
 #include "GameObjects/Components/PointLight.h"
 
 #include "Rendering/shader.h"
+#include "Rendering/FogModifier.h"
+
 #include "error.h"
 
 static ShaderPtr shd;
@@ -54,7 +58,7 @@ static GridGeometryPtr grid;
 static SpherePtr sphere;
 static CylinderPtr cylinder;
 
-static Scene* sceneptr = new Scene("Sistema Solar");
+static Scene* sceneptr = new Scene("Mesa");
 static Scene& scene = *sceneptr;
 
 static ArcballCamera3D* mainCamera;
@@ -135,24 +139,40 @@ static void T2(GLFWwindow* win)
 	cameraObject->transform.position.z = 4;
 	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
 	mainCamera->SetCurrentWindow(win);
+	mainCamera->SetCurrentShader(shd);
+
+	RenderModifierPtr fogModifier = FogModifier::Make(0.05f, Color::Make(0.4f, 0.80f, 0.9f));
+	mainCamera->AddRenderModifier(fogModifier);
 
 	GameObject* lightObject = scene.CreateNewGameObject("Light");
-	lightObject->transform.position = { 5, 5, 0 };
+	lightObject->transform.position = { 3, 3, 0 };
 	lightObject->AttachComponent<PointLight>();
 
 	MaterialPtr sunMaterial = Material::Make(shd);
 	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
+	sunMaterial->AttachNormalMap(Texture::Make("decal", Color::Make(0.5f, 0.5f, -1.0f)));
 
 	GameObject* sun = lightObject->CreateEmptyChild("Sun");
 	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
 	sunMR->mesh = sphere;
 	sunMR->AttachMaterial(sunMaterial);
 
+	MaterialPtr sunMaterial2 = Material::Make(shd);
+	sunMaterial2->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
+	sunMaterial2->AttachNormalMap(Texture::Make("decal", "Images/test.jpg"));
+
+	GameObject* sun2 = lightObject->CreateEmptyChild("Sun2");
+	sun2->transform.position = { 0, -3, 0 };
+	MeshRenderer* sun2MR = sun2->AttachComponent<MeshRenderer>();
+	sun2MR->mesh = sphere;
+	sun2MR->AttachMaterial(sunMaterial2);
+
 	MaterialPtr whiteMaterial = Material::Make(shd);
-	whiteMaterial->ambientColor = Color::Make(0.50f, 0.50f, 0.50f);
-	whiteMaterial->diffuseColor = Color::Make(0.70f, 0.70f, 0.70f);
+	whiteMaterial->ambientColor = Color::Make(0.20f, 0.20f, 0.20f);
+	whiteMaterial->diffuseColor = Color::Make(0.50f, 0.50f, 0.50f);
 	//whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
 	whiteMaterial->AttachGlossTexture(Texture::Make("gloss", Color::green));
+	whiteMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
 
 	GameObject* table = scene.CreateNewGameObject("Table");
 	table->transform.position.y = -1.5;
@@ -161,24 +181,25 @@ static void T2(GLFWwindow* win)
 	tableMR->mesh = cube;
 	tableMR->AttachMaterial(whiteMaterial);
 
-	MaterialPtr tableFeetMaterial = Material::Make(shd);
-	tableFeetMaterial->ambientColor = Color::Make(0.80f, 0.0f, 0.3f);
+	MaterialPtr tableLegMaterial = Material::Make(shd);
+	tableLegMaterial->ambientColor = Color::Make(0.80f, 0.0f, 0.3f);
 
 	std::vector<Vector3> tableLegPos = { {0.43f, -2, 0.43f}, {-0.43f, -2, 0.43f}, {0.43f, -2, -0.43f}, {-0.43f, -2, -0.43f} };
 	for (const Vector3& pos : tableLegPos)
 	{
-		GameObject* tableLeg = table->CreateEmptyChild("Table feet");
+		GameObject* tableLeg = table->CreateEmptyChild("Table Leg");
 		tableLeg->transform.position = pos;
 		tableLeg->transform.scale = { 1.0f / 16, 2, 1.0f / 16 };
 		MeshRenderer* tableLegMR = tableLeg->AttachComponent<MeshRenderer>();
 		tableLegMR->mesh = cylinder;
-		tableLegMR->AttachMaterial(tableFeetMaterial);
+		tableLegMR->AttachMaterial(tableLegMaterial);
 	}
 
 	MaterialPtr yellowBall = Material::Make(shd);
 	yellowBall->ambientColor = Color::Make(0.60f, 0.60f, 0.15f);
 	yellowBall->diffuseColor = Color::Make(1.00f, 1.00f, 0.30f);
 	yellowBall->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+	yellowBall->AttachGlossTexture(Texture::Make("gloss", Color::green));;
 
 	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
 	rectangle->transform.position.y = -0.5;
@@ -190,6 +211,7 @@ static void T2(GLFWwindow* win)
 	MaterialPtr moonCylinderMaterial = Material::Make(shd);
 	moonCylinderMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
 	moonCylinderMaterial->AttachGlossTexture(Texture::Make("MoonGloss", "Images/Sun.jpg"));
+	moonCylinderMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
 	
 	GameObject* moonCylinder = scene.CreateNewGameObject("MoonCylinder");
 	moonCylinder->transform.position.y = 1;
@@ -200,7 +222,7 @@ static void T2(GLFWwindow* win)
 
 static void initialize(GLFWwindow* win)
 {
-	glClearColor(0, 0, 0, 0);
+	glClearColor(0.4f, 0.80f, 0.9f, 0);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
@@ -236,7 +258,6 @@ static void display(GLFWwindow* win)
 	//Clears the color and depth buffer with the clear color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	shd->SetUniform("cameraPos", Camera3D::getMainCamera()->GetCameraPos());
 	Light::LoadLights(shd);
 	scene.DrawScene();
 

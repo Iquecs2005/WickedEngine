@@ -12,8 +12,8 @@ GridMeshPtr Sphere::CreateGrid(unsigned int nstack, unsigned int nslice)
 {
 	grid = GridMesh::Make(nstack, nslice);
 
-	std::vector<VertexData3D>& vertexDataList = grid->GetVerticeList();
-	for (VertexData3D& vertexData : vertexDataList)
+	std::vector<Vertex3D>& vertexDataList = grid->GetVerticeList();
+	for (Vertex3D& vertexData : vertexDataList)
 	{
 		float theta = vertexData.x * 2 * M_PI;
 		float phi = vertexData.y * M_PI;
@@ -25,6 +25,10 @@ GridMeshPtr Sphere::CreateGrid(unsigned int nstack, unsigned int nslice)
 		vertexData.nx = vertexData.x;
 		vertexData.ny = vertexData.y;
 		vertexData.nz = vertexData.z;
+
+		vertexData.tx = -vertexData.nz;
+		vertexData.ty = 0;
+		vertexData.tz = vertexData.nx;
 	}
 
 	return grid;

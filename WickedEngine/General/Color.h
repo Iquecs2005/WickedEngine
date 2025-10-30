@@ -17,6 +17,7 @@ public:
 	static const ColorPtr black;
 	static const ColorPtr red;
 	static const ColorPtr green;
+	static const ColorPtr blue;
 	static const ColorPtr yellow;
 
 	inline static ColorPtr Make();
