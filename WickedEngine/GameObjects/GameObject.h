@@ -1,6 +1,8 @@
 #include <memory>
 
 class GameObject;
+using GameObjectPtr = std::weak_ptr<GameObject>;
+using GameObjectShared = std::shared_ptr<GameObject>;
 
 #pragma once
 
@@ -45,9 +47,9 @@ public:
 	void AddToRenderQueue(Renderer* newRenderer);
 
 	//TO DO change to unique ptr
-	std::list<GameObject*> GetChildren();
-	void AddChild(GameObject* child);
-	GameObject* CreateEmptyChild(std::string name = "Child");
+	std::list<GameObjectPtr> GetChildren();
+	void AddChild(GameObjectShared child);
+	GameObjectPtr CreateEmptyChild(std::string name = "Child");
 
 	friend class Scene;
 
@@ -56,9 +58,16 @@ private:
 	//TO DO change to unique ptr
 	std::list<MonoBehaviour*> components;
 	std::list<Renderer*> renderQueue;
-	std::list<GameObject*> children;
+	std::list<GameObjectShared> children;
 
 	GameObject(std::string name = "GameObject");
 	~GameObject();
+
+	//inline static GameObjectShared Make(std::string name);
 };
+
+//inline GameObjectShared GameObject::Make(std::string name)
+//{
+//	return GameObjectShared(new GameObject(name));
+//}
 

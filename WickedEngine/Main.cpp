@@ -35,6 +35,9 @@
 
 #include "General/Vector3.h"
 #include "General/Color.h"
+#include "General/Event.h"
+
+#include "General/Memory/UniquePtr.h"
 
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Components/MeshRenderer.h"
@@ -63,161 +66,171 @@ static Scene& scene = *sceneptr;
 
 static ArcballCamera3D* mainCamera;
 
-static void SolarSystem(GLFWwindow* win)
+//static void SolarSystem(GLFWwindow* win)
+//{
+//	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
+//	cameraObject->transform.position.z = 0;
+//	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
+//	mainCamera->SetCurrentWindow(win);
+//
+//	MaterialPtr backgroundMaterial = Material::Make(shd);
+//	backgroundMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Background.jpg"));
+//
+//	GameObject* background = cameraObject->CreateEmptyChild("Background");
+//	background->transform.position.z = -1.5f;
+//	background->transform.scale = { 15, 15, 15 };
+//	MeshRenderer* backgroundMR = background->AttachComponent<MeshRenderer>();
+//	backgroundMR->mesh = squareGeometry;
+//	backgroundMR->AttachMaterial(backgroundMaterial);
+//	
+//	MaterialPtr sunMaterial = Material::Make(shd);
+//	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
+//
+//	GameObject* sun = scene.CreateNewGameObject("Sun");
+//	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
+//	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
+//	sunMR->mesh = sphere;
+//	sunMR->AttachMaterial(sunMaterial);
+//
+//	GameObject* venusPivot = sun->CreateEmptyChild("VenusPivot");
+//	venusPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 14;
+//
+//	MaterialPtr venusMaterial = Material::Make(shd);
+//	venusMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Venus.jpg"));
+//
+//	GameObject* venus = venusPivot->CreateEmptyChild("Venus");
+//	venus->transform.position = Vector3(1.75f, 0, 0);
+//	venus->transform.scale = Vector3(0.25, 0.25, 0.3);
+//	GameObject* venusMesh = venus->CreateEmptyChild("VenusMesh");
+//	MeshRenderer* venusMR = venusMesh->AttachComponent<MeshRenderer>();
+//	venusMR->mesh = circleGeometry;
+//	venusMR->AttachMaterial(venusMaterial);
+//
+//	GameObject* earthPivot = sun->CreateEmptyChild("EarthPivot");
+//	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
+//
+//	MaterialPtr earthMaterial = Material::Make(shd);
+//	earthMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Earth.jpg"));
+//
+//	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
+//
+//	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
+//	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
+//	earthMesh->AttachComponent<PlanetRotator>()->rotatingSpeed = 32;
+//	earthMR->mesh = circleGeometry;
+//	earthMR->AttachMaterial(earthMaterial);
+//	earth->transform.position = Vector3(3.5, 0, 0);
+//	earth->transform.scale = Vector3(0.5, 0.5, 0.5);
+//
+//	GameObject* moonPivot = earth->CreateEmptyChild("MoonPivot");
+//	moonPivot->AttachComponent<PlanetRotator>();
+//
+//	MaterialPtr moonMaterial = Material::Make(shd);
+//	moonMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
+//
+//	GameObject* moon = moonPivot->CreateEmptyChild("Moon");
+//	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
+//	moonMR->mesh = circleGeometry;
+//	moonMR->AttachMaterial(moonMaterial);
+//	moon->transform.position = Vector3(2, 0, 0);
+//	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
+//}
+//
+//static void T2(GLFWwindow* win)
+//{
+//	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
+//	cameraObject->transform.position.z = 4;
+//	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
+//	mainCamera->SetCurrentWindow(win);
+//	mainCamera->SetCurrentShader(shd);
+//
+//	RenderModifierPtr fogModifier = FogModifier::Make(0.05f, Color::Make(0.4f, 0.80f, 0.9f));
+//	mainCamera->AddRenderModifier(fogModifier);
+//
+//	GameObject* lightObject = scene.CreateNewGameObject("Light");
+//	lightObject->transform.position = { 3, 3, 0 };
+//	lightObject->AttachComponent<PointLight>();
+//
+//	MaterialPtr sunMaterial = Material::Make(shd);
+//	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
+//	sunMaterial->AttachNormalMap(Texture::Make("decal", Color::Make(0.5f, 0.5f, -1.0f)));
+//
+//	GameObject* sun = lightObject->CreateEmptyChild("Sun");
+//	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
+//	sunMR->mesh = sphere;
+//	sunMR->AttachMaterial(sunMaterial);
+//
+//	MaterialPtr sunMaterial2 = Material::Make(shd);
+//	sunMaterial2->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
+//	sunMaterial2->AttachNormalMap(Texture::Make("decal", "Images/test.jpg"));
+//
+//	GameObject* sun2 = lightObject->CreateEmptyChild("Sun2");
+//	sun2->transform.position = { 0, -3, 0 };
+//	MeshRenderer* sun2MR = sun2->AttachComponent<MeshRenderer>();
+//	sun2MR->mesh = sphere;
+//	sun2MR->AttachMaterial(sunMaterial2);
+//
+//	MaterialPtr whiteMaterial = Material::Make(shd);
+//	whiteMaterial->ambientColor = Color::Make(0.20f, 0.20f, 0.20f);
+//	whiteMaterial->diffuseColor = Color::Make(0.50f, 0.50f, 0.50f);
+//	//whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+//	whiteMaterial->AttachGlossTexture(Texture::Make("gloss", Color::green));
+//	whiteMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
+//
+//	GameObject* table = scene.CreateNewGameObject("Table");
+//	table->transform.position.y = -1.5;
+//	table->transform.scale = { 8, 1, 8 };
+//	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
+//	tableMR->mesh = cube;
+//	tableMR->AttachMaterial(whiteMaterial);
+//
+//	MaterialPtr tableLegMaterial = Material::Make(shd);
+//	tableLegMaterial->ambientColor = Color::Make(0.80f, 0.0f, 0.3f);
+//
+//	std::vector<Vector3> tableLegPos = { {0.43f, -2, 0.43f}, {-0.43f, -2, 0.43f}, {0.43f, -2, -0.43f}, {-0.43f, -2, -0.43f} };
+//	for (const Vector3& pos : tableLegPos)
+//	{
+//		GameObject* tableLeg = table->CreateEmptyChild("Table Leg");
+//		tableLeg->transform.position = pos;
+//		tableLeg->transform.scale = { 1.0f / 16, 2, 1.0f / 16 };
+//		MeshRenderer* tableLegMR = tableLeg->AttachComponent<MeshRenderer>();
+//		tableLegMR->mesh = cylinder;
+//		tableLegMR->AttachMaterial(tableLegMaterial);
+//	}
+//
+//	MaterialPtr yellowBall = Material::Make(shd);
+//	yellowBall->ambientColor = Color::Make(0.60f, 0.60f, 0.15f);
+//	yellowBall->diffuseColor = Color::Make(1.00f, 1.00f, 0.30f);
+//	yellowBall->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
+//	yellowBall->AttachGlossTexture(Texture::Make("gloss", Color::green));;
+//
+//	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
+//	rectangle->transform.position.y = -0.5;
+//	rectangle->transform.scale = { 3, 1, 3 };
+//	MeshRenderer* rectangleMR = rectangle->AttachComponent<MeshRenderer>();
+//	rectangleMR->mesh = cube;
+//	rectangleMR->AttachMaterial(yellowBall);
+//
+//	MaterialPtr moonCylinderMaterial = Material::Make(shd);
+//	moonCylinderMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
+//	moonCylinderMaterial->AttachGlossTexture(Texture::Make("MoonGloss", "Images/Sun.jpg"));
+//	moonCylinderMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
+//	
+//	GameObject* moonCylinder = scene.CreateNewGameObject("MoonCylinder");
+//	moonCylinder->transform.position.y = 1;
+//	MeshRenderer* moonCylinderMR = moonCylinder->AttachComponent<MeshRenderer>();
+//	moonCylinderMR->mesh = cylinder;
+//	moonCylinderMR->AttachMaterial(moonCylinderMaterial);
+//}
+
+static void testFunc(int parm, int parm2)
 {
-	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	cameraObject->transform.position.z = 0;
-	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
-	mainCamera->SetCurrentWindow(win);
-
-	MaterialPtr backgroundMaterial = Material::Make(shd);
-	backgroundMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Background.jpg"));
-
-	GameObject* background = cameraObject->CreateEmptyChild("Background");
-	background->transform.position.z = -1.5f;
-	background->transform.scale = { 15, 15, 15 };
-	MeshRenderer* backgroundMR = background->AttachComponent<MeshRenderer>();
-	backgroundMR->mesh = squareGeometry;
-	backgroundMR->AttachMaterial(backgroundMaterial);
-	
-	MaterialPtr sunMaterial = Material::Make(shd);
-	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
-
-	GameObject* sun = scene.CreateNewGameObject("Sun");
-	GameObject* sunMesh = sun->CreateEmptyChild("SunMesh");
-	MeshRenderer* sunMR = sunMesh->AttachComponent<MeshRenderer>();
-	sunMR->mesh = sphere;
-	sunMR->AttachMaterial(sunMaterial);
-
-	GameObject* venusPivot = sun->CreateEmptyChild("VenusPivot");
-	venusPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 14;
-
-	MaterialPtr venusMaterial = Material::Make(shd);
-	venusMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Venus.jpg"));
-
-	GameObject* venus = venusPivot->CreateEmptyChild("Venus");
-	venus->transform.position = Vector3(1.75f, 0, 0);
-	venus->transform.scale = Vector3(0.25, 0.25, 0.3);
-	GameObject* venusMesh = venus->CreateEmptyChild("VenusMesh");
-	MeshRenderer* venusMR = venusMesh->AttachComponent<MeshRenderer>();
-	venusMR->mesh = circleGeometry;
-	venusMR->AttachMaterial(venusMaterial);
-
-	GameObject* earthPivot = sun->CreateEmptyChild("EarthPivot");
-	earthPivot->AttachComponent<PlanetRotator>()->rotatingSpeed = 6;
-
-	MaterialPtr earthMaterial = Material::Make(shd);
-	earthMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Earth.jpg"));
-
-	GameObject* earth = earthPivot->CreateEmptyChild("Earth");
-
-	GameObject* earthMesh = earth->CreateEmptyChild("EarthMesh");
-	MeshRenderer* earthMR = earthMesh->AttachComponent<MeshRenderer>();
-	earthMesh->AttachComponent<PlanetRotator>()->rotatingSpeed = 32;
-	earthMR->mesh = circleGeometry;
-	earthMR->AttachMaterial(earthMaterial);
-	earth->transform.position = Vector3(3.5, 0, 0);
-	earth->transform.scale = Vector3(0.5, 0.5, 0.5);
-
-	GameObject* moonPivot = earth->CreateEmptyChild("MoonPivot");
-	moonPivot->AttachComponent<PlanetRotator>();
-
-	MaterialPtr moonMaterial = Material::Make(shd);
-	moonMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
-
-	GameObject* moon = moonPivot->CreateEmptyChild("Moon");
-	MeshRenderer* moonMR = moon->AttachComponent<MeshRenderer>();
-	moonMR->mesh = circleGeometry;
-	moonMR->AttachMaterial(moonMaterial);
-	moon->transform.position = Vector3(2, 0, 0);
-	moon->transform.scale = Vector3(0.25, 0.25, 0.25);
+	std::cout << "Print1 " << parm << parm2 << std::endl; 
 }
 
-static void T2(GLFWwindow* win)
+static void testFunc2(int parm, int parm2)
 {
-	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	cameraObject->transform.position.z = 4;
-	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
-	mainCamera->SetCurrentWindow(win);
-	mainCamera->SetCurrentShader(shd);
-
-	RenderModifierPtr fogModifier = FogModifier::Make(0.05f, Color::Make(0.4f, 0.80f, 0.9f));
-	mainCamera->AddRenderModifier(fogModifier);
-
-	GameObject* lightObject = scene.CreateNewGameObject("Light");
-	lightObject->transform.position = { 3, 3, 0 };
-	lightObject->AttachComponent<PointLight>();
-
-	MaterialPtr sunMaterial = Material::Make(shd);
-	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
-	sunMaterial->AttachNormalMap(Texture::Make("decal", Color::Make(0.5f, 0.5f, -1.0f)));
-
-	GameObject* sun = lightObject->CreateEmptyChild("Sun");
-	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
-	sunMR->mesh = sphere;
-	sunMR->AttachMaterial(sunMaterial);
-
-	MaterialPtr sunMaterial2 = Material::Make(shd);
-	sunMaterial2->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
-	sunMaterial2->AttachNormalMap(Texture::Make("decal", "Images/test.jpg"));
-
-	GameObject* sun2 = lightObject->CreateEmptyChild("Sun2");
-	sun2->transform.position = { 0, -3, 0 };
-	MeshRenderer* sun2MR = sun2->AttachComponent<MeshRenderer>();
-	sun2MR->mesh = sphere;
-	sun2MR->AttachMaterial(sunMaterial2);
-
-	MaterialPtr whiteMaterial = Material::Make(shd);
-	whiteMaterial->ambientColor = Color::Make(0.20f, 0.20f, 0.20f);
-	whiteMaterial->diffuseColor = Color::Make(0.50f, 0.50f, 0.50f);
-	//whiteMaterial->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
-	whiteMaterial->AttachGlossTexture(Texture::Make("gloss", Color::green));
-	whiteMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
-
-	GameObject* table = scene.CreateNewGameObject("Table");
-	table->transform.position.y = -1.5;
-	table->transform.scale = { 8, 1, 8 };
-	MeshRenderer* tableMR = table->AttachComponent<MeshRenderer>();
-	tableMR->mesh = cube;
-	tableMR->AttachMaterial(whiteMaterial);
-
-	MaterialPtr tableLegMaterial = Material::Make(shd);
-	tableLegMaterial->ambientColor = Color::Make(0.80f, 0.0f, 0.3f);
-
-	std::vector<Vector3> tableLegPos = { {0.43f, -2, 0.43f}, {-0.43f, -2, 0.43f}, {0.43f, -2, -0.43f}, {-0.43f, -2, -0.43f} };
-	for (const Vector3& pos : tableLegPos)
-	{
-		GameObject* tableLeg = table->CreateEmptyChild("Table Leg");
-		tableLeg->transform.position = pos;
-		tableLeg->transform.scale = { 1.0f / 16, 2, 1.0f / 16 };
-		MeshRenderer* tableLegMR = tableLeg->AttachComponent<MeshRenderer>();
-		tableLegMR->mesh = cylinder;
-		tableLegMR->AttachMaterial(tableLegMaterial);
-	}
-
-	MaterialPtr yellowBall = Material::Make(shd);
-	yellowBall->ambientColor = Color::Make(0.60f, 0.60f, 0.15f);
-	yellowBall->diffuseColor = Color::Make(1.00f, 1.00f, 0.30f);
-	yellowBall->specularColor = Color::Make(0.90f, 0.90f, 0.90f);
-	yellowBall->AttachGlossTexture(Texture::Make("gloss", Color::green));;
-
-	GameObject* rectangle = scene.CreateNewGameObject("YellowCube");
-	rectangle->transform.position.y = -0.5;
-	rectangle->transform.scale = { 3, 1, 3 };
-	MeshRenderer* rectangleMR = rectangle->AttachComponent<MeshRenderer>();
-	rectangleMR->mesh = cube;
-	rectangleMR->AttachMaterial(yellowBall);
-
-	MaterialPtr moonCylinderMaterial = Material::Make(shd);
-	moonCylinderMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Moon.jpg"));
-	moonCylinderMaterial->AttachGlossTexture(Texture::Make("MoonGloss", "Images/Sun.jpg"));
-	moonCylinderMaterial->AttachNormalMap(Texture::Make("tableNormal", "Images/test.jpg"));
-	
-	GameObject* moonCylinder = scene.CreateNewGameObject("MoonCylinder");
-	moonCylinder->transform.position.y = 1;
-	MeshRenderer* moonCylinderMR = moonCylinder->AttachComponent<MeshRenderer>();
-	moonCylinderMR->mesh = cylinder;
-	moonCylinderMR->AttachMaterial(moonCylinderMaterial);
+	std::cout << "Print2 " << parm << parm2 << std::endl; 
 }
 
 static void initialize(GLFWwindow* win)
@@ -239,11 +252,23 @@ static void initialize(GLFWwindow* win)
 	sphere = Sphere::Make();
 	cylinder = Cylinder::Make();
 
-	T2(win);
+	UniquePtr<Vector2> a = Vector2(0.0, 5.0);
+	std::cout << a->y << std::endl;
+	
+	Event<int, int> e;
+	e.AddListener(testFunc);
+	e.AddListener(testFunc2);
+	e.Invoke(1, 2);
+	e.Invoke(3, 4);
+	e.RemoveListener(testFunc);
+	e.Invoke(1, 2);
 
-	scene.printScene();
+	//UniquePtr<Scene> b;
+	//std::cout << *b << std::endl;
 
-	Error::Check("initialize");
+	//scene.printScene();
+
+ 	Error::Check("initialize");
 }
 
 static void error(int code, const char* msg)
@@ -259,7 +284,7 @@ static void display(GLFWwindow* win)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	Light::LoadLights(shd);
-	scene.DrawScene();
+	//scene.DrawScene();
 
 	Error::Check("display"); 
 }
@@ -288,9 +313,7 @@ static void cursorpos(GLFWwindow* win, double xpos, double ypos)
 	double x = xpos * fb_w / wn_w;
 	double y = (wn_h - ypos) * fb_h / wn_h;
 
-	Error::Check("a");
 	mainCamera->GetArcball()->AccumulateMouseMotion((float)x, (float)y);
-	Error::Check("b");
 }
 
 static void cursorinit(GLFWwindow* win, double xpos, double ypos)

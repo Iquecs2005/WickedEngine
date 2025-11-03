@@ -10,13 +10,6 @@ GameObject::~GameObject()
 		components.pop_front();
 		delete component;
 	}
-
-	while (!children.empty())
-	{
-		GameObject* child = children.front();
-		children.pop_front();
-		delete child;
-	}
 }
 
 MVPMatrixPtr GameObject::Draw(const MVPMatrixPtr baseMatrix)
@@ -37,22 +30,29 @@ void GameObject::AddToRenderQueue(Renderer* newRenderer)
 	renderQueue.push_back(newRenderer);
 }
 
-std::list<GameObject*> GameObject::GetChildren()
+std::list<GameObjectPtr> GameObject::GetChildren()
 {
-	return children;
+	std::list<GameObjectPtr> returnList;
+
+	for (GameObjectShared gameObject : children)
+	{
+		returnList.push_back(gameObject);
+	}
+
+	return returnList;
 }
 
-void GameObject::AddChild(GameObject* child)
+void GameObject::AddChild(GameObjectShared child)
 {
 	children.push_back(child);
 	child->transform.SetParent(&transform);
 }
 
-GameObject* GameObject::CreateEmptyChild(std::string name)
-{
-	GameObject* newChildren = new GameObject(name);
-
-	AddChild(newChildren);
-
-	return newChildren;
-}
+//GameObjectPtr GameObject::CreateEmptyChild(std::string name)
+//{
+//	GameObjectShared newChildren = GameObject::Make(name);
+//
+//	AddChild(newChildren);
+//
+//	return GameObjectPtr(newChildren);
+//}

@@ -9,11 +9,13 @@ public:
 
 	Scene(const std::string& name = "Scene");
 	~Scene();
+
+	//GameObjectPtr CreateNewGameObject(std::string gameObjectName = "GameObject", GameObject* parent = nullptr);
+	
 	//void UpdateScene();
-	void DrawScene();
-	GameObject* CreateNewGameObject(std::string gameObjectName = "GameObject", GameObject* parent = nullptr);
-	void printScene();
+	//void DrawScene();
+	//void printScene();
 private:
-	std::list<GameObject*> root;
+	std::list<GameObjectShared> root;
 };
 

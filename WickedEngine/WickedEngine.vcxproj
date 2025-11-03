@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="General\Event.cpp" />
     <ClCompile Include="Rendering\FogModifier.cpp" />
     <ClCompile Include="Geometry\3D\Cylinder.cpp" />
     <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
@@ -178,6 +179,8 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="General\Event.h" />
+    <ClInclude Include="General\Memory\SmartPtr.h" />
     <ClInclude Include="Rendering\FogModifier.h" />
     <ClInclude Include="Geometry\3D\Cylinder.h" />
     <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Geometry\Square.h" />
     <ClInclude Include="Geometry\3D\Sphere.h" />
+    <ClInclude Include="General\Memory\UniquePtr.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="General\Vector2.h" />
     <ClInclude Include="Geometry\3D\Vertex3D.h" />
