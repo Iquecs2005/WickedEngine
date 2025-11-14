@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="General\Event.cpp" />
+    <ClCompile Include="General\Memory\UniquePtr.cpp" />
     <ClCompile Include="Rendering\FogModifier.cpp" />
     <ClCompile Include="Geometry\3D\Cylinder.cpp" />
     <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
@@ -180,7 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General\Event.h" />
-    <ClInclude Include="General\Memory\SmartPtr.h" />
+    <ClInclude Include="General\Memory\WeakPtr.h" />
     <ClInclude Include="Rendering\FogModifier.h" />
     <ClInclude Include="Geometry\3D\Cylinder.h" />
     <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />

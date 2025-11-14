@@ -10,12 +10,12 @@ public:
 	Scene(const std::string& name = "Scene");
 	~Scene();
 
-	//GameObjectPtr CreateNewGameObject(std::string gameObjectName = "GameObject", GameObject* parent = nullptr);
+	GameObjectPtr CreateNewGameObject(std::string gameObjectName = "GameObject", GameObject* parent = nullptr);
 	
-	//void UpdateScene();
-	//void DrawScene();
-	//void printScene();
+	void UpdateScene();
+	void DrawScene();
+	void printScene();
 private:
-	std::list<GameObjectShared> root;
+	std::list<GameObjectUniquePtr> root;
 };
 

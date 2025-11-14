@@ -34,25 +34,25 @@ std::list<GameObjectPtr> GameObject::GetChildren()
 {
 	std::list<GameObjectPtr> returnList;
 
-	for (GameObjectShared gameObject : children)
+	for (GameObjectUniquePtr& gameObject : children)
 	{
-		returnList.push_back(gameObject);
+		returnList.push_back(GameObjectPtr(gameObject));
 	}
 
 	return returnList;
 }
 
-void GameObject::AddChild(GameObjectShared child)
+void GameObject::AddChild(const GameObjectUniquePtr& child)
 {
 	children.push_back(child);
 	child->transform.SetParent(&transform);
 }
 
-//GameObjectPtr GameObject::CreateEmptyChild(std::string name)
-//{
-//	GameObjectShared newChildren = GameObject::Make(name);
-//
-//	AddChild(newChildren);
-//
-//	return GameObjectPtr(newChildren);
-//}
+GameObjectPtr GameObject::CreateEmptyChild(std::string name)
+{
+	GameObjectUniquePtr newChildren = GameObject::Make(name);
+
+	AddChild(newChildren);
+
+	return GameObjectPtr(newChildren);
+}

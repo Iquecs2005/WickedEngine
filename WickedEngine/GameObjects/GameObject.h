@@ -1,8 +1,10 @@
 #include <memory>
+#include "../General/Memory/UniquePtr.h"
+#include "../General/Memory/WeakPtr.h"
 
 class GameObject;
-using GameObjectPtr = std::weak_ptr<GameObject>;
-using GameObjectShared = std::shared_ptr<GameObject>;
+using GameObjectPtr = WeakPtr<GameObject>;
+using GameObjectUniquePtr = UniquePtr<GameObject>;
 
 #pragma once
 
@@ -48,7 +50,7 @@ public:
 
 	//TO DO change to unique ptr
 	std::list<GameObjectPtr> GetChildren();
-	void AddChild(GameObjectShared child);
+	void AddChild(const GameObjectUniquePtr& child);
 	GameObjectPtr CreateEmptyChild(std::string name = "Child");
 
 	friend class Scene;
@@ -58,16 +60,16 @@ private:
 	//TO DO change to unique ptr
 	std::list<MonoBehaviour*> components;
 	std::list<Renderer*> renderQueue;
-	std::list<GameObjectShared> children;
+	std::list<GameObjectUniquePtr> children;
 
 	GameObject(std::string name = "GameObject");
 	~GameObject();
 
-	//inline static GameObjectShared Make(std::string name);
+	inline static GameObjectUniquePtr Make(std::string name);
 };
 
-//inline GameObjectShared GameObject::Make(std::string name)
-//{
-//	return GameObjectShared(new GameObject(name));
-//}
+inline GameObjectUniquePtr GameObject::Make(std::string name)
+{
+	return GameObjectUniquePtr(new GameObject(name));
+}
 

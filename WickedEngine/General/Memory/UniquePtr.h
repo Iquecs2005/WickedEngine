@@ -3,76 +3,96 @@
 #include <iostream>
 #include <stdexcept>
 
-template<typename ContentType>
+#include "../Event.h"
+
+template<typename UniqueContentType>
 class UniquePtr
 {
 public:
+	Event<> OnDestruction;
+	Event<UniquePtr<UniqueContentType>> OnNewOwner;
+
 	UniquePtr();
-	UniquePtr(ContentType* ptr);
-	UniquePtr(ContentType value);
-	UniquePtr(const UniquePtr<ContentType>&) = delete;
+	UniquePtr(UniqueContentType* ptr);
+	UniquePtr(UniqueContentType value);
+	UniquePtr(const UniquePtr<UniqueContentType>&) = delete;
 	~UniquePtr();
 
 	inline bool IsExpired() const;
-	
+	inline UniquePtr MoveOwner();
+
 	//inline ContentType& operator=(const S) const;
-	inline ContentType& operator*() const;
-	inline ContentType* operator->() const;
+	inline UniqueContentType& operator*() const;
+	inline UniqueContentType* operator->() const;
+
 private:
+	UniqueContentType* ptr;
+
 	inline void ExpiredExceptionChecker() const;
 
-	ContentType* ptr;
+	template<typename ContentType>
+	friend class WeakPtr;
 };
 
-template<typename ContentType>
-UniquePtr<ContentType>::UniquePtr()
+template<typename UniqueContentType>
+UniquePtr<UniqueContentType>::UniquePtr()
 {
-	ptr = new ContentType();
+	ptr = new UniqueContentType();
 }
 
-template<typename ContentType>
-UniquePtr<ContentType>::UniquePtr(ContentType* ptr)
+template<typename UniqueContentType>
+UniquePtr<UniqueContentType>::UniquePtr(UniqueContentType* ptr)
 {
 	this->ptr = ptr;
 }
 
-template<typename ContentType>
-UniquePtr<ContentType>::UniquePtr(ContentType value)
+template<typename UniqueContentType>
+UniquePtr<UniqueContentType>::UniquePtr(UniqueContentType value)
 {
-	ptr = new ContentType();
+	ptr = new UniqueContentType();
 	*ptr = value;
 }
 
-template<typename ContentType>
-UniquePtr<ContentType>::~UniquePtr()
+template<typename UniqueContentType>
+UniquePtr<UniqueContentType>::~UniquePtr()
 {
+	OnDestruction.Invoke();
 	if (!IsExpired())
 		delete ptr;
 	std::cout << "Deleting pointer" << std::endl;
 }
 
-template<typename ContentType>
-inline bool UniquePtr<ContentType>::IsExpired() const
+template<typename UniqueContentType>
+inline bool UniquePtr<UniqueContentType>::IsExpired() const
 {
 	return ptr == nullptr;
 }
 
-template<typename ContentType>
-inline void UniquePtr<ContentType>::ExpiredExceptionChecker() const
+template<typename UniqueContentType>
+inline UniquePtr<UniqueContentType> UniquePtr<UniqueContentType>::MoveOwner()
 {
-	if (IsExpired())
-		throw std::runtime_error("Null Pointer exception\n");
+	UniquePtr<UniqueContentType> newUnique = UniquePtr<UniqueContentType>(ptr);
+	ptr = nullptr;
+	OnNewOwner.Invoke(newUnique);
+	return newUnique;
 }
 
-template<typename ContentType>
-inline ContentType& UniquePtr<ContentType>::operator*() const
+template<typename UniqueContentType>
+inline void UniquePtr<UniqueContentType>::ExpiredExceptionChecker() const
+{
+	if (IsExpired())
+		throw std::runtime_error("UniquePtr Null Pointer exception\n");
+}
+
+template<typename UniqueContentType>
+inline UniqueContentType& UniquePtr<UniqueContentType>::operator*() const
 {
 	ExpiredExceptionChecker();
 	return *ptr;
 }
 
-template<typename ContentType>
-inline ContentType* UniquePtr<ContentType>::operator->() const
+template<typename UniqueContentType>
+inline UniqueContentType* UniquePtr<UniqueContentType>::operator->() const
 {
 	ExpiredExceptionChecker();
 	return ptr;

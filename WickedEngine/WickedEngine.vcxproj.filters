@@ -135,6 +135,9 @@
     <ClCompile Include="General\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="General\Memory\UniquePtr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
@@ -268,7 +271,7 @@
     <ClInclude Include="General\Memory\UniquePtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="General\Memory\SmartPtr.h">
+    <ClInclude Include="General\Memory\WeakPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="General\Event.h">
