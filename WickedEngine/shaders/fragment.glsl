@@ -25,25 +25,27 @@ in data
 {
 	vec3 vWorld;
 	vec3 nWorld;
+	vec3 tWorld;
 	vec3 lightVector;
 	float lightDistance;
 	vec2 texcoord;
-	mat3 TBN;
 } f;
 
 out vec4 fcolor;
 
 const float globalAttenuation = 0.75f;
 
+mat3 CreateTBNMatrix();
+
 void main (void)
 {
 	vec3 vNorm = normalize(f.vWorld);
 
+	mat3 TBN = CreateTBNMatrix();
+
 	vec3 nNorm = texture(normalMap, f.texcoord).rgb;
 	nNorm = (nNorm * 2.0) - 1.0;
-	nNorm = normalize(f.TBN * nNorm);
-
-	//vec3 nNorm = normalize(f.nWorld);
+	nNorm = normalize(TBN * nNorm);
 
 	vec3 lightNorm = normalize(f.lightVector);
 
@@ -77,4 +79,17 @@ void main (void)
 	fogValue = clamp(fogValue, 0.0f, 1.0f);
 
 	fcolor = fogValue * fcolor + (1 - fogValue) * fogColor;
+}
+
+mat3 CreateTBNMatrix()
+{
+	vec3 normal = normalize(f.nWorld);
+	vec3 tangent = normalize(f.tWorld);
+	vec3 binormal = cross(tangent, normal);
+
+	vec3 T = normalize(tangent);
+	vec3 B = normalize(binormal);
+	vec3 N = normalize(normal);
+	
+	return mat3(T, B, N);
 }
