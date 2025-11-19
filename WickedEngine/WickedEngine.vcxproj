@@ -129,6 +129,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Rendering\BaseTexture.cpp" />
+    <ClCompile Include="Rendering\DepthTexture.cpp" />
+    <ClCompile Include="Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Rendering\FogModifier.cpp" />
     <ClCompile Include="Geometry\3D\Cylinder.cpp" />
     <ClCompile Include="GameObjects\Components\ArcballCamera3D.cpp" />
@@ -178,6 +181,9 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Rendering\BaseTexture.h" />
+    <ClInclude Include="Rendering\DepthTexture.h" />
+    <ClInclude Include="Rendering\FrameBuffer.h" />
     <ClInclude Include="Rendering\FogModifier.h" />
     <ClInclude Include="Geometry\3D\Cylinder.h" />
     <ClInclude Include="GameObjects\Components\ArcballCamera3D.h" />

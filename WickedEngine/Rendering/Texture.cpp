@@ -4,8 +4,9 @@
 #include <glad/gl.h>
 #include <iostream>
 
-Texture::Texture(const std::string& name, const std::string& fileName) : name(name), id(0)
+Texture::Texture(const std::string& name, const std::string& fileName) : BaseTexture(name)
 {
+	this->name = name;
 	ImagePtr textureImage = Image::Make(fileName);
 
 	const int internalFormat = textureImage->GetNChannels() == 3 ? GL_RGB : GL_RGBA;
@@ -13,6 +14,9 @@ Texture::Texture(const std::string& name, const std::string& fileName) : name(na
 	const int imageHeight = textureImage->GetHeight();
 	const int imageBorder = 0;
 	
+	width = imageWidth;
+	height = imageHeight;
+
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexImage2D(GL_TEXTURE_2D, mipmapOriginalLevel, internalFormat, imageWidth, imageHeight, imageBorder,
@@ -32,7 +36,7 @@ Texture::Texture(const std::string& name, const ColorPtr& color) : Texture(name,
 	
 }
 
-Texture::Texture(const std::string& name, const Color& color) : name(name), id(0)
+Texture::Texture(const std::string& name, const Color& color) : BaseTexture(name)
 {
 	const int internalFormat = GL_RGBA;
 	const int imageWidth = 1;
@@ -42,6 +46,9 @@ Texture::Texture(const std::string& name, const Color& color) : name(name), id(0
 										 static_cast<unsigned char>(color.g * 255),
 										 static_cast<unsigned char>(color.b * 255),
 										 static_cast<unsigned char>(color.a * 255) };
+
+	width = 1;
+	height = 1;
 
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
