@@ -27,7 +27,7 @@ glm::mat4 Camera3D::GetProjectionMatrix() const
 
 glm::vec4 Camera3D::GetCameraPos() const
 {
-	glm::mat4 transformMatrix = glm::translate(gameObject->transform.GetModelMatrix(), (glm::vec3)eyeVector);
+	glm::mat4 transformMatrix = gameObject->transform.GetModelMatrix();
 
 	glm::vec4 globalPos = transformMatrix * glm::vec4(0,0,0,1);
 

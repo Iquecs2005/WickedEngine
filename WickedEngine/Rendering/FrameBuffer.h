@@ -5,9 +5,7 @@ using FrameBufferPtr = std::shared_ptr<FrameBuffer>;
 
 #pragma once
 
-//#include "Texture.h"
-class Texture;
-using TexturePtr = std::shared_ptr<Texture>;
+#include "BaseTexture.h"
 
 enum AttachmentType
 {
@@ -17,7 +15,7 @@ enum AttachmentType
 class FrameBuffer
 {
 public:
-	static inline FrameBufferPtr Make(TexturePtr tex, AttachmentType texType);
+	static inline FrameBufferPtr Make(BaseTexturePtr tex, AttachmentType texType);
 	~FrameBuffer();
 
 	void Activate();
@@ -28,10 +26,10 @@ private:
 	unsigned int height;
 	AttachmentType type;
 
-	FrameBuffer(TexturePtr tex, AttachmentType texType);
+	FrameBuffer(BaseTexturePtr tex, AttachmentType texType);
 };
 
-inline FrameBufferPtr FrameBuffer::Make(TexturePtr tex, AttachmentType texType)
+inline FrameBufferPtr FrameBuffer::Make(BaseTexturePtr tex, AttachmentType texType)
 {
 	return FrameBufferPtr(new FrameBuffer(tex, texType));
 }

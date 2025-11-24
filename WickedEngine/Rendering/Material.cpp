@@ -13,19 +13,16 @@ void Material::Load()
 
 	currentShader->SetUniform("spotCoeficient", spotCoeficient);
 
-	currentShader->ActiveTexture("normalMap");
-	glBindTexture(GL_TEXTURE_2D, normalMap->GetTextureId());
-	currentShader->ActiveTexture("gloss");
-	glBindTexture(GL_TEXTURE_2D, glossTexture->GetTextureId());
-	currentShader->ActiveTexture("decal");
-	glBindTexture(GL_TEXTURE_2D, decalTexture->GetTextureId());
+	normalMap->Load(currentShader, "normalMap");
+	glossTexture->Load(currentShader, "gloss");
+	decalTexture->Load(currentShader, "decal");
 }
 
 void Material::Unload()
 {
-	currentShader->DeactiveTexture();
-	currentShader->DeactiveTexture();
-	currentShader->DeactiveTexture();
+	normalMap->Unload(currentShader);
+	glossTexture->Unload(currentShader);
+	decalTexture->Unload(currentShader);
 }
 
 void Material::AttachShader(ShaderPtr shader)

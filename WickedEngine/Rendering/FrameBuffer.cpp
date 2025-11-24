@@ -12,10 +12,15 @@
 
 #endif
 
-#include "Texture.h"
+#include "../error.h"
 
-FrameBuffer::FrameBuffer(TexturePtr tex, AttachmentType texType)
+#include "BaseTexture.h"
+
+FrameBuffer::FrameBuffer(BaseTexturePtr tex, AttachmentType texType)
+	: type(texType)
 {
+	Error::Check("Start Frame Buffer Generation");
+
 	glGenFramebuffers(1, &id);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 
@@ -24,8 +29,10 @@ FrameBuffer::FrameBuffer(TexturePtr tex, AttachmentType texType)
 		attachmentType = GL_DEPTH_ATTACHMENT;
 
 	const int mipmapLevel = 0;
-	glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType,
-						   GL_TEXTURE_2D, id, mipmapLevel);
+	glFramebufferTexture(GL_FRAMEBUFFER, attachmentType,
+						 tex->GetId(), mipmapLevel);
+
+	Error::Check("Check Frame Buffer Generation");
 
 	width = tex->GetWidth();
 	height = tex->GetHeight();
@@ -36,6 +43,8 @@ FrameBuffer::FrameBuffer(TexturePtr tex, AttachmentType texType)
 
 	//Unbinds frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	Error::Check("End Frame Buffer Generation");
 }
 
 FrameBuffer::~FrameBuffer()
@@ -45,11 +54,9 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Activate()
 {
-	glViewport(0, 0, width, height);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
-
-	if (type == AttachmentType::DepthAttach)
-		glClear(GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, width, height);
+	
 }
 
 void FrameBuffer::Deactivate()

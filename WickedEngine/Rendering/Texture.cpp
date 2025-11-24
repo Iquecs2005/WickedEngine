@@ -6,29 +6,23 @@
 
 Texture::Texture(const std::string& name, const std::string& fileName) : BaseTexture(name)
 {
-	this->name = name;
+	TextureForm textureForm;
 	ImagePtr textureImage = Image::Make(fileName);
 
-	const int internalFormat = textureImage->GetNChannels() == 3 ? GL_RGB : GL_RGBA;
-	const int imageWidth = textureImage->GetWidth();
-	const int imageHeight = textureImage->GetHeight();
-	const int imageBorder = 0;
-	
-	width = imageWidth;
-	height = imageHeight;
+	textureForm.mipmapLevel = 0;
+	textureForm.internalFormat = textureImage->GetNChannels() == 3 ? GL_RGB : GL_RGBA;
+	textureForm.width = textureImage->GetWidth();
+	textureForm.height = textureImage->GetHeight();
+	textureForm.border = 0;
+	textureForm.texelFormat = textureForm.internalFormat;
+	textureForm.texelDataFormat = GL_UNSIGNED_BYTE;
+	textureForm.textureData = textureImage->GetData();
+	textureForm.sWrap = GL_REPEAT;
+	textureForm.tWrap = GL_REPEAT;
+	textureForm.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+	textureForm.maxFilter = GL_LINEAR;
 
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-	glTexImage2D(GL_TEXTURE_2D, mipmapOriginalLevel, internalFormat, imageWidth, imageHeight, imageBorder,
-				 internalFormat, GL_UNSIGNED_BYTE, textureImage->GetData());
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glBindTexture(GL_TEXTURE_2D, 0);
+	Create2DTexture(textureForm);
 }
 
 Texture::Texture(const std::string& name, const ColorPtr& color) : Texture(name, *color)
@@ -38,30 +32,27 @@ Texture::Texture(const std::string& name, const ColorPtr& color) : Texture(name,
 
 Texture::Texture(const std::string& name, const Color& color) : BaseTexture(name)
 {
-	const int internalFormat = GL_RGBA;
-	const int imageWidth = 1;
-	const int imageHeight = 1;
-	const int imageBorder = 0;
 	const unsigned char colorData[4] = { static_cast<unsigned char>(color.r * 255),
 										 static_cast<unsigned char>(color.g * 255),
 										 static_cast<unsigned char>(color.b * 255),
 										 static_cast<unsigned char>(color.a * 255) };
 
-	width = 1;
-	height = 1;
+	TextureForm textureForm;
 
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-	glTexImage2D(GL_TEXTURE_2D, mipmapOriginalLevel, internalFormat, imageWidth, imageHeight, imageBorder,
-		internalFormat, GL_UNSIGNED_BYTE, colorData);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	textureForm.mipmapLevel = 0;
+	textureForm.internalFormat = GL_RGBA;
+	textureForm.width = 1;
+	textureForm.height = 1;
+	textureForm.border = 0;
+	textureForm.texelFormat = GL_RGBA;
+	textureForm.texelDataFormat = GL_UNSIGNED_BYTE;
+	textureForm.textureData = colorData;
+	textureForm.sWrap = GL_REPEAT;
+	textureForm.tWrap = GL_REPEAT;
+	textureForm.minFilter = GL_NEAREST;
+	textureForm.maxFilter = GL_NEAREST;
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	Create2DTexture(textureForm);
 }
 
 Texture::~Texture()

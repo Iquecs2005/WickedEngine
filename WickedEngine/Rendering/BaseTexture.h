@@ -1,47 +1,76 @@
+#include <memory>
+
+class BaseTexture;
+using BaseTexturePtr = std::shared_ptr<BaseTexture>;
+
 #pragma once
 
+#include "shader.h"
 #include <string>
 
 class BaseTexture
 {
 public:
-	inline unsigned int GetTextureId();
-	inline std::string GetTextureName();
-	inline unsigned int GetWidth();
-	inline unsigned int GetHeight();
+	void Load(ShaderPtr shader, std::string variableName);
+	void Unload(ShaderPtr shader);
+
+	inline std::string GetTextureName() const;
+
+	inline unsigned int GetId() const;
+	inline unsigned int GetWidth() const;
+	inline unsigned int GetHeight() const;
 protected:
-	unsigned int id;
 	std::string name;
-	unsigned int width;
-	unsigned int height;
 
-	static const int mipmapOriginalLevel = 0;
+	unsigned int id = 0;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned int mipmapLevel = 0;
 
-	inline BaseTexture(std::string name);
+	struct TextureForm
+	{
+		unsigned int mipmapLevel;
+		int internalFormat;
+		unsigned int width;
+		unsigned int height;
+		unsigned int border;
+		unsigned int texelFormat;
+		unsigned int texelDataFormat;
+		const void* textureData;
+
+		unsigned int sWrap;
+		unsigned int tWrap;
+		unsigned int minFilter;
+		unsigned int maxFilter;
+	};
+	
+	inline BaseTexture(const std::string& name);
 	virtual ~BaseTexture() = default;
+
+	unsigned int Create2DTexture(const TextureForm& textureForm, bool saveValues = true);
 };
 
-inline BaseTexture::BaseTexture(std::string name) : name(name), id(0), width(0), height(0)
+inline BaseTexture::BaseTexture(const std::string& name) : name(name)
 {
 
 }
 
-inline unsigned int BaseTexture::GetTextureId()
-{
-	return id;
-}
-
-inline std::string BaseTexture::GetTextureName()
+inline std::string BaseTexture::GetTextureName() const
 {
 	return name;
 }
 
-inline unsigned int BaseTexture::GetWidth()
+inline unsigned int BaseTexture::GetId() const
+{
+	return id;
+}
+
+inline unsigned int BaseTexture::GetWidth() const
 {
 	return width;
 }
 
-inline unsigned int BaseTexture::GetHeight()
+inline unsigned int BaseTexture::GetHeight() const
 {
 	return height;
 }

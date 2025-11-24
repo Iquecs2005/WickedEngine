@@ -17,7 +17,7 @@ glm::vec4 ArcballCamera3D::GetCameraPos() const
 {
 	glm::mat4 rotation = glm::inverse(arcball->GetMatrix());
 
-	glm::mat4 transformMatrix = glm::translate(gameObject->transform.GetModelMatrix(), (glm::vec3)eyeVector);
+	glm::mat4 transformMatrix = gameObject->transform.GetModelMatrix();
 
 	glm::vec4 globalPos = transformMatrix * rotation * glm::vec4(0,0,0,1);
 

@@ -5,7 +5,9 @@ uniform vec4 uniformColor;
 uniform sampler2D decal;
 uniform sampler2D gloss;
 uniform sampler2D normalMap;
+uniform sampler2DShadow shadowMap;
 
+uniform mat4 lightSpaceMatrix;
 uniform vec4 cameraPos;
 
 uniform vec4 materialAmbientColor;
@@ -29,6 +31,7 @@ in data
 	vec3 lightVector;
 	float lightDistance;
 	vec2 texcoord;
+	vec4 lightSpacePos;
 } f;
 
 out vec4 fcolor;
@@ -57,6 +60,8 @@ void main (void)
 
 	fcolor = ambientColor * globalAttenuation;
 
+	float lcolor = textureProj(shadowMap, f.lightSpacePos);
+
 	float lightDivisor = lightAttConstantCoefficient;
 	lightDivisor += lightAttLinearCoefficient * f.lightDistance;
 	lightDivisor += lightAttQuadraticCoefficient * pow(f.lightDistance, 2);
@@ -64,13 +69,13 @@ void main (void)
 	float lightAttenuation = 1 / lightDivisor;
 	lightAttenuation = clamp(lightAttenuation, 0.0f, 1.0f);
 
-	fcolor += diffuseColor * max(0, nDotL) * lightAttenuation;
+	fcolor += diffuseColor * max(0, nDotL) * lightAttenuation * lcolor;
 
 	if (nDotL > 0)
 	{
 		vec3 refL = normalize(reflect(-lightNorm, nNorm));
 		vec3 eyeVector = normalize(vec3(cameraPos) - f.vWorld);
-		fcolor += pow(max(0, dot(refL, eyeVector)), spotCoeficient) * specularColor * lightAttenuation;
+		fcolor += pow(max(0, dot(refL, eyeVector)), spotCoeficient) * specularColor * lightAttenuation * lcolor;
 	}
 
 	//Fog effect

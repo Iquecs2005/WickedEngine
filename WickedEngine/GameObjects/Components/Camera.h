@@ -53,7 +53,7 @@ inline Camera::Camera(GameObject* gameObject) : MonoBehaviour(gameObject), curre
 
 inline Camera::~Camera()
 {
-	std::cout << "Deleted Camera" << std::endl;
+	//std::cout << "Deleted Camera" << std::endl;
 
 	if (mainCamera == this)
 	{

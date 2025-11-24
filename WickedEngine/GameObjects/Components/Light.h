@@ -2,13 +2,14 @@
 
 #include "../GameObject.h"
 #include "MonoBehaviour.h"
+#include "Camera.h"
 
 #include "../../Rendering/shader.h"
 
 class Light : public MonoBehaviour
 {
 public:
-	inline Light* GetCurrentLight();
+	static inline Light* GetCurrentLight();
 
 	static void LoadLights(ShaderPtr currentShader);
 protected:
@@ -19,7 +20,7 @@ private:
 	static Light* currentLight;
 };
 
-Light* Light::GetCurrentLight()
+inline Light* Light::GetCurrentLight()
 {
 	return currentLight;
 }

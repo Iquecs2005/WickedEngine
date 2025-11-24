@@ -17,8 +17,8 @@ private:
 inline ArcballCamera3D::ArcballCamera3D(GameObject* gameObject)
 	: Camera3D(gameObject)
 {
-	Vector3 cameraPos = eyeVector + gameObject->transform.position;
-	arcball = Arcball::Make(glm::distance((glm::vec4)cameraPos, (glm::vec4)centerPos));
+	Vector3 cameraPos = gameObject->transform.position;
+	arcball = Arcball::Make(glm::distance((glm::vec4)cameraPos, (glm::vec4)eyeVector));
 }
 
 ArcballPtr ArcballCamera3D::GetArcball() const

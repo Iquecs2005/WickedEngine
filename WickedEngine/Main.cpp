@@ -44,6 +44,7 @@
 #include "GameObjects/Components/ArcballCamera3D.h"
 #include "GameObjects/Components/PointLight.h"
 
+#include "Rendering/RenderingController.h"
 #include "Rendering/shader.h"
 #include "Rendering/FogModifier.h"
 
@@ -136,7 +137,7 @@ static void SolarSystem(GLFWwindow* win)
 static void T2(GLFWwindow* win)
 {
 	GameObject* cameraObject = scene.CreateNewGameObject("Camera");
-	cameraObject->transform.position.z = 4;
+	cameraObject->transform.position.z = 8;
 	mainCamera = cameraObject->AttachComponent<ArcballCamera3D>();
 	mainCamera->SetCurrentWindow(win);
 	mainCamera->SetCurrentShader(shd);
@@ -145,7 +146,7 @@ static void T2(GLFWwindow* win)
 	mainCamera->AddRenderModifier(fogModifier);
 
 	GameObject* lightObject = scene.CreateNewGameObject("Light");
-	lightObject->transform.position = { 3, 3, 0 };
+	lightObject->transform.position = { 8, 0, 0 };
 	lightObject->AttachComponent<PointLight>();
 
 	MaterialPtr sunMaterial = Material::Make(shd);
@@ -153,16 +154,16 @@ static void T2(GLFWwindow* win)
 	sunMaterial->AttachNormalMap(Texture::Make("decal", Color::Make(0.5f, 0.5f, -1.0f)));
 
 	GameObject* sun = lightObject->CreateEmptyChild("Sun");
-	MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
-	sunMR->mesh = sphere;
-	sunMR->AttachMaterial(sunMaterial);
+	//MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
+	//sunMR->mesh = sphere;
+	//sunMR->AttachMaterial(sunMaterial);
 
 	MaterialPtr sunMaterial2 = Material::Make(shd);
 	sunMaterial2->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
 	sunMaterial2->AttachNormalMap(Texture::Make("decal", "Images/test.jpg"));
 
-	GameObject* sun2 = lightObject->CreateEmptyChild("Sun2");
-	sun2->transform.position = { 0, -3, 0 };
+	GameObject* sun2 = scene.CreateNewGameObject("Sun2");
+	sun2->transform.position = { 3, 0, 0 };
 	MeshRenderer* sun2MR = sun2->AttachComponent<MeshRenderer>();
 	sun2MR->mesh = sphere;
 	sun2MR->AttachMaterial(sunMaterial2);
@@ -232,6 +233,8 @@ static void initialize(GLFWwindow* win)
 	shd->Link();
 	shd->UseProgram();
 
+	RenderingController::Initialize();
+
 	circleGeometry = Circle::Make(65);
 	squareGeometry = Square::Make();
 	cube = Cube::Make();
@@ -253,17 +256,6 @@ static void error(int code, const char* msg)
 	exit(0);
 }
 
-static void display(GLFWwindow* win)
-{
-	//Clears the color and depth buffer with the clear color
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	Light::LoadLights(shd);
-	scene.DrawScene();
-
-	Error::Check("display"); 
-}
-
 static void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
@@ -273,8 +265,6 @@ static void keyboard(GLFWwindow* window, int key, int scancode, int action, int 
 static void resize(GLFWwindow* win, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	display(win);
-	glfwSwapBuffers(win);
 }
 
 static void cursorpos(GLFWwindow* win, double xpos, double ypos)
@@ -389,10 +379,7 @@ int main()
 		Time::deltaTime = t - t0;
 		update(t - t0);
 		t0 = t;
-		display(win);
-		glfwSwapBuffers(win);
-		//Realizes queued events
-		glfwPollEvents();
+		RenderingController::Render(win, shd, scene);
 	}
 
 	delete sceneptr;

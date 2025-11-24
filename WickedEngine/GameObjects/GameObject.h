@@ -50,6 +50,7 @@ public:
 	GameObject* CreateEmptyChild(std::string name = "Child");
 
 	friend class Scene;
+	friend class RenderingController;
 
 private:
 	Transform ownedTransform;

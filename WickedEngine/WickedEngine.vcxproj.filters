@@ -141,9 +141,14 @@
     <ClCompile Include="Rendering\BaseTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderingController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
+    <None Include="shaders\shadowFragment.glsl" />
+    <None Include="shaders\shadowVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependencies\lib\glfw3.lib" />
@@ -278,6 +283,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\BaseTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderingController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

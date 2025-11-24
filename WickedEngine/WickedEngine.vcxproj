@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Rendering\RenderingController.cpp" />
     <ClCompile Include="Rendering\BaseTexture.cpp" />
     <ClCompile Include="Rendering\DepthTexture.cpp" />
     <ClCompile Include="Rendering\FrameBuffer.cpp" />
@@ -174,6 +175,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\lib\glfw3.dll" />
+    <None Include="shaders\shadowFragment.glsl" />
+    <None Include="shaders\shadowVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependencies\lib\glfw3.lib" />
@@ -181,6 +184,7 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Rendering\RenderingController.h" />
     <ClInclude Include="Rendering\BaseTexture.h" />
     <ClInclude Include="Rendering\DepthTexture.h" />
     <ClInclude Include="Rendering\FrameBuffer.h" />
