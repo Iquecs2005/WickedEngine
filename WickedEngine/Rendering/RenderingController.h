@@ -31,6 +31,11 @@ private:
 
 	RenderingController();
 
-	static glm::mat4 GenerateShadowMap(GLFWwindow* win, Camera3D* shadowCamera, Light* light, Scene& scene);
+	static void SetUpShadowCamera(GLFWwindow* win, Camera3D* shadowCamera, Light* currentLight);
+	static glm::mat4 SetUpShadowShader(ShaderPtr shader, Camera3D* shadowCamera);
+	static void GenerateShadowMap(Scene& scene);
+	static void DeactivateShadowShader(Camera* camera);
+	static void SetUpShader(ShaderPtr shader, Camera* camera);
+	static void StandardRender(GLFWwindow* win, Camera* camera, Scene& scene);
 };
 
