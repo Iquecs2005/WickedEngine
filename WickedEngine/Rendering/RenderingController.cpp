@@ -32,33 +32,21 @@ void RenderingController::Render(GLFWwindow* win, ShaderPtr baseShader, Scene& s
 
 	GameObject shadowCameraObject;
 	Camera3D* shadowCamera = shadowCameraObject.AttachComponent<Camera3D>();
-	Camera* mainCamera = Camera::getMainCamera();
-
-	shadowCamera->zNear = 1;
-	shadowCamera->SetCurrentWindow(win);
-	shadowCamera->SetCurrentShader(shadowShader);
 
 	Error::Check("Before Shadow Mapping Generation");
-
-	frameBuffer->Activate();
-	shadowShader->UseProgram();
-	shadowCamera->LoadCamera();
-	shadowCamera->setMainCamera();
-
-	glCullFace(GL_FRONT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 	
 	glm::mat4 mat;
 	if (Light::GetCurrentLight() != nullptr)
 	{
-		mat = GenerateShadowMap(shadowCamera, Light::GetCurrentLight(), scene);
+		mat = GenerateShadowMap(win, shadowCamera, Light::GetCurrentLight(), scene);
 	}
-	
-	shadowCamera->UnloadCamera();
-	frameBuffer->Deactivate();
 
 	Error::Check("After Shadow Mapping Generation");
 	
+	Camera* mainCamera = Camera::getMainCamera();
+
+	StandardRender(win, mainCamera, scene);
+
 	baseShader->UseProgram();
 	mainCamera->setMainCamera();
 
@@ -89,16 +77,24 @@ void RenderingController::Render(GLFWwindow* win, ShaderPtr baseShader, Scene& s
 	Error::Check("Render End");
 }
 
-glm::mat4 RenderingController::GenerateShadowMap(Camera3D* shadowCamera, Light* light, Scene& scene)
+glm::mat4 RenderingController::GenerateShadowMap(GLFWwindow* win, Camera3D* shadowCamera, Light* light, Scene& scene)
 {
-	//TODO: Make it work with Global light position 
-	Vector3& cameraPos = shadowCamera->gameObject->transform.position;
-
-	cameraPos = light->gameObject->transform.position;
+	shadowCamera->zNear = 1;
+	shadowCamera->SetCurrentWindow(win);
+	shadowCamera->SetCurrentShader(shadowShader);
+	shadowCamera->gameObject->transform.position = light->gameObject->transform.position;
 	//TODO: Calculate the angle correctly
 	//TODO: Fix Gimble lock
 	shadowCamera->gameObject->transform.rotation.y = 90;
 	shadowCamera->fOV = 90;
+
+	frameBuffer->Activate();
+	shadowShader->UseProgram();
+	shadowCamera->LoadCamera();
+	shadowCamera->setMainCamera();
+
+	glCullFace(GL_FRONT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
@@ -108,5 +104,30 @@ glm::mat4 RenderingController::GenerateShadowMap(Camera3D* shadowCamera, Light* 
 
 	scene.DrawScene();
 
+	shadowCamera->UnloadCamera();
+	frameBuffer->Deactivate();
+
 	return mat;
+}
+
+void RenderingController::StandardRender(GLFWwindow* win, ShaderPtr shader, Camera* camera, Scene& scene)
+{
+	shader->UseProgram();
+	camera->setMainCamera();
+	camera->LoadCamera();
+
+	int width, height;
+	glfwGetFramebufferSize(win, &width, &height);
+	if (width != 0 && height != 0)
+	{
+		glViewport(0, 0, width, height);
+	}
+
+	glCullFace(GL_BACK);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	Light::LoadLights(shader);
+	scene.DrawScene();
+
+	camera->UnloadCamera();
 }
