@@ -16,7 +16,7 @@ void RenderingController::Initialize()
 	Error::Check("RenderingController Initialization Start");
 
 	depthTex = DepthTexture::Make("ShadowMap", 1024, 1024);
-	frameBuffer = FrameBuffer::Make(depthTex, AttachmentType::DepthAttach);
+	frameBuffer = FrameBuffer::Make(1024, 1024, depthTex);
 	
 	shadowShader = Shader::Make();
 	shadowShader->AttachVertexShader("shaders/shadowVertex.glsl");

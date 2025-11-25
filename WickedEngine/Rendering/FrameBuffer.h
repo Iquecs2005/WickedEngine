@@ -5,7 +5,10 @@ using FrameBufferPtr = std::shared_ptr<FrameBuffer>;
 
 #pragma once
 
-#include "BaseTexture.h"
+#include <initializer_list>
+
+#include "DepthTexture.h"
+#include "Texture.h"
 
 enum AttachmentType
 {
@@ -15,7 +18,9 @@ enum AttachmentType
 class FrameBuffer
 {
 public:
-	static inline FrameBufferPtr Make(BaseTexturePtr tex, AttachmentType texType);
+	static inline FrameBufferPtr Make(int width, int height,
+									  DepthTexturePtr depthTex,
+									  std::initializer_list<TexturePtr> colorTextures = {});
 	~FrameBuffer();
 
 	void Activate();
@@ -24,12 +29,15 @@ private:
 	unsigned int id;
 	unsigned int width;
 	unsigned int height;
-	AttachmentType type;
+	DepthTexturePtr depthTex;
+	std::vector<TexturePtr> colorTextures;
 
-	FrameBuffer(BaseTexturePtr tex, AttachmentType texType);
+	FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<TexturePtr> colorTextures);
 };
 
-inline FrameBufferPtr FrameBuffer::Make(BaseTexturePtr tex, AttachmentType texType)
+inline FrameBufferPtr FrameBuffer::Make(int width, int height,
+										DepthTexturePtr depthTex,
+										std::initializer_list<TexturePtr> colorTextures)
 {
-	return FrameBufferPtr(new FrameBuffer(tex, texType));
+	return FrameBufferPtr(new FrameBuffer(width, height, depthTex, colorTextures));
 }
