@@ -1,11 +1,13 @@
 #version 410
 
-uniform vec4 uniformColor;
-
-uniform sampler2D decal;
-uniform sampler2D gloss;
+uniform sampler2D positionMap;
 uniform sampler2D normalMap;
+uniform sampler2D ambientMap;
+uniform sampler2D diffuseMap;
+uniform sampler2D specularMap;
 uniform sampler2DShadow shadowMap;
+
+uniform vec2 screenSize;
 
 uniform mat4 lightSpaceMatrix;
 uniform vec4 cameraPos;
@@ -23,26 +25,20 @@ uniform float spotCoeficient;
 uniform float fogDensity = 0;
 uniform vec4 fogColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-in data 
-{
-	vec3 vWorld;
-	vec3 nWorld;
-	vec3 tWorld;
-	vec3 lightVector;
-	float lightDistance;
-	vec2 texcoord;
-	vec4 lightSpacePos;
-} f;
-
 out vec4 fcolor;
 
 const float globalAttenuation = 0.75f;
 
-mat3 CreateTBNMatrix();
-
 void main (void)
 {
-	mat3 TBN = CreateTBNMatrix();
+	vec2 texCoord = gl_FragCoord.xy / screenSize;
+	vec3 worldPos = texture(positionMap, texCoord).xyz;
+	vec3 worldNormal = normalize(texture(normalMap, texCoord).xyz);
+	vec3 ambientColor = texture(ambientMap, texCoord).rgb;
+	vec3 diffuseColor = texture(diffuseMap, texCoord).rgb;
+	vec4 specularData = texture(specularMap, texCoord);
+	vec3 specularColor = specularData.rgb;
+	float spotCoeficient = specularData.a;
 
 	vec3 nNorm = texture(normalMap, f.texcoord).rgb;
 	nNorm = (nNorm * 2.0) - 1.0;
@@ -54,7 +50,7 @@ void main (void)
 	vec4 diffuseColor = materialDiffuseColor * uniformColor * texture(decal, f.texcoord);
 	vec4 specularColor = materialSpecularColor * texture(gloss, f.texcoord);
 
-	float nDotL = dot(nNorm, lightNorm);
+	float nDotL = dot(worldNormal, lightNorm);
 
 	fcolor = ambientColor * globalAttenuation;
 
@@ -71,7 +67,7 @@ void main (void)
 
 	if (nDotL > 0)
 	{
-		vec3 refL = normalize(reflect(-lightNorm, nNorm));
+		vec3 refL = normalize(reflect(-lightNorm, worldNormal));
 		vec3 eyeVector = normalize(vec3(cameraPos) - f.vWorld);
 		fcolor += pow(max(0, dot(refL, eyeVector)), spotCoeficient) * specularColor * lightAttenuation * lcolor;
 	}
@@ -82,17 +78,4 @@ void main (void)
 	fogValue = clamp(fogValue, 0.0f, 1.0f);
 
 	fcolor = fogValue * fcolor + (1 - fogValue) * fogColor;
-}
-
-mat3 CreateTBNMatrix()
-{
-	vec3 normal = normalize(f.nWorld);
-	vec3 tangent = normalize(f.tWorld);
-	vec3 binormal = cross(tangent, normal);
-
-	vec3 T = normalize(tangent);
-	vec3 B = normalize(binormal);
-	vec3 N = normalize(normal);
-	
-	return mat3(T, B, N);
 }

@@ -1,0 +1,29 @@
+#version 410
+
+layout (location = 0) in vec4 pos;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec3 tangent;
+layout (location = 3) in vec2 texcoord;
+
+uniform mat4 mv;
+uniform mat4 nm;
+uniform mat4 mvp;
+
+out data
+{
+	vec3 vWorld;
+	vec3 nWorld;
+	vec3 tWorld;
+	vec2 texcoord;
+	vec4 lightSpacePos;
+} v;
+
+void main (void)
+{
+	v.vWorld = vec3(mv * pos);
+	v.nWorld = normalize(vec3(nm * vec4(normal, 0.0f)));
+	v.tWorld = normalize(vec3(nm * vec4(tangent, 0.0f)));
+	v.texcoord = texcoord;
+
+	gl_Position = mvp * pos;
+}
