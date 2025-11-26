@@ -151,8 +151,9 @@ void RenderingController::DeferredRender(GLFWwindow* win, ShaderPtr baseShader, 
 	lightPassShader->SetUniform("mvp", glm::mat4(1.0f));
 	cameraQuad->Draw();
 
-	depthTex->Unload(lightPassShader);
 	gBuffer->UnloadTextures(lightPassShader);
+	depthTex->Unload(lightPassShader);
+	mainCamera->UnloadCamera();
 
 	Error::Check("Render Step 1");
 

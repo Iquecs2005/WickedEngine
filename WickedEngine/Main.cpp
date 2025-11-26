@@ -155,7 +155,7 @@ static void T2(GLFWwindow* win)
 	sunMaterial->AttachDecalTexture(Texture::Make("decal", "Images/Sun.jpg"));
 	sunMaterial->AttachNormalMap(Texture::Make("decal", Color::Make(0.5f, 0.5f, -1.0f)));
 
-	GameObject* sun = lightObject->CreateEmptyChild("Sun");
+	//GameObject* sun = lightObject->CreateEmptyChild("Sun");
 	//MeshRenderer* sunMR = sun->AttachComponent<MeshRenderer>();
 	//sunMR->mesh = sphere;
 	//sunMR->AttachMaterial(sunMaterial);
