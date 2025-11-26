@@ -18,6 +18,7 @@
 #include "../GameObjects/Components/Light.h"
 #include "FrameBuffer.h"
 #include "DepthTexture.h"
+#include "../Geometry/3D/Quad.h"
 
 class RenderingController
 {
@@ -26,8 +27,11 @@ public:
 	static void Render(GLFWwindow* win, ShaderPtr baseShader, Scene& scene);
 private:
 	static ShaderPtr shadowShader;
+	static ShaderPtr geometryPassShader;
+	static ShaderPtr lightPassShader;
 	static DepthTexturePtr depthTex;
 	static FrameBufferPtr frameBuffer;
+	static QuadPtr cameraQuad;
 
 	RenderingController();
 
@@ -37,5 +41,7 @@ private:
 	static void DeactivateShadowShader(Camera* camera);
 	static void SetUpShader(ShaderPtr shader, Camera* camera);
 	static void StandardRender(GLFWwindow* win, Camera* camera, Scene& scene);
+	static void DeferredRender(GLFWwindow* win, ShaderPtr baseShader, Scene& scene);
+	static void FowardRender(GLFWwindow* win, ShaderPtr baseShader, Scene& scene);
 };
 

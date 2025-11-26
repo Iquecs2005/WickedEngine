@@ -32,6 +32,7 @@
 #include "Geometry/3D/GridGeometry.h"
 #include "Geometry/3D/Sphere.h"
 #include "Geometry/3D/Cylinder.h"
+#include "Geometry/3D/Quad.h"
 
 #include "General/Vector3.h"
 #include "General/Color.h"
@@ -58,6 +59,7 @@ static CubePtr cube;
 static GridGeometryPtr grid;
 static SpherePtr sphere;
 static CylinderPtr cylinder;
+static QuadPtr quad;
 
 static Scene* sceneptr = new Scene("Mesa");
 static Scene& scene = *sceneptr;
@@ -241,6 +243,7 @@ static void initialize(GLFWwindow* win)
 	grid = GridGeometry::Make(2, 2);
 	sphere = Sphere::Make();
 	cylinder = Cylinder::Make();
+	quad = Quad::Make();
 
 	T2(win);
 

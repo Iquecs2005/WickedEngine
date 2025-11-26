@@ -15,7 +15,6 @@ out data
 	vec3 nWorld;
 	vec3 tWorld;
 	vec2 texcoord;
-	vec4 lightSpacePos;
 } v;
 
 void main (void)

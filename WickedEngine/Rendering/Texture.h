@@ -12,6 +12,7 @@ using TexturePtr = std::shared_ptr<Texture>;
 class Texture : public BaseTexture
 {
 public:
+	static inline TexturePtr Make(const std::string& name, const unsigned int width, const unsigned int height);
 	static inline TexturePtr Make(const std::string& name, const std::string& fileName);
 	static inline TexturePtr Make(const std::string& name, const ColorPtr& color);
 	static inline TexturePtr Make(const std::string& name, const Color& color);

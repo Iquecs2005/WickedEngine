@@ -129,6 +129,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry\3D\Quad.cpp" />
+    <ClCompile Include="Rendering\GBuffer.cpp" />
+    <ClCompile Include="Rendering\CustomTexture.cpp" />
     <ClCompile Include="Rendering\RenderingController.cpp" />
     <ClCompile Include="Rendering\BaseTexture.cpp" />
     <ClCompile Include="Rendering\DepthTexture.cpp" />
@@ -184,6 +187,9 @@
     <Library Include="Dependencies\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry\3D\Quad.h" />
+    <ClInclude Include="Rendering\GBuffer.h" />
+    <ClInclude Include="Rendering\CustomTexture.h" />
     <ClInclude Include="Rendering\RenderingController.h" />
     <ClInclude Include="Rendering\BaseTexture.h" />
     <ClInclude Include="Rendering\DepthTexture.h" />

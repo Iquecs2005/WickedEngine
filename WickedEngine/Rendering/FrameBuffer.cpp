@@ -16,10 +16,31 @@
 
 #include "../error.h"
 
-FrameBuffer::FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<TexturePtr> colorTextures)
+FrameBuffer::FrameBuffer(int width, int height)
+	: width(width), height(height)
+{
+}
+
+FrameBuffer::FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<BaseTexturePtr> colorTextures)
 	: width(width), height(height), depthTex(depthTex), colorTextures(colorTextures)
 {
+	GenFrameBuffer(width, height, depthTex, colorTextures);
+}
+
+FrameBuffer::~FrameBuffer()
+{
+	glDeleteFramebuffers(1, &id);
+}
+
+void FrameBuffer::GenFrameBuffer()
+{
 	Error::Check("Start Frame Buffer Generation");
+
+	if (id != 0)
+	{
+		std::cerr << "Frame Buffer already generated" << std::endl;
+		return;
+	}
 
 	glGenFramebuffers(1, &id);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
@@ -37,7 +58,7 @@ FrameBuffer::FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::i
 	}
 
 	int i = 0;
-	for (TexturePtr colorTex : colorTextures)
+	for (BaseTexturePtr colorTex : colorTextures)
 	{
 		unsigned int texId = colorTex->GetId();
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, texId, 0);
@@ -58,9 +79,14 @@ FrameBuffer::FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::i
 	Error::Check("End Frame Buffer Generation");
 }
 
-FrameBuffer::~FrameBuffer()
+void FrameBuffer::GenFrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<BaseTexturePtr> colorTextures)
 {
-	glDeleteFramebuffers(1, &id);
+	this->width = width;
+	this->height = height;
+	this->depthTex = depthTex;
+	this->colorTextures = colorTextures;
+
+	GenFrameBuffer();
 }
 
 void FrameBuffer::Activate()

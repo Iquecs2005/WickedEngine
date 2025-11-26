@@ -2,6 +2,11 @@
 
 #include <glad/gl.h>
 
+BaseTexture::~BaseTexture()
+{
+	glDeleteTextures(1, &id);
+}
+
 void BaseTexture::Load(ShaderPtr shader, std::string variableName)
 {
 	shader->ActiveTexture(variableName);
@@ -22,7 +27,8 @@ unsigned int BaseTexture::Create2DTexture(const TextureForm& textureForm, bool s
 	glTexImage2D(GL_TEXTURE_2D, textureForm.mipmapLevel, textureForm.internalFormat, 
 				 textureForm.width, textureForm.height, textureForm.border,
 				 textureForm.texelFormat, textureForm.texelDataFormat, textureForm.textureData);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	if (textureForm.minFilter != GL_NEAREST)
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureForm.sWrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureForm.tWrap);

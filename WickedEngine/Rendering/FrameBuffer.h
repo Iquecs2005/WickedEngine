@@ -10,34 +10,32 @@ using FrameBufferPtr = std::shared_ptr<FrameBuffer>;
 #include "DepthTexture.h"
 #include "Texture.h"
 
-enum AttachmentType
-{
-	ColorAttach, DepthAttach
-};
-
 class FrameBuffer
 {
 public:
 	static inline FrameBufferPtr Make(int width, int height,
 									  DepthTexturePtr depthTex,
-									  std::initializer_list<TexturePtr> colorTextures = {});
+									  std::initializer_list<BaseTexturePtr> colorTextures = {});
 	~FrameBuffer();
 
 	void Activate();
 	void Deactivate();
-private:
-	unsigned int id;
+protected:
+	unsigned int id = 0;
 	unsigned int width;
 	unsigned int height;
 	DepthTexturePtr depthTex;
-	std::vector<TexturePtr> colorTextures;
-
-	FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<TexturePtr> colorTextures);
+	std::vector<BaseTexturePtr> colorTextures;
+	
+	FrameBuffer(int width, int height);
+	FrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<BaseTexturePtr> colorTextures);
+	void GenFrameBuffer();
+	void GenFrameBuffer(int width, int height, DepthTexturePtr depthTex, std::initializer_list<BaseTexturePtr> colorTextures);
 };
 
 inline FrameBufferPtr FrameBuffer::Make(int width, int height,
 										DepthTexturePtr depthTex,
-										std::initializer_list<TexturePtr> colorTextures)
+										std::initializer_list<BaseTexturePtr> colorTextures)
 {
 	return FrameBufferPtr(new FrameBuffer(width, height, depthTex, colorTextures));
 }

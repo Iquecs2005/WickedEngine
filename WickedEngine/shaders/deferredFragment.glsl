@@ -29,8 +29,6 @@ mat3 CreateTBNMatrix();
 
 void main (void)
 {
-	vec3 vNorm = normalize(f.vWorld);
-
 	mat3 TBN = CreateTBNMatrix();
 
 	vec3 nNorm = texture(normalMap, f.texcoord).rgb;
@@ -49,6 +47,7 @@ mat3 CreateTBNMatrix()
 {
 	vec3 normal = normalize(f.nWorld);
 	vec3 tangent = normalize(f.tWorld);
+	tangent = normalize(tangent - normal * dot(tangent, normal));
 	vec3 binormal = cross(tangent, normal);
 
 	vec3 T = normalize(tangent);

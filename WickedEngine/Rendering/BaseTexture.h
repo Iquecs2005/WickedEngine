@@ -19,13 +19,6 @@ public:
 	inline unsigned int GetId() const;
 	inline unsigned int GetWidth() const;
 	inline unsigned int GetHeight() const;
-protected:
-	std::string name;
-
-	unsigned int id = 0;
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned int mipmapLevel = 0;
 
 	struct TextureForm
 	{
@@ -43,9 +36,16 @@ protected:
 		unsigned int minFilter;
 		unsigned int maxFilter;
 	};
+protected:
+	std::string name;
+
+	unsigned int id = 0;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned int mipmapLevel = 0;
 	
 	inline BaseTexture(const std::string& name);
-	virtual ~BaseTexture() = default;
+	virtual ~BaseTexture();
 
 	unsigned int Create2DTexture(const TextureForm& textureForm, bool saveValues = true);
 };

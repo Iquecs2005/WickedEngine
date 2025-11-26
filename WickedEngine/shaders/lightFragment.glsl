@@ -7,58 +7,59 @@ uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
 uniform sampler2DShadow shadowMap;
 
-uniform vec2 screenSize;
-
-uniform mat4 lightSpaceMatrix;
+uniform vec3 screenSize;
 uniform vec4 cameraPos;
 
-uniform vec4 materialAmbientColor;
-uniform vec4 materialDiffuseColor;
-uniform vec4 materialSpecularColor;
+uniform vec4 lightPos;
+uniform mat4 lightSpaceMatrix;
 
 uniform float lightAttConstantCoefficient;
 uniform float lightAttLinearCoefficient;
 uniform float lightAttQuadraticCoefficient;
 
-uniform float spotCoeficient; 
-
 uniform float fogDensity = 0;
 uniform vec4 fogColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-out vec4 fcolor;
-
 const float globalAttenuation = 0.75f;
+
+out vec4 fcolor;
 
 void main (void)
 {
-	vec2 texCoord = gl_FragCoord.xy / screenSize;
+	vec2 texCoord = gl_FragCoord.xy / screenSize.xy;
 	vec3 worldPos = texture(positionMap, texCoord).xyz;
 	vec3 worldNormal = normalize(texture(normalMap, texCoord).xyz);
-	vec3 ambientColor = texture(ambientMap, texCoord).rgb;
-	vec3 diffuseColor = texture(diffuseMap, texCoord).rgb;
+	vec4 ambientColor = texture(ambientMap, texCoord);
+	vec4 diffuseColor = texture(diffuseMap, texCoord);
 	vec4 specularData = texture(specularMap, texCoord);
-	vec3 specularColor = specularData.rgb;
+	vec4 specularColor = vec4(specularData.rgb, 1);
 	float spotCoeficient = specularData.a;
 
-	vec3 nNorm = texture(normalMap, f.texcoord).rgb;
-	nNorm = (nNorm * 2.0) - 1.0;
-	nNorm = normalize(TBN * nNorm);
+	vec3 lightVector;
+	float lightDistance;
+	if (lightPos.w == 0)
+	{
+		lightVector = normalize(vec3(lightPos));
+		lightDistance = 0;
+	}
+	else
+	{
+		lightVector = normalize(vec3(lightPos) - worldPos);
+		lightDistance = distance(vec3(lightPos), worldPos);
+	}
 
-	vec3 lightNorm = normalize(f.lightVector);
+	float nDotL = dot(worldNormal, lightVector);
 
-	vec4 ambientColor = materialAmbientColor * uniformColor * texture(decal, f.texcoord);
-	vec4 diffuseColor = materialDiffuseColor * uniformColor * texture(decal, f.texcoord);
-	vec4 specularColor = materialSpecularColor * texture(gloss, f.texcoord);
+	//fcolor = ambientColor * globalAttenuation;
+	fcolor = ambientColor;
 
-	float nDotL = dot(worldNormal, lightNorm);
-
-	fcolor = ambientColor * globalAttenuation;
-
-	float lcolor = textureProj(shadowMap, f.lightSpacePos);
+	vec4 lightSpacePos = lightSpaceMatrix * vec4(worldPos, 1.0);
+	float lcolor = textureProj(shadowMap, lightSpacePos);
+	lcolor = 1;
 
 	float lightDivisor = lightAttConstantCoefficient;
-	lightDivisor += lightAttLinearCoefficient * f.lightDistance;
-	lightDivisor += lightAttQuadraticCoefficient * pow(f.lightDistance, 2);
+	lightDivisor += lightAttLinearCoefficient * lightDistance;
+	lightDivisor += lightAttQuadraticCoefficient * pow(lightDistance, 2);
 
 	float lightAttenuation = 1 / lightDivisor;
 	lightAttenuation = clamp(lightAttenuation, 0.0f, 1.0f);
@@ -67,13 +68,13 @@ void main (void)
 
 	if (nDotL > 0)
 	{
-		vec3 refL = normalize(reflect(-lightNorm, worldNormal));
-		vec3 eyeVector = normalize(vec3(cameraPos) - f.vWorld);
+		vec3 refL = normalize(reflect(-lightVector, worldNormal));
+		vec3 eyeVector = normalize(vec3(cameraPos) - worldPos);
 		fcolor += pow(max(0, dot(refL, eyeVector)), spotCoeficient) * specularColor * lightAttenuation * lcolor;
 	}
 
 	//Fog effect
-	float cameraDistance = distance(vec3(cameraPos), f.vWorld);
+	float cameraDistance = distance(vec3(cameraPos), worldPos);
 	float fogValue = exp(-pow(cameraDistance * fogDensity, 2));
 	fogValue = clamp(fogValue, 0.0f, 1.0f);
 
